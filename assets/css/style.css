@@ -319,17 +319,35 @@ body::after {
   display: none;
   position: relative;
   z-index: 2;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: center;
   width: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
 }
 
 .header--open .header__menu {
   display: flex;
 }
+
 .header--open .header__taglines {
   display: none;
+}
+
+.header__menu-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.header__menu-group--auth {
+  display: none;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(221, 189, 132, 0.2);
+}
+
+body.is-auth .header__menu-group--auth {
+  display: flex;
 }
 
 .header__menu-link {
@@ -2211,13 +2229,6 @@ body.auth-open .auth__panel {
 }
 
 /* ===== СОСТОЯНИЕ АВТОРИЗАЦИИ ===== */
-.header__menu-link--auth {
-  display: none;
-}
-
-body.is-auth .header__menu-link--auth {
-  display: inline-block;
-}
 
 body.is-auth .auth {
   display: none;
