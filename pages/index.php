@@ -28,7 +28,7 @@
     </div>
 <nav class="header__menu">
   <div class="header__menu-group header__menu-group--auth">
-    <a href="#" class="header__menu-link">Личный кабинет</a>
+    <a href="cabinet.php" class="header__menu-link">Личный кабинет</a>
     <a href="#" class="header__menu-link">Калькулятор</a>
     <a href="#" class="header__menu-link">Каталог</a>
     <a href="#" class="header__menu-link">Корзина</a>
