@@ -445,6 +445,12 @@
     </div>
   </aside>
 
+  <!-- тост: показывается только при свежем логине/регистрации -->
+  <div class="auth-toast" id="authToast" role="status" aria-live="polite">
+    <span class="auth-toast__label">Успешный вход</span>
+    <strong class="auth-toast__name" data-toast-name></strong>
+  </div>
+
   <script src="../assets/js/main.js"></script>
 </body>
 </html>

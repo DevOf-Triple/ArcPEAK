@@ -189,6 +189,7 @@ async function submitAuth(url, form) {
     }
     applyUser(data.user);
     closeAuth();
+    showAuthToast(data.user); // <-- единственная точка вызова тоста
     form.reset();
   } catch (err) {
     errorEl.textContent = "Нет связи с сервером";
@@ -224,3 +225,20 @@ async function doLogout() {
     applyUser(null);
   }
 })();
+
+// Тост только по факту входа/регистрации. Из me.php НЕ вызываем —
+// иначе будет всплывать при каждом F5.
+const authToast = document.getElementById("authToast");
+let toastTimer = null;
+
+function showAuthToast(user) {
+  if (!authToast || !user) return;
+  const nameEl = authToast.querySelector("[data-toast-name]");
+  if (nameEl) nameEl.textContent = user.full_name || user.login;
+
+  authToast.classList.add("is-visible");
+  clearTimeout(toastTimer); // если быстро залогинился дважды — не плодим таймеры
+  toastTimer = setTimeout(() => {
+    authToast.classList.remove("is-visible");
+  }, 4000);
+}

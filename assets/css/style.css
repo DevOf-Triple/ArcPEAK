@@ -2233,3 +2233,61 @@ body.auth-open .auth__panel {
 body.is-auth .auth {
   display: none;
 }
+
+/* ===== AUTH TOAST ===== */
+.auth-toast {
+  position: fixed;
+  top: 120px;
+  right: 20px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 260px;
+  padding: 18px 24px;
+  background: linear-gradient(160deg, #3a2f22 0%, #221c14 100%);
+  color: #decbab;
+  border: 1px solid rgba(221, 189, 132, 0.4);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+  transform: translateX(calc(100% + 40px));    /* уезжает за правый край */
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.35s ease;
+}
+
+.auth-toast.is-visible {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.auth-toast__label {
+  font-family: "Onest", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #ddbd84;
+  opacity: 0.85;
+}
+
+.auth-toast__name {
+  font-family: "Unbounded", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #decbab;
+  line-height: 1.3;
+}
+
+@media (max-width: 800px) {
+  .auth-toast {
+    top: 100px;
+    right: 12px;
+    min-width: 200px;
+    padding: 14px 18px;
+  }
+  .auth-toast__name {
+    font-size: 14px;
+  }
+}
