@@ -444,9 +444,9 @@ body.is-auth .header__menu-group--auth {
   object-fit: contain;
 }
 
-.logo:hover {
-  box-shadow: 0 12px 40px rgba(153, 82, 58, 0.3);
-}
+/*.logo:hover {
+  box-shadow: 0 12px 40px rgba(153, 82, 58, 0.3); <--- а нахрена этот кусок кода вообще нужен? чисто по приколу
+}*/
 
 .logo--hidden {
   transform: translateY(-220%);
@@ -2249,7 +2249,7 @@ body.is-auth .auth {
   color: #decbab;
   border: 1px solid rgba(221, 189, 132, 0.4);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
-  transform: translateX(calc(100% + 40px));    /* уезжает за правый край */
+  transform: translateX(calc(100% + 40px)); /* уезжает за правый край */
   opacity: 0;
   pointer-events: none;
   transition:
