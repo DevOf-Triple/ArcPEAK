@@ -27,16 +27,22 @@
       <span class="header__tagline">Каждый проект — под конкретного человека</span>
     </div>
 <nav class="header__menu">
-  <a href="cabinet.php" class="header__menu-link header__menu-link--auth">Личный кабинет</a>
-  <a href="#" class="header__menu-link header__menu-link--auth">Калькулятор</a>
-  <a href="#" class="header__menu-link header__menu-link--auth">Каталог</a>
-  <a href="#" class="header__menu-link header__menu-link--auth">Корзина</a>
-  <a href="#" class="header__menu-link">Отзывы</a>
-  <a href="#" class="header__menu-link">Блог</a>
-  <a href="#" class="header__menu-link">FAQ</a>
-  <a href="#" class="header__menu-link header__menu-link--auth">Партнёрам</a>
-  <a href="#" class="header__menu-link">Контакты</a>
-  <a href="#" class="header__menu-link header__menu-link--auth" data-auth-logout>Выйти</a>
+  <div class="header__menu-group header__menu-group--auth">
+    <a href="#" class="header__menu-link">Личный кабинет</a>
+    <a href="#" class="header__menu-link">Калькулятор</a>
+    <a href="#" class="header__menu-link">Каталог</a>
+    <a href="#" class="header__menu-link">Корзина</a>
+    <a href="#" class="header__menu-link">Партнёрам</a>
+    <a href="#" class="header__menu-link" data-auth-logout>Выйти</a>
+  </div>
+
+  <div class="header__menu-group">
+    <a href="#" class="header__menu-link">Отзывы</a>
+    <a href="#" class="header__menu-link">Вакансии</a>
+    <a href="#" class="header__menu-link">Блог</a>
+    <a href="#" class="header__menu-link">FAQ</a>
+    <a href="#" class="header__menu-link">Контакты</a>
+  </div>
 </nav>
   </header>
 
