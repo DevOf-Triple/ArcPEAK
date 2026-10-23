@@ -633,3 +633,487 @@ async function init() {
 }
 
 document.addEventListener("DOMContentLoaded", init);
+
+/* ============================================================
+   ШАГ 6 — ПОЛНОЭКРАННЫЙ ОВЕРЛЕЙ ПАПКИ
+   ============================================================ */
+
+const portfolio = {
+  overlay: null,
+  panel: null,
+  project: null, // { id, project_number, title }
+  items: [],
+  price: null,
+  sort: "added_at",
+  cachedProjects: null,
+};
+
+function ensurePortfolioElements() {
+  if (portfolio.overlay) return true;
+  portfolio.overlay = $("#portfolioOverlay");
+  portfolio.panel = $("#portfolioPanel");
+  return !!portfolio.overlay;
+}
+
+/* ---------- FLIP ---------- */
+
+function canFlip() {
+  return (
+    window.matchMedia("(min-width: 601px)").matches &&
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
+
+function flipOpen() {
+  if (!ensurePortfolioElements()) return;
+
+  const front = $("#folderFront");
+  if (!front || !canFlip()) {
+    portfolio.overlay.hidden = false;
+    return;
+  }
+
+  const from = front.getBoundingClientRect();
+  portfolio.overlay.hidden = false;
+
+  const to = portfolio.panel.getBoundingClientRect();
+  const dx = from.left - to.left;
+  const dy = from.top - to.top;
+  const sx = from.width / to.width;
+  const sy = from.height / to.height;
+
+  portfolio.panel.animate(
+    [
+      {
+        transformOrigin: "top left",
+        transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`,
+        opacity: 0.4,
+      },
+      {
+        transformOrigin: "top left",
+        transform: "translate(0, 0) scale(1, 1)",
+        opacity: 1,
+      },
+    ],
+    { duration: 480, easing: "cubic-bezier(.2,.8,.2,1)" },
+  );
+}
+
+function flipClose(onDone) {
+  if (!ensurePortfolioElements()) return;
+
+  const front = $("#folderFront");
+  if (!front || !canFlip()) {
+    portfolio.overlay.hidden = true;
+    onDone?.();
+    return;
+  }
+
+  const to = front.getBoundingClientRect();
+  const from = portfolio.panel.getBoundingClientRect();
+  const dx = to.left - from.left;
+  const dy = to.top - from.top;
+  const sx = to.width / from.width;
+  const sy = to.height / from.height;
+
+  const anim = portfolio.panel.animate(
+    [
+      {
+        transformOrigin: "top left",
+        transform: "translate(0, 0) scale(1, 1)",
+        opacity: 1,
+      },
+      {
+        transformOrigin: "top left",
+        transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`,
+        opacity: 0.4,
+      },
+    ],
+    { duration: 420, easing: "cubic-bezier(.2,.8,.2,1)" },
+  );
+
+  anim.onfinish = () => {
+    portfolio.overlay.hidden = true;
+    onDone?.();
+  };
+}
+
+/* ---------- РЕНДЕР ---------- */
+
+function renderPortfolioTabs() {
+  const wrap = $("#portfolioTabs");
+  if (!wrap) return;
+  if (!state.projects.length) {
+    wrap.innerHTML = "";
+    return;
+  }
+  wrap.innerHTML = state.projects
+    .map(
+      (p) => `
+    <button type="button" class="ptab ${p.id === portfolio.project?.id ? "is-active" : ""}" data-project-tab="${p.id}">
+      Проект №${p.project_number}
+    </button>
+  `,
+    )
+    .join("");
+}
+
+function renderPortfolioHeader() {
+  const title = $("#portfolioTitle");
+  const number = $("#portfolioNumber");
+  if (!portfolio.project) {
+    if (title) title.textContent = "—";
+    if (number) number.textContent = "";
+    return;
+  }
+  if (title) title.textContent = portfolio.project.title;
+  if (number) number.textContent = `№${portfolio.project.project_number}`;
+}
+
+function renderPortfolioItems() {
+  const wrap = $("#portfolioItems");
+  if (!wrap) return;
+
+  if (!portfolio.items.length) {
+    wrap.innerHTML = `
+      <div class="portfolio-empty">
+        <p class="portfolio-empty__title">В проекте пока нет листов</p>
+        <p class="portfolio-empty__text">Добавьте здание или лист из каталога.</p>
+      </div>`;
+    return;
+  }
+
+  const sorted = [...portfolio.items].sort((a, b) => {
+    if (portfolio.sort === "price") {
+      const pa =
+        a.type === "building" ? a.price_override || a.base_price || 0 : 0;
+      const pb =
+        b.type === "building" ? b.price_override || b.base_price || 0 : 0;
+      return pb - pa;
+    }
+    if (portfolio.sort === "name") {
+      return (a.name || "").localeCompare(b.name || "", "ru");
+    }
+    return new Date(a.added_at) - new Date(b.added_at);
+  });
+
+  wrap.innerHTML = sorted.map((it) => renderPortfolioItem(it)).join("");
+}
+
+function renderPortfolioItem(it) {
+  const isBuilding = it.type === "building";
+  const thumb = it.image_path
+    ? `<img src="../${it.image_path}" alt="">`
+    : isBuilding
+      ? "ДОМ"
+      : "ЛИСТ";
+
+  const typeBadge = isBuilding
+    ? '<span class="pitem__type pitem__type--building">Здание</span>'
+    : '<span class="pitem__type pitem__type--sheet">Лист</span>';
+
+  const meta = isBuilding
+    ? `${it.area_m2} м² · ${it.floors} эт. · ${it.bedrooms} спал.`
+    : it.description || "Настройка проекта";
+
+  const price = isBuilding ? fmtPrice(it.base_price) : "";
+
+  const details = isBuilding
+    ? `<ul class="pitem__expand-list">
+        <li>${it.bathrooms} с/у</li>
+        <li>${it.wall_material || "—"}</li>
+        <li>${it.roof_type || "—"}</li>
+        ${(it.extra_features || []).map((f) => `<li>${f}</li>`).join("")}
+      </ul>`
+    : `<p>${escapeHtml(it.description || "")}</p>`;
+
+  return `
+    <div class="pitem" data-item-type="${it.type}" data-item-id="${it.id}">
+      <div class="pitem__row">
+        <div class="pitem__thumb">${thumb}</div>
+        <div class="pitem__info">
+          <h4 class="pitem__name">${escapeHtml(it.name || "—")}</h4>
+          <p class="pitem__meta">${escapeHtml(meta)}</p>
+        </div>
+        ${typeBadge}
+        <span class="pitem__price">${price}</span>
+      </div>
+      <div class="pitem__expand">${details}</div>
+    </div>`;
+}
+
+function renderPortfolioTotal() {
+  const el = $("#portfolioTotal");
+  if (!el) return;
+  const total = portfolio.price?.total || 0;
+  el.textContent = fmtPrice(total);
+}
+
+function renderPortfolioAll() {
+  renderPortfolioHeader();
+  renderPortfolioTabs();
+  renderPortfolioItems();
+  renderPortfolioTotal();
+}
+
+/* ---------- ЗАГРУЗКА ---------- */
+
+async function loadPortfolioProject(projectId) {
+  if (!projectId) {
+    portfolio.project = null;
+    portfolio.items = [];
+    portfolio.price = null;
+    renderPortfolioAll();
+    return;
+  }
+
+  const data = await api(`${API.getProject}?id=${projectId}`);
+  if (!data.ok) {
+    showToast(data.error || "Не удалось открыть проект", true);
+    return;
+  }
+  portfolio.project = data.data.project;
+  portfolio.items = data.data.items;
+  portfolio.price = data.data.price;
+  renderPortfolioAll();
+}
+
+/* ---------- ОТКРЫТИЕ / ЗАКРЫТИЕ ---------- */
+
+async function openPortfolio() {
+  if (!state.activeProjectId) {
+    openCreateModal();
+    return;
+  }
+  if (!ensurePortfolioElements()) return;
+
+  await loadPortfolioProject(state.activeProjectId);
+  flipOpen();
+  document.body.style.overflow = "hidden";
+}
+
+function closePortfolio() {
+  flipClose(() => {
+    document.body.style.overflow = "";
+  });
+}
+
+/* ---------- ПЕРЕИМЕНОВАНИЕ ---------- */
+
+function startRename() {
+  const titleEl = $("#portfolioTitle");
+  if (!titleEl || !portfolio.project) return;
+
+  const original = portfolio.project.title;
+  titleEl.contentEditable = "true";
+  titleEl.classList.add("portfolio-panel__title--editing");
+  titleEl.focus();
+
+  // выделить всё
+  const range = document.createRange();
+  range.selectNodeContents(titleEl);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+
+  const finish = async (save) => {
+    titleEl.contentEditable = "false";
+    titleEl.classList.remove("portfolio-panel__title--editing");
+
+    const next = titleEl.textContent.trim();
+    if (!save || !next || next === original) {
+      titleEl.textContent = original;
+      return;
+    }
+
+    const fd = new FormData();
+    fd.append("project_id", portfolio.project.id);
+    fd.append("title", next);
+    const data = await api(API.renameProject, { method: "POST", body: fd });
+    if (!data.ok) {
+      titleEl.textContent = original;
+      showToast(data.error || "Не удалось переименовать", true);
+      return;
+    }
+    portfolio.project.title = next;
+    const p = state.projects.find((x) => x.id === portfolio.project.id);
+    if (p) p.title = next;
+    renderFolderMeta();
+    showToast("Переименовано");
+  };
+
+  const onKey = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      cleanup();
+      finish(true);
+    }
+    if (e.key === "Escape") {
+      e.preventDefault();
+      cleanup();
+      finish(false);
+    }
+  };
+  const onBlur = () => {
+    cleanup();
+    finish(true);
+  };
+
+  const cleanup = () => {
+    titleEl.removeEventListener("keydown", onKey);
+    titleEl.removeEventListener("blur", onBlur);
+  };
+
+  titleEl.addEventListener("keydown", onKey);
+  titleEl.addEventListener("blur", onBlur);
+}
+
+/* ---------- УДАЛЕНИЕ ПРОЕКТА ---------- */
+
+async function deleteActiveProject() {
+  if (!portfolio.project) return;
+  const ok = confirm(
+    `Удалить проект №${portfolio.project.project_number} «${portfolio.project.title}»?\nДействие необратимо.`,
+  );
+  if (!ok) return;
+
+  const fd = new FormData();
+  fd.append("project_id", portfolio.project.id);
+  const data = await api(API.deleteProject, { method: "POST", body: fd });
+  if (!data.ok) {
+    showToast(data.error || "Не удалось удалить", true);
+    return;
+  }
+
+  state.projects = state.projects.filter((p) => p.id !== portfolio.project.id);
+  state.projectItems.clear();
+  state.activeProjectId = data.data.next_active_id;
+
+  if (state.activeProjectId) {
+    await loadProjectItems(state.activeProjectId);
+    await loadPortfolioProject(state.activeProjectId);
+    applyAddedStates();
+    renderFolderMeta();
+    showToast("Проект удалён");
+  } else {
+    closePortfolio();
+    renderFolderMeta();
+    applyAddedStates();
+    showToast("Проект удалён");
+    setTimeout(() => openCreateModal(), 400);
+  }
+}
+
+/* ---------- ПЕРЕКЛЮЧЕНИЕ ПРОЕКТОВ ---------- */
+
+async function switchPortfolioProject(projectId) {
+  if (!projectId || projectId === portfolio.project?.id) return;
+  await setActiveProject(projectId);
+  await loadPortfolioProject(projectId);
+  await loadProjectItems(projectId);
+  applyAddedStates();
+  renderFolderMeta();
+}
+
+/* ---------- ОБРАБОТЧИКИ ---------- */
+
+function bindPortfolioEvents() {
+  if (!ensurePortfolioElements()) return;
+
+  $("#portfolioClose")?.addEventListener("click", closePortfolio);
+  $(".portfolio-overlay__backdrop")?.addEventListener("click", closePortfolio);
+
+  $("#portfolioRename")?.addEventListener("click", startRename);
+  $("#portfolioDelete")?.addEventListener("click", deleteActiveProject);
+
+  $("#portfolioSort")?.addEventListener("change", (e) => {
+    portfolio.sort = e.target.value;
+    renderPortfolioItems();
+  });
+
+  $("#portfolioNew")?.addEventListener("click", () => {
+    closePortfolio();
+    setTimeout(() => openCreateModal(), 420);
+  });
+
+  // табы проектов
+  $("#portfolioTabs")?.addEventListener("click", (e) => {
+    const tab = e.target.closest("[data-project-tab]");
+    if (!tab) return;
+    switchPortfolioProject(+tab.dataset.projectTab);
+  });
+
+  // клик по строке item — аккордеон
+  $("#portfolioItems")?.addEventListener("click", (e) => {
+    const row = e.target.closest(".pitem__row");
+    if (!row) return;
+    const pitem = row.closest(".pitem");
+    pitem?.classList.toggle("is-open");
+  });
+
+  // двойной клик по строке — удалить item
+  $("#portfolioItems")?.addEventListener("dblclick", async (e) => {
+    const row = e.target.closest(".pitem__row");
+    if (!row) return;
+    const pitem = row.closest(".pitem");
+    if (!pitem) return;
+    const type = pitem.dataset.itemType;
+    const id = +pitem.dataset.itemId;
+    const item = portfolio.items.find((x) => x.type === type && x.id === id);
+    if (!item) return;
+    const ok = confirm(`Удалить «${item.name}» из проекта?`);
+    if (!ok) return;
+
+    const fd = new FormData();
+    fd.append("project_id", portfolio.project.id);
+    fd.append("item_type", type);
+    fd.append("item_id", id);
+    const data = await api(API.removeItem, { method: "POST", body: fd });
+    if (!data.ok) {
+      showToast(data.error || "Не удалось убрать", true);
+      return;
+    }
+    portfolio.items = portfolio.items.filter(
+      (x) => !(x.type === type && x.id === id),
+    );
+    state.projectItems.delete(itemKey(type, id));
+    updateCardState(type, id, false);
+    bumpProjectItemsCount(-1);
+    renderPortfolioItems();
+    // пересчитать итог заново — дёрнем сервер (там логика)
+    const refreshed = await api(`${API.getProject}?id=${portfolio.project.id}`);
+    if (refreshed.ok) {
+      portfolio.items = refreshed.data.items;
+      portfolio.price = refreshed.data.price;
+      renderPortfolioTotal();
+      renderPortfolioItems();
+    }
+    renderFolderMeta();
+    showToast("Убрано из проекта");
+  });
+
+  // Esc
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && portfolio.overlay && !portfolio.overlay.hidden) {
+      if (document.activeElement?.isContentEditable) return; // не мешаем редактированию
+      closePortfolio();
+    }
+  });
+}
+
+/* ---------- ЗАМЕНА ОБРАБОТЧИКА КНОПКИ ПАПКИ ---------- */
+
+// удаляем старую заглушку, вешаем открытие оверлея
+function replaceFolderFrontHandler() {
+  const front = $("#folderFront");
+  if (!front) return;
+  const clone = front.cloneNode(true);
+  front.parentNode.replaceChild(clone, front);
+  clone.addEventListener("click", openPortfolio);
+}
+
+// запускаем после DOMContentLoaded, но init уже отработал — можно сразу
+document.addEventListener("DOMContentLoaded", () => {
+  bindPortfolioEvents();
+  replaceFolderFrontHandler();
+});

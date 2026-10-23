@@ -212,8 +212,7 @@ $userName = $_SESSION['user_name'] ?? '';
     </div>
   </div>
 
-  <!-- Оверлей портфолио подключается отдельным partial'ом на шаге 6 -->
-  <div id="portfolioModalRoot"></div>
+  <?php include __DIR__ . '/portfolio_modal.php'; ?>
 
   <!-- Тост -->
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
