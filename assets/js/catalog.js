@@ -21,8 +21,19 @@ const state = {
   projectItems: new Set(), // "building:12", "sheet:7"
   buildings: [],
   sheets: [],
-  pendingItem: null, // { type, id } — что добавить после создания проекта
+  pendingItem: null,
   filterTimer: null,
+};
+
+const portfolio = {
+  overlay: null,
+  panel: null,
+  project: null,
+  items: [],
+  price: null,
+  sort: "added_at",
+  page: 0,
+  pageSize: 15, // 3 колонки × 5 рядов
 };
 
 /* ============================================================
@@ -39,11 +50,24 @@ const fmtPrice = (n) =>
 
 const itemKey = (type, id) => `${type}:${id}`;
 
+function escapeHtml(s) {
+  return String(s ?? "").replace(
+    /[&<>"']/g,
+    (c) =>
+      ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;",
+      })[c],
+  );
+}
+
 async function api(url, options = {}) {
   try {
     const res = await fetch(url, options);
-    const data = await res.json();
-    return data;
+    return await res.json();
   } catch (err) {
     console.error("API error:", url, err);
     return { ok: false, error: "Нет связи с сервером" };
@@ -209,7 +233,7 @@ function resetFilters() {
 }
 
 /* ============================================================
-   РЕНДЕР
+   РЕНДЕР КАТАЛОГА
    ============================================================ */
 
 function stampSVG() {
@@ -338,7 +362,8 @@ function renderFolderMeta() {
     meta.textContent = "Нет проектов";
     return;
   }
-  meta.textContent = `Проект №${p.project_number} — ${p.title} — ${state.projectItems.size} лист.`;
+  const n = state.projectItems.size;
+  meta.textContent = `Проект №${p.project_number} — ${p.title} — ${n} лист.`;
 }
 
 function applyAddedStates() {
@@ -360,6 +385,93 @@ function updateCardState(type, id, added) {
 }
 
 /* ============================================================
+   ЛЕТЯЩИЙ ЛИСТ + ТОРЧАЩИЕ ЛИСТЫ + ПУЛЬС ПАПКИ
+   ============================================================ */
+
+function flyToFolder(fromRect) {
+  return new Promise((resolve) => {
+    const folder = document.getElementById("folderFront");
+    if (!folder) {
+      resolve();
+      return;
+    }
+
+    const toRect = folder.getBoundingClientRect();
+
+    const fly = document.createElement("div");
+    fly.className = "fly-sheet";
+    fly.style.left = fromRect.left + "px";
+    fly.style.top = fromRect.top + "px";
+    fly.style.width = Math.min(fromRect.width, 120) + "px";
+    fly.style.height = Math.min(fromRect.height, 90) + "px";
+    document.body.appendChild(fly);
+
+    const fromCX = fromRect.left + fromRect.width / 2;
+    const fromCY = fromRect.top + fromRect.height / 2;
+    const toCX = toRect.left + toRect.width / 2;
+    const toCY = toRect.top + toRect.height / 2;
+
+    const dx = toCX - fromCX;
+    const dy = toCY - fromCY;
+
+    const anim = fly.animate(
+      [
+        {
+          transform: "translate(0, 0) rotate(0) scale(1)",
+          opacity: 1,
+          offset: 0,
+        },
+        {
+          transform: `translate(${dx * 0.5}px, ${dy * 0.35 - 100}px) rotate(-10deg) scale(0.65)`,
+          opacity: 0.95,
+          offset: 0.5,
+        },
+        {
+          transform: `translate(${dx}px, ${dy}px) rotate(-22deg) scale(0.12)`,
+          opacity: 0,
+          offset: 1,
+        },
+      ],
+      { duration: 850, easing: "cubic-bezier(.3,0,.4,1)", fill: "forwards" },
+    );
+
+    anim.onfinish = () => {
+      fly.remove();
+      resolve();
+    };
+  });
+}
+
+function pulseFolder() {
+  const folder = document.getElementById("folderFront");
+  if (!folder) return;
+  folder.animate(
+    [
+      { transform: "translateY(-10px) scale(1)" },
+      { transform: "translateY(-14px) scale(1.06)" },
+      { transform: "translateY(-10px) scale(1)" },
+    ],
+    { duration: 420, easing: "cubic-bezier(.22,1,.36,1)" },
+  );
+}
+
+function renderFolderPapers() {
+  const wrap = document.getElementById("folderPapers");
+  if (!wrap) return;
+
+  const count = state.projectItems.size;
+  const paperCount = count === 0 ? 0 : Math.min(3, Math.ceil(count / 3));
+
+  wrap.innerHTML = "";
+  for (let i = 0; i < paperCount; i++) {
+    const p = document.createElement("div");
+    p.className = "folder-stack__paper";
+    p.style.setProperty("--i", i);
+    wrap.appendChild(p);
+  }
+}
+
+/* ============================================================
    ЭКШЕНЫ — добавить / удалить
    ============================================================ */
 
@@ -370,6 +482,12 @@ async function handleAdd(type, id) {
     return;
   }
   if (state.projectItems.has(itemKey(type, id))) return;
+
+  const selector = type === "building" ? ".b-card" : ".sheet-card";
+  const cardEl = document.querySelector(
+    `${selector}[data-type="${type}"][data-id="${id}"]`,
+  );
+  const fromRect = cardEl ? cardEl.getBoundingClientRect() : null;
 
   const fd = new FormData();
   fd.append("project_id", state.activeProjectId);
@@ -390,6 +508,14 @@ async function handleAdd(type, id) {
   updateCardState(type, id, true);
   bumpProjectItemsCount(+1);
   renderFolderMeta();
+  renderFolderPapers();
+
+  if (fromRect) {
+    flyToFolder(fromRect).then(() => pulseFolder());
+  } else {
+    pulseFolder();
+  }
+
   showToast("Добавлено в проект");
 }
 
@@ -412,6 +538,7 @@ async function handleRemove(type, id) {
   updateCardState(type, id, false);
   bumpProjectItemsCount(-1);
   renderFolderMeta();
+  renderFolderPapers();
   showToast("Убрано из проекта");
 }
 
@@ -443,6 +570,7 @@ async function createNewProject(title) {
   state.activeProjectId = data.data.id;
   state.projectItems.clear();
   renderFolderMeta();
+  renderFolderPapers();
   showToast(`Проект №${data.data.project_number} создан`);
 
   if (state.pendingItem) {
@@ -464,6 +592,7 @@ async function setActiveProject(projectId) {
   await loadProjectItems(projectId);
   applyAddedStates();
   renderFolderMeta();
+  renderFolderPapers();
 }
 
 /* ============================================================
@@ -495,158 +624,8 @@ async function submitCreateModal() {
 }
 
 /* ============================================================
-   СОБЫТИЯ
+   ПОРТФОЛИО — FLIP
    ============================================================ */
-
-function bindEvents() {
-  /* Фильтры */
-  [
-    "fStyle",
-    "fArea",
-    "fFloors",
-    "fBedrooms",
-    "fBathrooms",
-    "fGarage",
-    "fMaterial",
-    "fRoof",
-    "fPriceMin",
-    "fPriceMax",
-    "fSort",
-  ].forEach((id) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.addEventListener("input", onFiltersChanged);
-    el.addEventListener("change", onFiltersChanged);
-  });
-  $$('#fFeatures input[type="checkbox"]').forEach((cb) =>
-    cb.addEventListener("change", onFiltersChanged),
-  );
-
-  $("#resetFilters")?.addEventListener("click", resetFilters);
-  $("#emptyReset")?.addEventListener("click", resetFilters);
-
-  /* Табы */
-  $$(".catalog-tab").forEach((tab) => {
-    tab.addEventListener("click", () => {
-      $$(".catalog-tab").forEach((t) =>
-        t.classList.toggle("is-active", t === tab),
-      );
-      $$(".catalog-panel").forEach((p) => {
-        p.classList.toggle("is-active", p.id === `panel-${tab.dataset.tab}`);
-      });
-    });
-  });
-
-  /* Клик по карточкам (делегирование) */
-  document.addEventListener("click", (e) => {
-    const removeBtn = e.target.closest("[data-remove]");
-    if (removeBtn) {
-      e.stopPropagation();
-      const card = removeBtn.closest("[data-type][data-id]");
-      if (!card) return;
-      handleRemove(card.dataset.type, +card.dataset.id);
-      return;
-    }
-
-    const card = e.target.closest(".b-card, .sheet-card");
-    if (card) {
-      handleAdd(card.dataset.type, +card.dataset.id);
-    }
-  });
-
-  /* Модалка создания */
-  $("#createProjectSubmit")?.addEventListener("click", submitCreateModal);
-  $("#newProjectTitle")?.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      submitCreateModal();
-    }
-  });
-  $$("[data-close-modal]").forEach((el) =>
-    el.addEventListener("click", closeCreateModal),
-  );
-
-  /* Стопка папок — клик по кнопке «+» и по «front» */
-  $("#folderAddBtn")?.addEventListener("click", (e) => {
-    e.stopPropagation();
-    openCreateModal();
-  });
-  $("#folderFront")?.addEventListener("click", () => {
-    // TODO шаг 6: здесь будет открытие полноэкранного оверлея
-    if (!state.activeProjectId) {
-      openCreateModal();
-      return;
-    }
-    const p = state.projects.find((x) => x.id === state.activeProjectId);
-    showToast(
-      `Проект №${p?.project_number || "?"} — ${state.projectItems.size} листов`,
-    );
-  });
-
-  /* Esc — закрыть модалку */
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      const modal = $("#createProjectModal");
-      if (modal && !modal.hasAttribute("hidden")) closeCreateModal();
-    }
-  });
-}
-
-/* ============================================================
-   ИНИЦИАЛИЗАЦИЯ
-   ============================================================ */
-
-function escapeHtml(s) {
-  return String(s ?? "").replace(
-    /[&<>"']/g,
-    (c) =>
-      ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;",
-      })[c],
-  );
-}
-
-async function init() {
-  readFiltersFromURL();
-  bindEvents();
-
-  await loadProjects();
-
-  if (state.activeProjectId) {
-    await loadProjectItems(state.activeProjectId);
-  }
-
-  await Promise.all([loadBuildings(), loadSheets()]);
-
-  renderBuildings();
-  renderSheets();
-  renderFolderMeta();
-
-  // если у пользователя нет ни одного проекта — показать модалку
-  if (state.projects.length === 0) {
-    setTimeout(() => openCreateModal(), 400);
-  }
-}
-
-document.addEventListener("DOMContentLoaded", init);
-
-/* ============================================================
-   ШАГ 6 — ПОЛНОЭКРАННЫЙ ОВЕРЛЕЙ ПАПКИ
-   ============================================================ */
-
-const portfolio = {
-  overlay: null,
-  panel: null,
-  project: null, // { id, project_number, title }
-  items: [],
-  price: null,
-  sort: "added_at",
-  cachedProjects: null,
-};
 
 function ensurePortfolioElements() {
   if (portfolio.overlay) return true;
@@ -654,8 +633,6 @@ function ensurePortfolioElements() {
   portfolio.panel = $("#portfolioPanel");
   return !!portfolio.overlay;
 }
-
-/* ---------- FLIP ---------- */
 
 function canFlip() {
   return (
@@ -666,7 +643,6 @@ function canFlip() {
 
 function flipOpen() {
   if (!ensurePortfolioElements()) return;
-
   const front = $("#folderFront");
   if (!front || !canFlip()) {
     portfolio.overlay.hidden = false;
@@ -701,7 +677,6 @@ function flipOpen() {
 
 function flipClose(onDone) {
   if (!ensurePortfolioElements()) return;
-
   const front = $("#folderFront");
   if (!front || !canFlip()) {
     portfolio.overlay.hidden = true;
@@ -738,7 +713,9 @@ function flipClose(onDone) {
   };
 }
 
-/* ---------- РЕНДЕР ---------- */
+/* ============================================================
+   ПОРТФОЛИО — РЕНДЕР
+   ============================================================ */
 
 function renderPortfolioTabs() {
   const wrap = $("#portfolioTabs");
@@ -770,25 +747,11 @@ function renderPortfolioHeader() {
   if (number) number.textContent = `№${portfolio.project.project_number}`;
 }
 
-function renderPortfolioItems() {
-  const wrap = $("#portfolioItems");
-  if (!wrap) return;
-
-  if (!portfolio.items.length) {
-    wrap.innerHTML = `
-      <div class="portfolio-empty">
-        <p class="portfolio-empty__title">В проекте пока нет листов</p>
-        <p class="portfolio-empty__text">Добавьте здание или лист из каталога.</p>
-      </div>`;
-    return;
-  }
-
-  const sorted = [...portfolio.items].sort((a, b) => {
+function getSortedItems() {
+  return [...portfolio.items].sort((a, b) => {
     if (portfolio.sort === "price") {
-      const pa =
-        a.type === "building" ? a.price_override || a.base_price || 0 : 0;
-      const pb =
-        b.type === "building" ? b.price_override || b.base_price || 0 : 0;
+      const pa = a.type === "building" ? a.base_price || 0 : 0;
+      const pb = b.type === "building" ? b.base_price || 0 : 0;
       return pb - pa;
     }
     if (portfolio.sort === "name") {
@@ -796,67 +759,87 @@ function renderPortfolioItems() {
     }
     return new Date(a.added_at) - new Date(b.added_at);
   });
-
-  wrap.innerHTML = sorted.map((it) => renderPortfolioItem(it)).join("");
 }
 
-function renderPortfolioItem(it) {
+function renderPCard(it) {
   const isBuilding = it.type === "building";
-  const thumb = it.image_path
+  const previewInner = it.image_path
     ? `<img src="../${it.image_path}" alt="">`
     : isBuilding
       ? "ДОМ"
       : "ЛИСТ";
 
-  const typeBadge = isBuilding
-    ? '<span class="pitem__type pitem__type--building">Здание</span>'
-    : '<span class="pitem__type pitem__type--sheet">Лист</span>';
-
-  const meta = isBuilding
-    ? `${it.area_m2} м² · ${it.floors} эт. · ${it.bedrooms} спал.`
-    : it.description || "Настройка проекта";
-
-  const price = isBuilding ? fmtPrice(it.base_price) : "";
-
-  const details = isBuilding
-    ? `<ul class="pitem__expand-list">
-        <li>${it.bathrooms} с/у</li>
-        <li>${it.wall_material || "—"}</li>
-        <li>${it.roof_type || "—"}</li>
-        ${(it.extra_features || []).map((f) => `<li>${f}</li>`).join("")}
-      </ul>`
-    : `<p>${escapeHtml(it.description || "")}</p>`;
+  const badge = isBuilding ? "Здание" : "Лист";
+  const price = isBuilding
+    ? `<span class="pcard__price">${fmtPrice(it.base_price)}</span>`
+    : "";
 
   return `
-    <div class="pitem" data-item-type="${it.type}" data-item-id="${it.id}">
-      <div class="pitem__row">
-        <div class="pitem__thumb">${thumb}</div>
-        <div class="pitem__info">
-          <h4 class="pitem__name">${escapeHtml(it.name || "—")}</h4>
-          <p class="pitem__meta">${escapeHtml(meta)}</p>
-        </div>
-        ${typeBadge}
-        <span class="pitem__price">${price}</span>
+    <div class="pcard" data-item-type="${it.type}" data-item-id="${it.id}">
+      <button type="button" class="pcard__remove" data-pcard-remove aria-label="Удалить">×</button>
+      <div class="pcard__preview">
+        <span class="pcard__badge">${badge}</span>
+        ${previewInner}
+        ${price}
       </div>
-      <div class="pitem__expand">${details}</div>
+      <div class="pcard__body">
+        <h4 class="pcard__title">${escapeHtml(it.name || "—")}</h4>
+      </div>
     </div>`;
+}
+
+function renderPortfolioGrid() {
+  const grid = document.getElementById("portfolioGrid");
+  const pagination = document.getElementById("portfolioPagination");
+  const pageInfo = document.getElementById("portfolioPageInfo");
+  if (!grid) return;
+
+  const sorted = getSortedItems();
+
+  if (!sorted.length) {
+    grid.innerHTML = `
+      <div class="portfolio-empty">
+        <p class="portfolio-empty__title">В проекте пока нет листов</p>
+        <p class="portfolio-empty__text">Добавьте здание или лист из каталога.</p>
+      </div>`;
+    if (pagination) pagination.hidden = true;
+    return;
+  }
+
+  const totalPages = Math.max(1, Math.ceil(sorted.length / portfolio.pageSize));
+  if (portfolio.page >= totalPages) portfolio.page = totalPages - 1;
+  if (portfolio.page < 0) portfolio.page = 0;
+
+  const start = portfolio.page * portfolio.pageSize;
+  const pageItems = sorted.slice(start, start + portfolio.pageSize);
+
+  grid.innerHTML = pageItems.map(renderPCard).join("");
+
+  if (pagination) pagination.hidden = totalPages <= 1;
+  if (pageInfo) pageInfo.textContent = `${portfolio.page + 1} / ${totalPages}`;
+
+  const prev = document.querySelector("[data-page-prev]");
+  const next = document.querySelector("[data-page-next]");
+  if (prev) prev.disabled = portfolio.page === 0;
+  if (next) next.disabled = portfolio.page >= totalPages - 1;
 }
 
 function renderPortfolioTotal() {
   const el = $("#portfolioTotal");
   if (!el) return;
-  const total = portfolio.price?.total || 0;
-  el.textContent = fmtPrice(total);
+  el.textContent = fmtPrice(portfolio.price?.total || 0);
 }
 
 function renderPortfolioAll() {
   renderPortfolioHeader();
   renderPortfolioTabs();
-  renderPortfolioItems();
+  renderPortfolioGrid();
   renderPortfolioTotal();
 }
 
-/* ---------- ЗАГРУЗКА ---------- */
+/* ============================================================
+   ПОРТФОЛИО — ЗАГРУЗКА
+   ============================================================ */
 
 async function loadPortfolioProject(projectId) {
   if (!projectId) {
@@ -875,10 +858,13 @@ async function loadPortfolioProject(projectId) {
   portfolio.project = data.data.project;
   portfolio.items = data.data.items;
   portfolio.price = data.data.price;
+  portfolio.page = 0;
   renderPortfolioAll();
 }
 
-/* ---------- ОТКРЫТИЕ / ЗАКРЫТИЕ ---------- */
+/* ============================================================
+   ПОРТФОЛИО — ОТКРЫТИЕ / ЗАКРЫТИЕ
+   ============================================================ */
 
 async function openPortfolio() {
   if (!state.activeProjectId) {
@@ -898,7 +884,98 @@ function closePortfolio() {
   });
 }
 
-/* ---------- ПЕРЕИМЕНОВАНИЕ ---------- */
+/* ============================================================
+   ПОРТФОЛИО — ДЕТАЛИ КУБИКА
+   ============================================================ */
+
+function openItemDetails(type, id) {
+  const item = portfolio.items.find((x) => x.type === type && x.id === id);
+  if (!item) return;
+
+  const modal = document.getElementById("portfolioDetails");
+  const preview = document.getElementById("pdetailsPreview");
+  const content = document.getElementById("pdetailsContent");
+  const removeBtn = document.getElementById("pdetailsRemove");
+  if (!modal || !preview || !content) return;
+
+  const isBuilding = type === "building";
+
+  preview.innerHTML = item.image_path
+    ? `<img src="../${item.image_path}" alt="">`
+    : isBuilding
+      ? "ЗДАНИЕ"
+      : "ЛИСТ";
+
+  let html = `<h3 class="pdetails__title">${escapeHtml(item.name || "—")}</h3>`;
+  html += `<p class="pdetails__meta">${isBuilding ? "Здание" : "Лист справочника"}</p>`;
+
+  if (isBuilding) {
+    html += `<p class="pdetails__desc">Площадь ${item.area_m2} м² · ${item.floors} эт. · ${item.bedrooms} спал. · ${item.bathrooms} с/у</p>`;
+    html += `<dl class="pdetails__specs">
+      <div><dt>Стиль</dt><dd>${escapeHtml(item.style || "—")}</dd></div>
+      <div><dt>Материал</dt><dd>${escapeHtml(item.wall_material || "—")}</dd></div>
+      <div><dt>Кровля</dt><dd>${escapeHtml(item.roof_type || "—")}</dd></div>
+      <div><dt>Гараж</dt><dd>${escapeHtml(item.garage || "—")}</dd></div>
+      <div><dt>Цена</dt><dd>${fmtPrice(item.base_price)}</dd></div>
+    </dl>`;
+  } else {
+    html += `<p class="pdetails__desc">${escapeHtml(item.description || "")}</p>`;
+  }
+
+  content.innerHTML = html;
+
+  if (removeBtn) {
+    removeBtn.onclick = () => {
+      if (confirm(`Удалить «${item.name}» из проекта?`)) {
+        removePortfolioItem(type, id);
+      }
+    };
+  }
+
+  modal.hidden = false;
+}
+
+function closeItemDetails() {
+  document.getElementById("portfolioDetails")?.setAttribute("hidden", "");
+}
+
+async function removePortfolioItem(type, id) {
+  const item = portfolio.items.find((x) => x.type === type && x.id === id);
+  if (!item) return;
+  const ok = confirm(`Удалить «${item.name}» из проекта?`);
+  if (!ok) return;
+
+  const fd = new FormData();
+  fd.append("project_id", portfolio.project.id);
+  fd.append("item_type", type);
+  fd.append("item_id", id);
+  const data = await api(API.removeItem, { method: "POST", body: fd });
+  if (!data.ok) {
+    showToast(data.error || "Не удалось убрать", true);
+    return;
+  }
+
+  state.projectItems.delete(itemKey(type, id));
+  updateCardState(type, id, false);
+  bumpProjectItemsCount(-1);
+
+  const refreshed = await api(`${API.getProject}?id=${portfolio.project.id}`);
+  if (refreshed.ok) {
+    portfolio.items = refreshed.data.items;
+    portfolio.price = refreshed.data.price;
+  }
+
+  renderPortfolioGrid();
+  renderPortfolioTotal();
+  renderFolderMeta();
+  renderFolderPapers();
+  closeItemDetails();
+  showToast("Убрано из проекта");
+}
+
+/* ============================================================
+   ПОРТФОЛИО — ПЕРЕИМЕНОВАНИЕ
+   ============================================================ */
 
 function startRename() {
   const titleEl = $("#portfolioTitle");
@@ -909,7 +986,6 @@ function startRename() {
   titleEl.classList.add("portfolio-panel__title--editing");
   titleEl.focus();
 
-  // выделить всё
   const range = document.createRange();
   range.selectNodeContents(titleEl);
   const sel = window.getSelection();
@@ -968,7 +1044,9 @@ function startRename() {
   titleEl.addEventListener("blur", onBlur);
 }
 
-/* ---------- УДАЛЕНИЕ ПРОЕКТА ---------- */
+/* ============================================================
+   ПОРТФОЛИО — УДАЛЕНИЕ ПРОЕКТА
+   ============================================================ */
 
 async function deleteActiveProject() {
   if (!portfolio.project) return;
@@ -994,17 +1072,21 @@ async function deleteActiveProject() {
     await loadPortfolioProject(state.activeProjectId);
     applyAddedStates();
     renderFolderMeta();
+    renderFolderPapers();
     showToast("Проект удалён");
   } else {
     closePortfolio();
     renderFolderMeta();
+    renderFolderPapers();
     applyAddedStates();
     showToast("Проект удалён");
     setTimeout(() => openCreateModal(), 400);
   }
 }
 
-/* ---------- ПЕРЕКЛЮЧЕНИЕ ПРОЕКТОВ ---------- */
+/* ============================================================
+   ПОРТФОЛИО — ПЕРЕКЛЮЧЕНИЕ ПРОЕКТОВ
+   ============================================================ */
 
 async function switchPortfolioProject(projectId) {
   if (!projectId || projectId === portfolio.project?.id) return;
@@ -1013,9 +1095,12 @@ async function switchPortfolioProject(projectId) {
   await loadProjectItems(projectId);
   applyAddedStates();
   renderFolderMeta();
+  renderFolderPapers();
 }
 
-/* ---------- ОБРАБОТЧИКИ ---------- */
+/* ============================================================
+   ПОРТФОЛИО — ОБРАБОТЧИКИ
+   ============================================================ */
 
 function bindPortfolioEvents() {
   if (!ensurePortfolioElements()) return;
@@ -1028,7 +1113,8 @@ function bindPortfolioEvents() {
 
   $("#portfolioSort")?.addEventListener("change", (e) => {
     portfolio.sort = e.target.value;
-    renderPortfolioItems();
+    portfolio.page = 0;
+    renderPortfolioGrid();
   });
 
   $("#portfolioNew")?.addEventListener("click", () => {
@@ -1036,84 +1122,175 @@ function bindPortfolioEvents() {
     setTimeout(() => openCreateModal(), 420);
   });
 
-  // табы проектов
   $("#portfolioTabs")?.addEventListener("click", (e) => {
     const tab = e.target.closest("[data-project-tab]");
     if (!tab) return;
     switchPortfolioProject(+tab.dataset.projectTab);
   });
 
-  // клик по строке item — аккордеон
-  $("#portfolioItems")?.addEventListener("click", (e) => {
-    const row = e.target.closest(".pitem__row");
-    if (!row) return;
-    const pitem = row.closest(".pitem");
-    pitem?.classList.toggle("is-open");
-  });
-
-  // двойной клик по строке — удалить item
-  $("#portfolioItems")?.addEventListener("dblclick", async (e) => {
-    const row = e.target.closest(".pitem__row");
-    if (!row) return;
-    const pitem = row.closest(".pitem");
-    if (!pitem) return;
-    const type = pitem.dataset.itemType;
-    const id = +pitem.dataset.itemId;
-    const item = portfolio.items.find((x) => x.type === type && x.id === id);
-    if (!item) return;
-    const ok = confirm(`Удалить «${item.name}» из проекта?`);
-    if (!ok) return;
-
-    const fd = new FormData();
-    fd.append("project_id", portfolio.project.id);
-    fd.append("item_type", type);
-    fd.append("item_id", id);
-    const data = await api(API.removeItem, { method: "POST", body: fd });
-    if (!data.ok) {
-      showToast(data.error || "Не удалось убрать", true);
+  // клик по кубику — открыть детали или удалить
+  document.getElementById("portfolioGrid")?.addEventListener("click", (e) => {
+    const removeBtn = e.target.closest("[data-pcard-remove]");
+    if (removeBtn) {
+      e.stopPropagation();
+      const card = removeBtn.closest(".pcard");
+      if (!card) return;
+      removePortfolioItem(card.dataset.itemType, +card.dataset.itemId);
       return;
     }
-    portfolio.items = portfolio.items.filter(
-      (x) => !(x.type === type && x.id === id),
-    );
-    state.projectItems.delete(itemKey(type, id));
-    updateCardState(type, id, false);
-    bumpProjectItemsCount(-1);
-    renderPortfolioItems();
-    // пересчитать итог заново — дёрнем сервер (там логика)
-    const refreshed = await api(`${API.getProject}?id=${portfolio.project.id}`);
-    if (refreshed.ok) {
-      portfolio.items = refreshed.data.items;
-      portfolio.price = refreshed.data.price;
-      renderPortfolioTotal();
-      renderPortfolioItems();
-    }
-    renderFolderMeta();
-    showToast("Убрано из проекта");
+    const card = e.target.closest(".pcard");
+    if (card) openItemDetails(card.dataset.itemType, +card.dataset.itemId);
   });
 
-  // Esc
+  // пагинация
+  document.querySelector("[data-page-prev]")?.addEventListener("click", () => {
+    if (portfolio.page > 0) {
+      portfolio.page--;
+      renderPortfolioGrid();
+    }
+  });
+  document.querySelector("[data-page-next]")?.addEventListener("click", () => {
+    const total = Math.ceil(getSortedItems().length / portfolio.pageSize);
+    if (portfolio.page < total - 1) {
+      portfolio.page++;
+      renderPortfolioGrid();
+    }
+  });
+
+  // закрытие модалки деталей
+  $$("[data-close-details]").forEach((el) =>
+    el.addEventListener("click", closeItemDetails),
+  );
+
+  // Esc — приоритет у модалки деталей
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && portfolio.overlay && !portfolio.overlay.hidden) {
-      if (document.activeElement?.isContentEditable) return; // не мешаем редактированию
+    if (e.key !== "Escape") return;
+    if (portfolio.overlay && !portfolio.overlay.hidden) {
+      if (document.activeElement?.isContentEditable) return;
+      const details = document.getElementById("portfolioDetails");
+      if (details && !details.hidden) {
+        closeItemDetails();
+        return;
+      }
       closePortfolio();
     }
   });
 }
 
-/* ---------- ЗАМЕНА ОБРАБОТЧИКА КНОПКИ ПАПКИ ---------- */
+/* ============================================================
+   ГЛАВНЫЕ СОБЫТИЯ КАТАЛОГА
+   ============================================================ */
 
-// удаляем старую заглушку, вешаем открытие оверлея
-function replaceFolderFrontHandler() {
-  const front = $("#folderFront");
-  if (!front) return;
-  const clone = front.cloneNode(true);
-  front.parentNode.replaceChild(clone, front);
-  clone.addEventListener("click", openPortfolio);
+function bindEvents() {
+  [
+    "fStyle",
+    "fArea",
+    "fFloors",
+    "fBedrooms",
+    "fBathrooms",
+    "fGarage",
+    "fMaterial",
+    "fRoof",
+    "fPriceMin",
+    "fPriceMax",
+    "fSort",
+  ].forEach((id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener("input", onFiltersChanged);
+    el.addEventListener("change", onFiltersChanged);
+  });
+  $$('#fFeatures input[type="checkbox"]').forEach((cb) =>
+    cb.addEventListener("change", onFiltersChanged),
+  );
+
+  $("#resetFilters")?.addEventListener("click", resetFilters);
+  $("#emptyReset")?.addEventListener("click", resetFilters);
+
+  $$(".catalog-tab").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      $$(".catalog-tab").forEach((t) =>
+        t.classList.toggle("is-active", t === tab),
+      );
+      $$(".catalog-panel").forEach((p) => {
+        p.classList.toggle("is-active", p.id === `panel-${tab.dataset.tab}`);
+      });
+    });
+  });
+
+  // клики по карточкам каталога
+  document.addEventListener("click", (e) => {
+    const removeBtn = e.target.closest("[data-remove]");
+    if (removeBtn) {
+      e.stopPropagation();
+      const card = removeBtn.closest("[data-type][data-id]");
+      if (!card) return;
+      handleRemove(card.dataset.type, +card.dataset.id);
+      return;
+    }
+    const card = e.target.closest(".b-card, .sheet-card");
+    if (card) handleAdd(card.dataset.type, +card.dataset.id);
+  });
+
+  $("#createProjectSubmit")?.addEventListener("click", submitCreateModal);
+  $("#newProjectTitle")?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      submitCreateModal();
+    }
+  });
+  $$("[data-close-modal]").forEach((el) =>
+    el.addEventListener("click", closeCreateModal),
+  );
+
+  $("#folderAddBtn")?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    openCreateModal();
+  });
+
+  // Esc закрывает модалку создания
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    const modal = $("#createProjectModal");
+    if (modal && !modal.hasAttribute("hidden")) closeCreateModal();
+  });
 }
 
-// запускаем после DOMContentLoaded, но init уже отработал — можно сразу
+/* ============================================================
+   ИНИЦИАЛИЗАЦИЯ
+   ============================================================ */
+
+async function init() {
+  readFiltersFromURL();
+  bindEvents();
+
+  await loadProjects();
+
+  if (state.activeProjectId) {
+    await loadProjectItems(state.activeProjectId);
+  }
+
+  await Promise.all([loadBuildings(), loadSheets()]);
+
+  renderBuildings();
+  renderSheets();
+  renderFolderMeta();
+  renderFolderPapers();
+
+  if (state.projects.length === 0) {
+    setTimeout(() => openCreateModal(), 400);
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+  init();
   bindPortfolioEvents();
-  replaceFolderFrontHandler();
+
+  // вешаем клик на папку (снимаем старый, если был)
+  const front = $("#folderFront");
+  if (front) {
+    const clone = front.cloneNode(true);
+    front.parentNode.replaceChild(clone, front);
+    clone.addEventListener("click", openPortfolio);
+  }
 });

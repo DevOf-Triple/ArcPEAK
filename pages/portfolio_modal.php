@@ -26,7 +26,13 @@
       </select>
     </div>
 
-    <div class="portfolio-items" id="portfolioItems"></div>
+    <div class="portfolio-grid" id="portfolioGrid"></div>
+
+    <div class="portfolio-pagination" id="portfolioPagination" hidden>
+      <button type="button" class="portfolio-page-btn" data-page-prev aria-label="Предыдущая">←</button>
+      <span class="portfolio-page-info" id="portfolioPageInfo">1 / 1</span>
+      <button type="button" class="portfolio-page-btn" data-page-next aria-label="Следующая">→</button>
+    </div>
 
     <footer class="portfolio-footer">
       <div class="portfolio-total">
@@ -35,5 +41,18 @@
       </div>
       <button type="button" class="portfolio-new-btn" id="portfolioNew">+ Новый проект</button>
     </footer>
+  </div>
+
+  <!-- Модалка деталей — вложена в оверлей, поверх панели -->
+  <div class="pdetails" id="portfolioDetails" hidden>
+    <div class="pdetails__backdrop" data-close-details></div>
+    <div class="pdetails__window" role="dialog">
+      <button type="button" class="pdetails__close" data-close-details aria-label="Закрыть">×</button>
+      <div class="pdetails__preview" id="pdetailsPreview"></div>
+      <div class="pdetails__content" id="pdetailsContent"></div>
+      <div class="pdetails__actions">
+        <button type="button" class="pdetails__btn pdetails__btn--danger" id="pdetailsRemove">Удалить из проекта</button>
+      </div>
+    </div>
   </div>
 </div>

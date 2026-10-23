@@ -188,6 +188,7 @@ $userName = $_SESSION['user_name'] ?? '';
     <div class="folder-stack__layer folder-stack__layer--3"></div>
     <div class="folder-stack__layer folder-stack__layer--2"></div>
     <div class="folder-stack__layer folder-stack__layer--1"></div>
+    <div class="folder-stack__papers" id="folderPapers"></div>
     <button type="button" class="folder-stack__front" id="folderFront">
       <span class="folder-stack__title">Мои проекты</span>
       <span class="folder-stack__meta" id="folderMeta">Нет проектов</span>
