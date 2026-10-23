@@ -12,7 +12,24 @@ body {
   font-family: "Onest", sans-serif;
   font-size: 16px;
   line-height: 1.6;
-  background: #cfc9c5;
+  background-color: #edeae2;
+  background-image:
+    radial-gradient(
+      ellipse 90% 70% at 12% 0%,
+      rgba(221, 189, 132, 0.25) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 75% 60% at 92% 100%,
+      rgba(153, 82, 58, 0.12) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 60% 50% at 50% 50%,
+      rgba(255, 253, 247, 0.55) 0%,
+      transparent 70%
+    );
+  background-attachment: fixed;
   color: #3a352d;
   min-height: 100vh;
   padding: 40px 24px 80px;
@@ -20,16 +37,83 @@ body {
   overflow-x: hidden;
 }
 
-/* лёгкое зерно, чтоб фон не был плоским */
+/* зерно ослабил: было 0.18, стало 0.10 - не грязнит, как будто это радиационный фон лол*/
 body::after {
   content: "";
   position: fixed;
   inset: 0;
   z-index: 200;
   pointer-events: none;
-  opacity: 0.12;
+  opacity: 0.1;
   mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ===== АНИМИРОВАННЫЙ ФОН ===== */
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bg::before,
+.bg::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  will-change: transform;
+}
+
+.bg::before {
+  width: 520px;
+  height: 520px;
+  top: 8%;
+  left: 5%;
+  background: rgba(221, 189, 132, 0.32);
+  animation: blobDrift1 32s ease-in-out infinite alternate;
+}
+
+.bg::after {
+  width: 460px;
+  height: 460px;
+  bottom: 10%;
+  right: 6%;
+  background: rgba(153, 82, 58, 0.16);
+  animation: blobDrift2 38s ease-in-out infinite alternate;
+}
+
+@keyframes blobDrift1 {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(70px, -60px) scale(1.12);
+  }
+  100% {
+    transform: translate(-40px, 50px) scale(0.94);
+  }
+}
+
+@keyframes blobDrift2 {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-80px, -40px) scale(1.18);
+  }
+  100% {
+    transform: translate(60px, 70px) scale(0.9);
+  }
+}
+
+/* контент над блобами */
+.page__back,
+.page__main {
+  position: relative;
+  z-index: 1;
 }
 
 /* ===== НАВИГАЦИЯ НАЗАД ===== */
@@ -178,8 +262,9 @@ body::after {
   display: flex;
   flex-direction: column;
   padding: 36px 32px 30px;
-  background: #f4ede0; /* тёплый крем вместо белого */
-  border: 1px solid rgba(42, 36, 28, 0.08);
+  background: #faf6ec;                          /* чуть светлее и чище — было #f4ede0 */
+  border: 1px solid rgba(42, 36, 28, 0.1);      /* было .08 */
+  box-shadow: 0 2px 6px rgba(42, 36, 28, 0.03); /* базовая тень, чтоб карточка "стояла" */
   overflow: hidden;
   transition:
     transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
