@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="../assets/css/reviews.css">
 </head>
 <body>
+  <div class="bg" aria-hidden="true"></div>
   <a href="index.php" class="page__back">< На главную</a>
 
   <main class="page__main">
