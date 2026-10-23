@@ -17,8 +17,22 @@ body {
   min-height: 100vh;
   padding: 40px 24px 80px;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
+/* лёгкое зерно, чтоб фон не был плоским */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  pointer-events: none;
+  opacity: 0.12;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ===== НАВИГАЦИЯ НАЗАД ===== */
 .page__back {
   display: inline-block;
   margin-bottom: 40px;
@@ -36,81 +50,340 @@ body {
 }
 
 .page__main {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
+}
+
+/* ===== HERO ===== */
+.reviews-hero {
+  position: relative;
+  margin-bottom: 56px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid rgba(42, 36, 28, 0.15);
+}
+
+.reviews-hero::before {
+  content: "";
+  position: absolute;
+  top: -60px;
+  left: -80px;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(221, 189, 132, 0.35) 0%,
+    transparent 65%
+  );
+  pointer-events: none;
+  z-index: -1;
+}
+
+.reviews-hero__inner {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.reviews-hero__score {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reviews-hero__number {
+  font-family: "Unbounded", sans-serif;
+  font-weight: 600;
+  font-size: clamp(64px, 10vw, 120px);
+  line-height: 0.9;
+  letter-spacing: -4px;
+  color: #99523a;
+}
+
+.reviews-hero__stars {
+  display: flex;
+  gap: 4px;
+  font-size: 22px;
+  color: #99523a;
+}
+.reviews-hero__stars span {
+  display: inline-block;
+  animation: starTwinkle 3.6s ease-in-out infinite;
+}
+.reviews-hero__stars span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.reviews-hero__stars span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.reviews-hero__stars span:nth-child(4) {
+  animation-delay: 0.45s;
+}
+.reviews-hero__stars span:nth-child(5) {
+  animation-delay: 0.6s;
+}
+
+@keyframes starTwinkle {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.92);
+  }
+}
+
+.reviews-hero__label {
+  font-size: 15px;
+  color: #5a5246;
+  line-height: 1.6;
+}
+.reviews-hero__label strong {
+  display: inline-block;
+  margin-top: 4px;
+  font-family: "Unbounded", sans-serif;
+  font-weight: 500;
+  font-size: 17px;
+  color: #2a241c;
 }
 
 .page__title {
   font-family: "Unbounded", sans-serif;
   font-weight: 500;
-  font-size: clamp(32px, 5vw, 56px);
-  line-height: 1.1;
-  letter-spacing: -0.5px;
-  margin-bottom: 48px;
+  font-size: clamp(36px, 5.5vw, 64px);
+  line-height: 1.08;
+  letter-spacing: -0.6px;
+  color: #2a241c;
 }
 .page__title em {
   font-style: normal;
+  font-weight: 700;
   color: #99523a;
 }
 
-/* карточки отзывов */
+/* ===== СЕТКА ОТЗЫВОВ ===== */
 .reviews {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 24px;
 }
 
+/* ===== КАРТОЧКА ОТЗЫВА ===== */
 .review {
-  padding: 32px;
-  background: #fff;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 36px 32px 30px;
+  background: #f4ede0; /* тёплый крем вместо белого */
   border: 1px solid rgba(42, 36, 28, 0.08);
+  overflow: hidden;
   transition:
-    transform 0.35s ease,
-    box-shadow 0.35s ease;
-}
-.review:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(42, 36, 28, 0.08);
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.45s ease,
+    border-color 0.35s ease;
 }
 
-.review__head {
+/* гигантская декоративная кавычка на фоне */
+.review::before {
+  content: "\201C"; /* „ */
+  position: absolute;
+  top: -32px;
+  right: 10px;
+  font-family: "Unbounded", serif;
+  font-size: 160px;
+  line-height: 1;
+  color: #99523a;
+  opacity: 0.08;
+  pointer-events: none;
+  transition:
+    opacity 0.45s ease,
+    transform 0.45s ease;
+}
+
+/* золотая линия слева — растёт при hover */
+.review::after {
+  content: "";
+  position: absolute;
+  top: 20%;
+  bottom: 20%;
+  left: 0;
+  width: 3px;
+  background: linear-gradient(180deg, transparent, #ddbd84 50%, transparent);
+  opacity: 0.6;
+  transition:
+    top 0.5s ease,
+    bottom 0.5s ease,
+    opacity 0.4s ease;
+}
+
+.review:hover {
+  transform: translateY(-6px);
+  border-color: rgba(153, 82, 58, 0.25);
+  box-shadow:
+    0 24px 48px rgba(42, 36, 28, 0.12),
+    0 0 0 1px rgba(221, 189, 132, 0.15);
+}
+
+.review:hover::before {
+  opacity: 0.16;
+  transform: translateY(6px) scale(1.05);
+}
+
+.review:hover::after {
+  top: 8%;
+  bottom: 8%;
+  opacity: 1;
+}
+
+/* верхняя строка: звёзды + тег */
+.review__top {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 20px;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.review__stars {
+  display: flex;
+  gap: 2px;
+  font-size: 15px;
+  color: #99523a;
+  transition: color 0.35s ease;
+}
+
+.review__tag {
+  display: inline-block;
+  padding: 5px 12px;
+  background: rgba(153, 82, 58, 0.08);
+  color: #99523a;
+  font-family: "Onest", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border: 1px solid rgba(153, 82, 58, 0.2);
+  transition:
+    background 0.35s ease,
+    color 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.review:hover .review__tag {
+  background: #99523a;
+  color: #decbab;
+  border-color: #99523a;
+}
+
+/* текст отзыва */
+.review__text {
+  position: relative;
+  flex: 1;
+  margin-bottom: 28px;
+  font-family: "Onest", sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  color: #3a352d;
+}
+
+/* подвал: аватар + автор */
+.review__author {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(42, 36, 28, 0.12);
 }
 
 .review__avatar {
-  width: 48px;
-  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  width: 46px;
+  height: 46px;
   background: #2a241c;
   color: #ddbd84;
   font-family: "Unbounded", sans-serif;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
+  letter-spacing: 1px;
   border-radius: 50%;
+  transition:
+    background 0.35s ease,
+    color 0.35s ease,
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.review:hover .review__avatar {
+  background: #99523a;
+  color: #decbab;
+  transform: rotate(-8deg) scale(1.05);
 }
 
 .review__name {
   display: block;
   font-family: "Unbounded", sans-serif;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
-  margin-bottom: 4px;
+  color: #2a241c;
+  margin-bottom: 3px;
+  transition: color 0.3s ease;
+}
+.review:hover .review__name {
+  color: #99523a;
 }
 
 .review__date {
-  font-size: 13px;
+  display: block;
+  font-family: "Onest", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
   color: #7f786d;
-  letter-spacing: 0.5px;
 }
 
-.review__text {
-  font-size: 15px;
-  line-height: 1.6;
-  color: #3a352d;
+/* ===== REVEAL ===== */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0s),
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0s);
+  will-change: opacity, transform;
+}
+
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== АДАПТИВ ===== */
+@media (max-width: 600px) {
+  .reviews-hero__inner {
+    gap: 24px;
+  }
+  .reviews-hero__number {
+    letter-spacing: -2px;
+  }
+  .reviews-hero__stars {
+    font-size: 18px;
+  }
+  .review {
+    padding: 28px 24px 24px;
+  }
+  .review::before {
+    font-size: 120px;
+    top: -20px;
+  }
+  .review__text {
+    font-size: 15px;
+  }
 }
