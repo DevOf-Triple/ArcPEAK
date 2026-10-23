@@ -32,7 +32,7 @@
     <a href="calculator.php" class="header__menu-link">Калькулятор</a>
     <a href="#" class="header__menu-link">Каталог</a>
     <a href="#" class="header__menu-link">Корзина</a>
-    <a href="#" class="header__menu-link">Партнёрам</a>
+    <a href="partners.php" class="header__menu-link">Партнёрам</a>
     <a href="#" class="header__menu-link" data-auth-logout>Выйти</a>
   </div>
 
