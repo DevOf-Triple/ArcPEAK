@@ -1,0 +1,126 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  font-family: "Onest", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  background: #cfc9c5;
+  color: #3a352d;
+  min-height: 100vh;
+  padding: 40px 24px 80px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page__back {
+  display: inline-block;
+  margin-bottom: 40px;
+  color: #99523a;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  transition:
+    color 0.3s,
+    transform 0.3s;
+}
+.page__back:hover {
+  color: #2a241c;
+  transform: translateX(-4px);
+}
+
+.page__main {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page__title {
+  font-family: "Unbounded", sans-serif;
+  font-weight: 500;
+  font-size: clamp(32px, 5vw, 56px);
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  margin-bottom: 48px;
+}
+.page__title em {
+  font-style: normal;
+  color: #99523a;
+}
+
+/* статьи */
+.posts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 32px;
+}
+
+.post {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.35s ease;
+}
+.post:hover {
+  transform: translateY(-6px);
+}
+
+.post__cover {
+  aspect-ratio: 4 / 3;
+  margin-bottom: 20px;
+  transition: box-shadow 0.4s ease;
+}
+.post:hover .post__cover {
+  box-shadow: 0 20px 40px rgba(42, 36, 28, 0.15);
+}
+
+.post__date {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #99523a;
+}
+
+.post__title {
+  font-family: "Unbounded", sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.2px;
+  margin-bottom: 12px;
+  transition: color 0.3s ease;
+}
+.post:hover .post__title {
+  color: #99523a;
+}
+
+.post__excerpt {
+  font-size: 15px;
+  color: #5a5246;
+  margin-bottom: 18px;
+  flex: 1;
+}
+
+.post__more {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #2a241c;
+  text-decoration: none;
+  transition:
+    color 0.3s ease,
+    transform 0.3s ease;
+  align-self: flex-start;
+}
+.post__more:hover {
+  color: #99523a;
+  transform: translateX(4px);
+}

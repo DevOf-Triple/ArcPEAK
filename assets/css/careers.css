@@ -1,0 +1,145 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  font-family: "Onest", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  background: #cfc9c5;
+  color: #3a352d;
+  min-height: 100vh;
+  padding: 40px 24px 80px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page__back {
+  display: inline-block;
+  margin-bottom: 40px;
+  color: #99523a;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  transition:
+    color 0.3s,
+    transform 0.3s;
+}
+.page__back:hover {
+  color: #2a241c;
+  transform: translateX(-4px);
+}
+
+.page__main {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.page__title {
+  font-family: "Unbounded", sans-serif;
+  font-weight: 500;
+  font-size: clamp(32px, 5vw, 56px);
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  margin-bottom: 48px;
+}
+.page__title em {
+  font-style: normal;
+  color: #99523a;
+}
+
+/* вакансии */
+.jobs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 60px;
+}
+
+.job {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 28px 32px;
+  background: #fff;
+  border: 1px solid rgba(42, 36, 28, 0.08);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+.job:hover {
+  transform: translateX(6px);
+  box-shadow: 0 12px 32px rgba(42, 36, 28, 0.08);
+  border-color: #99523a;
+}
+
+.job__title {
+  font-family: "Unbounded", sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  letter-spacing: -0.2px;
+}
+
+.job__meta {
+  font-size: 14px;
+  color: #7f786d;
+}
+
+.job__salary {
+  font-family: "Unbounded", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #99523a;
+  white-space: nowrap;
+}
+
+/* призыв внизу */
+.careers__cta {
+  padding: 40px;
+  background: #2a241c;
+  color: #decbab;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.careers__cta p {
+  font-size: 16px;
+  max-width: 500px;
+  opacity: 0.85;
+}
+
+.careers__btn {
+  padding: 16px 28px;
+  background: #ddbd84;
+  color: #2a241c;
+  font-family: "Onest", sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-decoration: none;
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
+}
+.careers__btn:hover {
+  background: #decbab;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 600px) {
+  .job {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}

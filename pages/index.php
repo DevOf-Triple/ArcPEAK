@@ -37,11 +37,11 @@
   </div>
 
   <div class="header__menu-group">
-    <a href="#" class="header__menu-link">Отзывы</a>
-    <a href="#" class="header__menu-link">Вакансии</a>
-    <a href="#" class="header__menu-link">Блог</a>
-    <a href="#" class="header__menu-link">FAQ</a>
-    <a href="#" class="header__menu-link">Контакты</a>
+    <a href="reviews.php" class="header__menu-link">Отзывы</a>
+    <a href="careers.php" class="header__menu-link">Вакансии</a>
+    <a href="blog.php" class="header__menu-link">Блог</a>
+    <a href="faq.php" class="header__menu-link">FAQ</a>
+    <a href="contacts.php" class="header__menu-link">Контакты</a>
   </div>
 </nav>
   </header>
