@@ -1536,28 +1536,14 @@ body::after {
 }
 
 /* ===== СЕТКА КУБИКОВ ===== */
-.portfolio-grid-wrap {
-  flex: 1;
-  overflow-y: auto;
-  padding: 24px 40px 0;
-}
-
-.portfolio-grid-wrap::-webkit-scrollbar {
-  width: 6px;
-}
-.portfolio-grid-wrap::-webkit-scrollbar-thumb {
-  background: rgba(153, 82, 58, 0.2);
-  border-radius: 3px;
-}
-
 .portfolio-grid {
   flex: 1;
   overflow-y: auto;
-  padding: 20px 40px 0;
+  padding: 28px 44px 4px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-auto-rows: 1fr;
-  gap: 16px;
+  gap: 28px;
   align-content: start;
 }
 
@@ -1569,7 +1555,7 @@ body::after {
   border-radius: 3px;
 }
 
-/* кубик */
+/* кубик: название сверху, превью снизу */
 .pcard {
   position: relative;
   display: flex;
@@ -1603,6 +1589,51 @@ body::after {
   box-shadow: 0 16px 32px rgba(42, 36, 28, 0.12);
 }
 
+/* верх — название */
+.pcard__body {
+  order: -1;
+  padding: 14px 16px 12px;
+  background: #faf6ec;
+  border-bottom: 1px solid rgba(42, 36, 28, 0.1);
+  flex-shrink: 0;
+}
+
+.pcard__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 6px;
+  font-family: "Unbounded", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.1px;
+  color: #2a241c;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2; /* по рофлу */
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+}
+
+/* категория перед названием листа */
+.pcard__cat {
+  display: inline;
+  font-family: "Onest", sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #99523a;
+}
+
+.pcard__sep {
+  color: rgba(153, 82, 58, 0.5);
+  font-weight: 400;
+}
+
+/* низ — превью */
 .pcard__preview {
   flex: 1;
   position: relative;
@@ -1614,7 +1645,8 @@ body::after {
   min-height: 0;
 }
 
-.pcard[data-type="sheet"] .pcard__preview {
+.pcard[data-type="sheet"] .pcard__preview,
+.pcard[data-item-type="sheet"] .pcard__preview {
   background: linear-gradient(135deg, #ddbd84, #c79b78);
 }
 
@@ -1665,27 +1697,6 @@ body::after {
   font-size: 11px;
   font-weight: 500;
   backdrop-filter: blur(4px);
-}
-
-.pcard__body {
-  padding: 10px 12px;
-  background: #faf6ec;
-  border-top: 1px solid rgba(42, 36, 28, 0.1);
-}
-
-.pcard__title {
-  font-family: "Unbounded", sans-serif;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 1.25;
-  letter-spacing: -0.1px;
-  color: #2a241c;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2; /* по рофлу */
-  -webkit-box-orient: vertical;
-  text-overflow: ellipsis;
 }
 
 .pcard__remove {

@@ -761,6 +761,13 @@ function getSortedItems() {
   });
 }
 
+function getSheetCategory(sheetId) {
+  for (const tag of state.sheets) {
+    if (tag.sheets.some((s) => s.id === sheetId)) return tag.name;
+  }
+  return "";
+}
+
 function renderPCard(it) {
   const isBuilding = it.type === "building";
   const previewInner = it.image_path
@@ -774,16 +781,21 @@ function renderPCard(it) {
     ? `<span class="pcard__price">${fmtPrice(it.base_price)}</span>`
     : "";
 
+  const category = !isBuilding ? getSheetCategory(it.id) : "";
+  const titleHTML = category
+    ? `<span class="pcard__cat">${escapeHtml(category)}</span><span class="pcard__sep">›</span>${escapeHtml(it.name || "—")}`
+    : escapeHtml(it.name || "—");
+
   return `
     <div class="pcard" data-item-type="${it.type}" data-item-id="${it.id}">
       <button type="button" class="pcard__remove" data-pcard-remove aria-label="Удалить">×</button>
+      <div class="pcard__body">
+        <h4 class="pcard__title">${titleHTML}</h4>
+      </div>
       <div class="pcard__preview">
         <span class="pcard__badge">${badge}</span>
         ${previewInner}
         ${price}
-      </div>
-      <div class="pcard__body">
-        <h4 class="pcard__title">${escapeHtml(it.name || "—")}</h4>
       </div>
     </div>`;
 }
@@ -906,8 +918,12 @@ function openItemDetails(type, id) {
       ? "ЗДАНИЕ"
       : "ЛИСТ";
 
+  const category = isBuilding
+    ? "Здание"
+    : getSheetCategory(item.id) || "Лист справочника";
+
   let html = `<h3 class="pdetails__title">${escapeHtml(item.name || "—")}</h3>`;
-  html += `<p class="pdetails__meta">${isBuilding ? "Здание" : "Лист справочника"}</p>`;
+  html += `<p class="pdetails__meta">${escapeHtml(category)}</p>`;
 
   if (isBuilding) {
     html += `<p class="pdetails__desc">Площадь ${item.area_m2} м² · ${item.floors} эт. · ${item.bedrooms} спал. · ${item.bathrooms} с/у</p>`;
