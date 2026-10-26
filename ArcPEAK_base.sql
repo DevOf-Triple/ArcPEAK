@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: MySQL-8.4
--- Время создания: Окт 24 2026 г., 02:44
+-- Время создания: Окт 26 2026 г., 22:38
 -- Версия сервера: 8.4.6
 -- Версия PHP: 8.2.29
 
@@ -139,8 +139,13 @@ CREATE TABLE `portfolio_items` (
 --
 
 INSERT INTO `portfolio_items` (`id`, `project_id`, `item_type`, `item_id`, `added_at`) VALUES
-(49, 3, 'sheet', 7, '2026-10-23 22:56:18'),
-(52, 3, 'sheet', 13, '2026-10-23 22:56:20');
+(94, 4, 'sheet', 5, '2026-10-26 18:54:19'),
+(96, 4, 'sheet', 7, '2026-10-26 18:55:09'),
+(97, 4, 'sheet', 11, '2026-10-26 18:55:11'),
+(98, 4, 'sheet', 14, '2026-10-26 18:55:12'),
+(99, 4, 'sheet', 12, '2026-10-26 18:55:18'),
+(100, 4, 'sheet', 9, '2026-10-26 18:56:29'),
+(103, 4, 'sheet', 3, '2026-10-26 19:19:27');
 
 -- --------------------------------------------------------
 
@@ -162,9 +167,7 @@ CREATE TABLE `portfolio_projects` (
 --
 
 INSERT INTO `portfolio_projects` (`id`, `user_id`, `project_number`, `title`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 'Проект', '2026-10-23 21:49:27', '2026-10-23 22:50:16'),
-(2, 1, 2, 'Вилла', '2026-10-23 21:49:34', '2026-10-23 22:57:18'),
-(3, 1, 3, 'супер', '2026-10-23 22:32:01', '2026-10-23 22:57:24');
+(4, 1, 1, 'Тестовый', '2026-10-26 18:53:42', '2026-10-26 19:19:27');
 
 -- --------------------------------------------------------
 
@@ -309,13 +312,13 @@ ALTER TABLE `catalog_tags`
 -- AUTO_INCREMENT для таблицы `portfolio_items`
 --
 ALTER TABLE `portfolio_items`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
 
 --
 -- AUTO_INCREMENT для таблицы `portfolio_projects`
 --
 ALTER TABLE `portfolio_projects`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT для таблицы `sheets`
