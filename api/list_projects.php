@@ -5,7 +5,7 @@ require __DIR__ . '/../config/helpers.php';
 $userId = require_auth();
 
 $stmt = $pdo->prepare("
-    SELECT p.id, p.project_number, p.title, p.created_at, p.updated_at,
+    SELECT p.id, p.project_number, p.title, p.project_kind, p.created_at, p.updated_at,
            (SELECT COUNT(*) FROM portfolio_items WHERE project_id = p.id) AS items_count
     FROM portfolio_projects p
     WHERE p.user_id = ?

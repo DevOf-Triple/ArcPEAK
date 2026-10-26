@@ -9,7 +9,7 @@ if (!$projectId) {
     json_response(['ok' => false, 'error' => 'Не указан проект'], 400);
 }
 
-$stmt = $pdo->prepare('SELECT id, project_number, title, created_at FROM portfolio_projects WHERE id = ? AND user_id = ?');
+$stmt = $pdo->prepare('SELECT id, project_number, title, project_kind, created_at FROM portfolio_projects WHERE id = ? AND user_id = ?');
 $stmt->execute([$projectId, $userId]);
 $project = $stmt->fetch();
 if (!$project) {
@@ -41,10 +41,20 @@ if ($buildingIds) {
 $sheetsMap = [];
 if ($sheetIds) {
     $in = implode(',', array_fill(0, count($sheetIds), '?'));
-    $st = $pdo->prepare("SELECT id, name, description, image_path, modifier_type, modifier_value FROM sheets WHERE id IN ($in)");
+    $st = $pdo->prepare("
+        SELECT s.id, s.tag_id, s.name, s.description, s.image_path,
+               s.modifier_type, s.modifier_value, s.is_custom,
+               t.slug AS tag_slug, t.name AS tag_name, t.is_key, t.is_radio
+        FROM sheets s
+        JOIN catalog_tags t ON t.id = s.tag_id
+        WHERE s.id IN ($in)
+    ");
     $st->execute($sheetIds);
     foreach ($st->fetchAll() as $r) {
         $r['modifier_value'] = (float)$r['modifier_value'];
+        $r['is_custom'] = (int)$r['is_custom'];
+        $r['is_key'] = (int)$r['is_key'];
+        $r['is_radio'] = (int)$r['is_radio'];
         $sheetsMap[(int)$r['id']] = $r;
     }
 }
@@ -52,7 +62,8 @@ if ($sheetIds) {
 $items = [];
 foreach ($rawItems as $it) {
     $type = $it['item_type'];
-    $iid = (int)$it['item_id'];
+    $iid  = (int)$it['item_id'];
+
     if ($type === 'building' && isset($buildingsMap[$iid])) {
         $b = $buildingsMap[$iid];
         $items[] = [
@@ -78,6 +89,12 @@ foreach ($rawItems as $it) {
         $items[] = [
             'type' => 'sheet',
             'id' => $iid,
+            'tag_id' => (int)$s['tag_id'],
+            'tag_slug' => $s['tag_slug'],
+            'tag_name' => $s['tag_name'],
+            'is_key' => $s['is_key'],
+            'is_radio' => $s['is_radio'],
+            'is_custom' => $s['is_custom'],
             'name' => $s['name'],
             'description' => $s['description'],
             'image_path' => $s['image_path'],
@@ -90,6 +107,23 @@ foreach ($rawItems as $it) {
 
 $price = calculate_project_price($pdo, $projectId);
 
+$params = null;
+if ($project['project_kind'] === 'custom') {
+    $stmt = $pdo->prepare('
+        SELECT pp.region_id, r.name AS region_name, r.factor AS region_factor
+        FROM project_params pp
+        LEFT JOIN regions r ON r.id = pp.region_id
+        WHERE pp.project_id = ?
+    ');
+    $stmt->execute([$projectId]);
+    $row = $stmt->fetch();
+    $params = [
+        'region_id' => $row && $row['region_id'] ? (int)$row['region_id'] : null,
+        'region_name' => $row && $row['region_name'] ? $row['region_name'] : null,
+        'region_factor' => $row && $row['region_factor'] ? (float)$row['region_factor'] : null,
+    ];
+}
+
 json_response([
     'ok' => true,
     'data' => [
@@ -97,8 +131,10 @@ json_response([
             'id' => (int)$project['id'],
             'project_number' => (int)$project['project_number'],
             'title' => $project['title'],
+            'project_kind' => $project['project_kind'],
             'created_at' => $project['created_at'],
         ],
+        'params' => $params,
         'items' => $items,
         'price' => $price,
     ],
