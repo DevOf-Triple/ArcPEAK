@@ -898,7 +898,7 @@ function renderPCard(it) {
       ? "ДОМ"
       : isCustom
         ? "СВОЙ"
-        : "ЛИСТ";
+        : "";
 
   const badge = isBuilding ? "Здание" : isCustom ? "Свой" : "Лист";
   const price = isBuilding
