@@ -347,7 +347,7 @@ function renderSheets() {
         <header class="tag-block__head">
           <h3 class="tag-block__title">${escapeHtml(tag.name)}${keyBadge}</h3>
           <span class="tag-block__count">${tag.sheets.length} вариантов</span>
-          ${isKey ? "" : `<button type="button" class="tag-block__add-custom" data-add-custom="${tag.id}">+ Свой вариант</button>`}
+          <button type="button" class="tag-block__add-custom" data-add-custom="${tag.id}">+ Свой вариант</button>
         </header>
         <div class="sheets-grid">
           ${tag.sheets.map(sheetCardHTML).join("")}
@@ -638,7 +638,6 @@ function openCustomSheetModal(tagId) {
   select.innerHTML = "";
   let found = false;
   for (const tag of state.sheets) {
-    if (tag.is_key === 1) continue;
     const opt = document.createElement("option");
     opt.value = String(tag.id);
     opt.textContent = tag.name;

@@ -26,11 +26,12 @@ $tag = $stmt->fetch();
 if (!$tag) {
     json_response(['ok' => false, 'error' => 'Категория не найдена'], 404);
 }
-if ((int)$tag['is_key'] === 1) {
-    json_response(['ok' => false, 'error' => 'Свои варианты для ключевых параметров недоступны'], 400);
-}
 
 $modType = 'flat_add';
+if ($tag['slug'] === 'type')   $modType = 'base_type_factor';
+if ($tag['slug'] === 'area')   $modType = 'base_area';
+if ($tag['slug'] === 'floors') $modType = 'base_floors';
+
 $sheetId = 0;
 
 try {

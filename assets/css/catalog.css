@@ -1005,57 +1005,6 @@ body::after {
   background: linear-gradient(90deg, transparent, #99523a 50%, transparent);
 }
 
-/* ===== ОВЕРЛЕЙ — УВЕЛИЧЕН ===== */
-.portfolio-panel {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: min(94vw, 1400px);
-  max-height: 94vh;
-  background: #faf6ec;
-  border: 1px solid rgba(42, 36, 28, 0.15);
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
-  overflow: hidden;
-}
-
-.portfolio-overlay {
-  padding: 24px;
-}
-
-/* заголовок проекта — крупный */
-.portfolio-panel__title {
-  display: inline;
-  font-family: "Unbounded", sans-serif;
-  font-weight: 500;
-  font-size: clamp(28px, 3.8vw, 48px);
-  line-height: 1.1;
-  letter-spacing: -0.6px;
-  color: #2a241c;
-  word-break: break-word;
-  cursor: text;
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.25s;
-}
-.portfolio-panel__title:hover {
-  border-bottom-color: rgba(153, 82, 58, 0.3);
-}
-
-.portfolio-panel__label {
-  font-size: 12px;
-  margin-bottom: 10px;
-}
-.portfolio-panel__number {
-  font-size: 14px;
-  padding: 5px 12px;
-  margin-left: 16px;
-}
-
-.portfolio-panel__header {
-  padding: 36px 40px 28px;
-}
-
 /* ===== МОДАЛКА ===== */
 .modal {
   position: fixed;
@@ -1341,15 +1290,15 @@ body::after {
   }
 }
 
-/* ===== ПОЛНОЭКРАННЫЙ ОВЕРЛЕЙ ПАПКИ ===== */
+/* ===== ОВЕРЛЕЙ ПАПКИ ===== */
 .portfolio-overlay {
   position: fixed;
   inset: 0;
   z-index: 180;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
-  padding: 32px;
+  padding: 16px;
 }
 .portfolio-overlay[hidden] {
   display: none;
@@ -1379,8 +1328,9 @@ body::after {
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 900px;
-  max-height: 90vh;
+  max-width: min(96vw, 1500px);
+  height: calc(100vh - 32px);
+  max-height: calc(100vh - 32px);
   background: #faf6ec;
   border: 1px solid rgba(42, 36, 28, 0.15);
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
@@ -1396,15 +1346,26 @@ body::after {
   height: 3px;
   background: linear-gradient(90deg, transparent, #ddbd84 50%, transparent);
   z-index: 2;
+  pointer-events: none;
+}
+
+.portfolio-panel__header,
+.portfolio-params,
+.portfolio-tabs,
+.portfolio-toolbar,
+.portfolio-pagination,
+.portfolio-footer {
+  flex-shrink: 0;
 }
 
 /* ===== ШАПКА ===== */
 .portfolio-panel__header {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 24px;
-  padding: 32px 32px 24px;
+  padding: 28px 32px 22px;
   border-bottom: 1px solid rgba(42, 36, 28, 0.1);
 }
 
@@ -1427,9 +1388,9 @@ body::after {
   display: inline;
   font-family: "Unbounded", sans-serif;
   font-weight: 500;
-  font-size: clamp(20px, 2.4vw, 28px);
-  line-height: 1.2;
-  letter-spacing: -0.3px;
+  font-size: clamp(26px, 3.2vw, 42px);
+  line-height: 1.1;
+  letter-spacing: -0.5px;
   color: #2a241c;
   word-break: break-word;
   cursor: text;
@@ -1439,7 +1400,6 @@ body::after {
 .portfolio-panel__title:hover {
   border-bottom-color: rgba(153, 82, 58, 0.3);
 }
-
 .portfolio-panel__title--editing {
   display: block;
   width: 100%;
@@ -1458,7 +1418,6 @@ body::after {
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 1px;
-  border-radius: 2px;
   vertical-align: middle;
 }
 
@@ -1489,7 +1448,6 @@ body::after {
   color: #decbab;
   border-color: #99523a;
 }
-
 .pp-btn--danger:hover {
   background: #c0392b;
   border-color: #c0392b;
@@ -1506,6 +1464,759 @@ body::after {
   line-height: 1;
   letter-spacing: 0;
   text-transform: none;
+}
+
+/* ===== ПАРАМЕТРЫ ===== */
+.portfolio-params {
+  padding: 16px 32px;
+  background: rgba(153, 82, 58, 0.04);
+  border-bottom: 1px solid rgba(42, 36, 28, 0.08);
+}
+.portfolio-params[hidden] {
+  display: none;
+}
+
+.portfolio-params__row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+.portfolio-params__field {
+  display: block;
+  flex: 1;
+  min-width: 220px;
+}
+
+.portfolio-params__label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #7f786d;
+}
+
+.portfolio-params__select {
+  width: 100%;
+  padding: 9px 32px 9px 12px;
+  background: #fff;
+  border: 1px solid rgba(42, 36, 28, 0.2);
+  font-family: "Onest", sans-serif;
+  font-size: 14px;
+  color: #3a352d;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath fill='%2399523a' d='M5 7 0 0h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  transition: border-color 0.25s;
+}
+.portfolio-params__select:focus {
+  border-color: #99523a;
+}
+
+.portfolio-params__warning {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: rgba(221, 189, 132, 0.15);
+  border-left: 3px solid #ddbd84;
+  font-size: 13px;
+  color: #7a5c14;
+  line-height: 1.4;
+}
+.portfolio-params__warning[hidden] {
+  display: none;
+}
+.portfolio-params__warning-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* ===== ТАБЫ ===== */
+.portfolio-tabs {
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  gap: 2px;
+  padding: 10px 32px 0;
+  background: rgba(42, 36, 28, 0.02);
+  border-bottom: 1px solid rgba(42, 36, 28, 0.08);
+  scrollbar-width: thin;
+  min-height: 48px;
+}
+.portfolio-tabs::-webkit-scrollbar {
+  height: 4px;
+}
+.portfolio-tabs::-webkit-scrollbar-thumb {
+  background: rgba(153, 82, 58, 0.2);
+}
+
+.ptab {
+  flex-shrink: 0;
+  padding: 10px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-family: "Onest", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #7f786d;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+.ptab:hover {
+  color: #2a241c;
+}
+.ptab.is-active {
+  color: #99523a;
+  border-bottom-color: #99523a;
+  font-weight: 600;
+}
+
+/* ===== ТУЛБАР ===== */
+.portfolio-toolbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 32px;
+  background: #faf6ec;
+  border-bottom: 1px solid rgba(42, 36, 28, 0.08);
+}
+
+.portfolio-toolbar__label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #7f786d;
+}
+
+.portfolio-toolbar__select {
+  padding: 6px 10px;
+  background: #fff;
+  border: 1px solid rgba(42, 36, 28, 0.15);
+  font-family: "Onest", sans-serif;
+  font-size: 13px;
+  color: #3a352d;
+  cursor: pointer;
+  outline: none;
+}
+.portfolio-toolbar__select:focus {
+  border-color: #99523a;
+}
+
+/* ===== СЕТКА ===== */
+.portfolio-grid {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 44px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: max-content; /* было auto — теперь строка растягивается под квадратную карточку */
+  gap: 64px 40px; /* было 44px 32px — увеличили расстояние между карточками */
+  align-content: start;
+  align-items: start; /* карточка больше не «растягивается» и не вылезает из строки */
+}
+
+.portfolio-grid::-webkit-scrollbar {
+  width: 6px;
+}
+.portfolio-grid::-webkit-scrollbar-thumb {
+  background: rgba(153, 82, 58, 0.2);
+  border-radius: 3px;
+}
+
+/* ===== КУБИК ===== */
+.pcard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: #fff;
+  border: 1px solid rgba(42, 36, 28, 0.12);
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s ease,
+    border-color 0.3s ease;
+  animation: pcardIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes pcardIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.pcard:hover {
+  transform: translateY(-4px);
+  border-color: rgba(153, 82, 58, 0.35);
+  box-shadow: 0 16px 32px rgba(42, 36, 28, 0.12);
+}
+
+.pcard__body {
+  flex-shrink: 0;
+  padding: 12px 14px 10px;
+  background: #faf6ec;
+  border-bottom: 1px solid rgba(42, 36, 28, 0.1);
+}
+
+.pcard__title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-family: "Unbounded", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.1px;
+  color: #2a241c;
+  text-overflow: ellipsis;
+}
+
+.pcard__cat {
+  display: inline;
+  font-family: "Onest", sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #99523a;
+}
+.pcard__sep {
+  color: rgba(153, 82, 58, 0.5);
+  font-weight: 400;
+  margin: 0 4px;
+}
+
+.pcard__preview {
+  flex: 1 1 auto;
+  min-height: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #c79b78, #99523a);
+  overflow: hidden;
+}
+
+.pcard[data-item-type="sheet"] .pcard__preview {
+  background: linear-gradient(135deg, #ddbd84, #c79b78);
+}
+
+.pcard__preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.pcard__preview::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(42, 36, 28, 0.08) 0 1px,
+    transparent 1px 12px
+  );
+  pointer-events: none;
+}
+
+.pcard__badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  padding: 3px 8px;
+  background: rgba(42, 36, 28, 0.8);
+  color: #decbab;
+  font-family: "Onest", sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  backdrop-filter: blur(4px);
+}
+
+.pcard__price {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  z-index: 2;
+  padding: 4px 10px;
+  background: rgba(42, 36, 28, 0.85);
+  color: #ddbd84;
+  font-family: "Unbounded", sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  backdrop-filter: blur(4px);
+}
+
+.pcard__remove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 3;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(42, 36, 28, 0.85);
+  color: #decbab;
+  border: none;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.8);
+  transition:
+    opacity 0.25s,
+    transform 0.25s,
+    background 0.2s;
+}
+.pcard:hover .pcard__remove {
+  opacity: 1;
+  transform: scale(1);
+}
+.pcard__remove:hover {
+  background: #c0392b;
+}
+
+/* ===== ПАГИНАЦИЯ ===== */
+.portfolio-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 32px;
+  background: #faf6ec;
+  border-top: 1px solid rgba(42, 36, 28, 0.08);
+}
+.portfolio-pagination[hidden] {
+  display: none;
+}
+
+.portfolio-page-btn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: #99523a;
+  border: 1px solid rgba(153, 82, 58, 0.35);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background 0.25s,
+    color 0.25s,
+    border-color 0.25s;
+}
+.portfolio-page-btn:hover:not(:disabled) {
+  background: #99523a;
+  color: #decbab;
+  border-color: #99523a;
+}
+.portfolio-page-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.portfolio-page-info {
+  font-family: "Unbounded", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  color: #2a241c;
+  min-width: 60px;
+  text-align: center;
+}
+
+/* ===== МОДАЛКА ДЕТАЛЕЙ (не меняется) ===== */
+.pdetails {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.pdetails[hidden] {
+  display: none;
+}
+
+.pdetails__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 16, 12, 0.6);
+  backdrop-filter: blur(4px);
+  animation: pFadeIn 0.3s ease;
+}
+
+.pdetails__window {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 560px;
+  max-height: 88vh;
+  padding: 0 0 24px;
+  background: #faf6ec;
+  border: 1px solid rgba(42, 36, 28, 0.15);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+  overflow-y: auto;
+  animation: pcardIn 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pdetails__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(42, 36, 28, 0.85);
+  color: #decbab;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.25s;
+}
+.pdetails__close:hover {
+  background: #c0392b;
+}
+
+.pdetails__preview {
+  aspect-ratio: 16 / 9;
+  background: linear-gradient(135deg, #c79b78, #99523a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #decbab;
+  font-family: "Unbounded", sans-serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  overflow: hidden;
+}
+
+.pdetails__preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pdetails__content {
+  padding: 24px 28px 20px;
+}
+
+.pdetails__title {
+  margin-bottom: 8px;
+  font-family: "Unbounded", sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.3px;
+  color: #2a241c;
+}
+
+.pdetails__meta {
+  margin-bottom: 18px;
+  font-size: 13px;
+  color: #7f786d;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.pdetails__desc {
+  font-size: 14px;
+  line-height: 1.65;
+  color: #5a5246;
+  margin-bottom: 16px;
+}
+
+.pdetails__specs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 20px;
+  padding: 16px 0;
+  border-top: 1px solid rgba(42, 36, 28, 0.1);
+  border-bottom: 1px solid rgba(42, 36, 28, 0.1);
+  margin-bottom: 18px;
+  font-size: 13px;
+}
+
+.pdetails__specs dt {
+  color: #7f786d;
+  margin-bottom: 2px;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.pdetails__specs dd {
+  color: #2a241c;
+  font-weight: 500;
+  font-family: "Unbounded", sans-serif;
+  font-size: 13px;
+}
+
+.pdetails__actions {
+  padding: 0 28px;
+}
+
+.pdetails__btn {
+  padding: 12px 24px;
+  background: #99523a;
+  color: #decbab;
+  border: 1px solid #99523a;
+  font-family: "Onest", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background 0.25s,
+    border-color 0.25s;
+}
+.pdetails__btn:hover {
+  background: #2a241c;
+  border-color: #2a241c;
+}
+.pdetails__btn--danger {
+  background: #c0392b;
+  border-color: #c0392b;
+}
+.pdetails__btn--danger:hover {
+  background: #a32b1f;
+  border-color: #a32b1f;
+}
+
+/* пустое состояние */
+.portfolio-empty {
+  grid-column: 1 / -1;
+  padding: 60px 20px;
+  text-align: center;
+  color: #7f786d;
+}
+.portfolio-empty__title {
+  margin-bottom: 6px;
+  font-family: "Unbounded", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #2a241c;
+}
+.portfolio-empty__text {
+  font-size: 14px;
+}
+
+/* ===== ФУТЕР ===== */
+.portfolio-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 32px;
+  border-top: 1px solid rgba(42, 36, 28, 0.1);
+  background: rgba(42, 36, 28, 0.03);
+}
+
+.portfolio-total {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.portfolio-total__label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #7f786d;
+}
+
+.portfolio-total__value {
+  font-family: "Unbounded", sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  color: #99523a;
+}
+
+.portfolio-breakdown {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-height: 140px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.portfolio-breakdown::-webkit-scrollbar {
+  width: 3px;
+}
+.portfolio-breakdown::-webkit-scrollbar-thumb {
+  background: rgba(153, 82, 58, 0.2);
+}
+
+.breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+  color: #5a5246;
+  padding: 2px 0;
+}
+.breakdown-row__label {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.breakdown-row__value {
+  font-family: "Unbounded", sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.breakdown-row--param .breakdown-row__value {
+  color: #7f786d;
+}
+.breakdown-row--base {
+  font-weight: 600;
+  padding-top: 5px;
+  margin-top: 3px;
+  border-top: 1px dashed rgba(42, 36, 28, 0.15);
+}
+.breakdown-row--base .breakdown-row__value {
+  color: #2a241c;
+}
+.breakdown-row--modifier .breakdown-row__value {
+  color: #99523a;
+}
+
+.portfolio-new-btn {
+  padding: 12px 24px;
+  background: #99523a;
+  color: #decbab;
+  border: 1px solid #99523a;
+  font-family: "Onest", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background 0.25s,
+    border-color 0.25s;
+}
+.portfolio-new-btn:hover {
+  background: #2a241c;
+  border-color: #2a241c;
+}
+
+/* ===== АДАПТИВ ОВЕРЛЕЯ ===== */
+@media (max-width: 900px) {
+  .portfolio-grid {
+    padding: 24px 24px;
+    gap: 24px 20px;
+  }
+}
+
+@media (max-width: 700px) {
+  .portfolio-overlay {
+    padding: 0;
+  }
+  .portfolio-panel {
+    max-width: none;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
+    border: none;
+  }
+
+  .portfolio-panel__header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    padding: 18px 18px 14px;
+  }
+  .portfolio-panel__title {
+    font-size: 22px;
+  }
+  .portfolio-panel__actions {
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+  .pp-btn {
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+
+  .portfolio-params {
+    padding: 12px 18px;
+  }
+  .portfolio-params__field {
+    min-width: 0;
+  }
+
+  .portfolio-tabs {
+    padding: 8px 18px 0;
+    min-height: 44px;
+  }
+  .portfolio-toolbar {
+    padding: 10px 18px;
+  }
+  .portfolio-grid {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 18px;
+    gap: 16px;
+  }
+  .pcard__body {
+    padding: 8px 10px;
+  }
+  .pcard__title {
+    font-size: 11px;
+  }
+
+  .portfolio-pagination {
+    padding: 12px 18px;
+  }
+  .portfolio-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 14px 18px;
+  }
+  .portfolio-new-btn {
+    width: 100%;
+  }
 }
 
 /* ===== ТАБЫ ПРОЕКТОВ ===== */
@@ -1591,7 +2302,7 @@ body::after {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-auto-rows: auto;
-  gap: 32px 28px;
+  gap: 44px 32px;
   align-content: start;
 }
 
