@@ -56,6 +56,7 @@ if ($itemType === 'building') {
 
 $pdo->beginTransaction();
 
+$inserted = 0;
 try {
     // Радио-тег — снять старый лист этой группы
     if ($itemType === 'sheet' && (int)$tagInfo['is_radio'] === 1) {
