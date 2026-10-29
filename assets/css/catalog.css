@@ -576,16 +576,19 @@ body::after {
 
 .sheets-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
 }
 
 .sheet-card {
   position: relative;
-  padding: 18px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  padding: 22px 22px 0;
   background: #fff;
   border: 1px solid rgba(42, 36, 28, 0.12);
   cursor: pointer;
+  overflow: hidden;
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease,
@@ -595,7 +598,7 @@ body::after {
 .sheet-card:hover {
   transform: translateY(-4px);
   border-color: rgba(153, 82, 58, 0.3);
-  box-shadow: 0 12px 24px rgba(42, 36, 28, 0.08);
+  box-shadow: 0 16px 32px rgba(42, 36, 28, 0.1);
 }
 
 .sheet-card.is-added {
@@ -606,9 +609,10 @@ body::after {
 .sheet-card__title {
   margin-bottom: 8px;
   font-family: "Unbounded", sans-serif;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
-  letter-spacing: 0.5px;
+  line-height: 1.3;
+  letter-spacing: 0.3px;
   color: #2a241c;
   transition: color 0.3s;
 }
@@ -617,20 +621,23 @@ body::after {
 }
 
 .sheet-card__desc {
+  margin-bottom: 12px;
   font-size: 13px;
   line-height: 1.5;
   color: #5a5246;
   display: -webkit-box;
   -webkit-line-clamp: 3;
-  line-clamp: 3; /* Стандартное свойство для будущей совместимости, а тьо с вебкитом это чмо жалуется*/
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  flex: 1;
 }
 
 .sheet-card__modifier {
   display: inline-block;
-  margin-top: 10px;
-  padding: 3px 8px;
+  align-self: flex-start;
+  margin-bottom: 14px;
+  padding: 3px 9px;
   background: rgba(153, 82, 58, 0.08);
   color: #99523a;
   font-size: 11px;
@@ -639,19 +646,60 @@ body::after {
   text-transform: uppercase;
 }
 
+/* картинка (под текстом) */
+.sheet-card__image {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  margin: 0 -22px;
+  background: linear-gradient(135deg, #c79b78, #99523a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(222, 203, 171, 0.55);
+  font-family: "Onest", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  overflow: hidden;
+}
+
+.sheet-card__image::before {
+  content: "ФОТО";
+  position: absolute;
+}
+
+.sheet-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+.sheet-card__image:has(img)::before {
+  display: none;
+}
+
+.sheet-card--custom .sheet-card__image {
+  background: linear-gradient(135deg, #ddbd84, #c79b78);
+}
+
 .sheet-card__remove {
   position: absolute;
   top: 8px;
   right: 8px;
-  width: 24px;
-  height: 24px;
+  z-index: 3;
+  width: 26px;
+  height: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(42, 36, 28, 0.85);
   color: #decbab;
   border: none;
-  font-size: 14px;
+  font-size: 15px;
   cursor: pointer;
   opacity: 0;
   transition:
@@ -2414,4 +2462,33 @@ body::after {
   .portfolio-params__field {
     min-width: 0;
   }
+}
+
+.modal__select {
+  width: 100%;
+  padding: 12px 40px 12px 14px;
+  background: rgba(221, 189, 132, 0.05);
+  color: #decbab;
+  border: 1px solid rgba(221, 189, 132, 0.25);
+  font-family: "Onest", sans-serif;
+  font-size: 15px;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath fill='%23ddbd84' d='M5 7 0 0h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  transition:
+    border-color 0.3s,
+    background 0.3s,
+    box-shadow 0.3s;
+}
+.modal__select:focus {
+  border-color: #ddbd84;
+  background-color: rgba(221, 189, 132, 0.09);
+  box-shadow: 0 0 0 3px rgba(221, 189, 132, 0.12);
+}
+.modal__select option {
+  background: #2a241c;
+  color: #decbab;
 }

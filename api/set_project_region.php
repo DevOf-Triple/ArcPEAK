@@ -25,10 +25,18 @@ if ($regionId > 0) {
     }
 }
 
-$pdo->prepare('
-    INSERT INTO project_params (project_id, region_id) VALUES (?, ?)
-    ON DUPLICATE KEY UPDATE region_id = VALUES(region_id)
-')->execute([$projectId, $regionId > 0 ? $regionId : null]);
+try {
+    $pdo->prepare('
+        INSERT INTO project_params (project_id, region_id) VALUES (?, ?)
+        ON DUPLICATE KEY UPDATE region_id = ?
+    ')->execute([
+        $projectId,
+        $regionId > 0 ? $regionId : null,
+        $regionId > 0 ? $regionId : null,
+    ]);
+} catch (PDOException $e) {
+    json_response(['ok' => false, 'error' => 'Не удалось сохранить регион: ' . $e->getMessage()], 500);
+}
 
 $price = calculate_project_price($pdo, $projectId);
 

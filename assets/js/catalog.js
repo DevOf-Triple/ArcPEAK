@@ -276,12 +276,14 @@ function buildingCardHTML(b) {
 function sheetCardHTML(s) {
   const modifierLabel = sheetModifierLabel(s);
   const cls = s.is_custom ? "sheet-card sheet-card--custom" : "sheet-card";
+  const imgInner = s.image_path ? `<img src="../${s.image_path}" alt="">` : "";
   return `
     <article class="${cls}" data-type="sheet" data-id="${s.id}">
       <button type="button" class="sheet-card__remove" data-remove aria-label="Убрать">×</button>
       <h4 class="sheet-card__title">${escapeHtml(s.name)}</h4>
       <p class="sheet-card__desc">${escapeHtml(s.description || "")}</p>
       ${modifierLabel ? `<span class="sheet-card__modifier">${modifierLabel}</span>` : ""}
+      <div class="sheet-card__image">${imgInner}</div>
     </article>`;
 }
 
@@ -623,59 +625,49 @@ async function createNewProject(title, kind) {
 
 /* ============ МОДАЛКА: свой вариант листа ============ */
 
-let customSheetTag = null;
+let customSheetDefaultTagId = null;
 
-function openCustomSheetModal(tagId, tagName, isKey, slug) {
-  customSheetTag = { tagId, tagName, isKey, slug };
+function openCustomSheetModal(tagId, tagName) {
+  customSheetDefaultTagId = tagId;
+
   const modal = $("#customSheetModal");
-  const title = $("#customSheetTitle");
-  const lead = $("#customSheetLead");
   const nameInput = $("#customSheetName");
-  const valueInput = $("#customSheetValue");
-  const valueLabel = $("#customSheetValueLabel");
-  const hint = $("#customSheetHint");
-  if (!modal) return;
+  const select = $("#customSheetTag");
+  if (!modal || !select) return;
 
-  title.textContent = `Свой вариант — ${tagName}`;
-  lead.textContent = `Добавьте собственное значение в категорию «${tagName}». Оно будет видно только вам.`;
-  nameInput.value = "";
-  valueInput.value = "0";
-
-  if (slug === "type") {
-    valueLabel.textContent = "Коэффициент (например, 1.2)";
-    hint.textContent = "Множитель к базовой цене. 1.0 — обычный дом.";
-    valueInput.step = "0.01";
-  } else if (slug === "area") {
-    valueLabel.textContent = "Площадь, м²";
-    hint.textContent = "Например, 130";
-    valueInput.step = "1";
-  } else if (slug === "floors") {
-    valueLabel.textContent = "Количество этажей";
-    hint.textContent = "Например, 2";
-    valueInput.step = "1";
-  } else if (isKey) {
-    valueLabel.textContent = "Значение";
-    hint.textContent = "";
-  } else {
-    valueLabel.textContent = "Значение (₽)";
-    hint.textContent = "Прибавка к базовой цене в рублях.";
-    valueInput.step = "0.01";
+  // заполняем селект только неключевыми тегами
+  select.innerHTML = "";
+  for (const tag of state.sheets) {
+    if (tag.is_key === 1) continue;
+    const opt = document.createElement("option");
+    opt.value = tag.id;
+    opt.textContent = tag.name;
+    select.appendChild(opt);
   }
+  select.value = String(tagId);
 
+  nameInput.value = "";
   modal.removeAttribute("hidden");
   setTimeout(() => nameInput?.focus(), 50);
 }
 
 function closeCustomSheetModal() {
   $("#customSheetModal")?.setAttribute("hidden", "");
-  customSheetTag = null;
+  customSheetDefaultTagId = null;
 }
 
 async function submitCustomSheet() {
-  if (!customSheetTag || !state.activeProjectId) return;
+  if (!state.activeProjectId) return;
 
-  const name = $("#customSheetName").value.trim();
-  const value = parseFloat($("#customSheetValue").value) || 0;
+  const select = $("#customSheetTag");
+  const nameInput = $("#customSheetName");
+  const tagId = parseInt(select?.value || "0");
+  const name = nameInput?.value.trim() || "";
+
+  if (!tagId) {
+    showToast("Выберите категорию", true);
+    return;
+  }
   if (!name) {
     showToast("Введите название", true);
     return;
@@ -683,9 +675,9 @@ async function submitCustomSheet() {
 
   const fd = new FormData();
   fd.append("project_id", state.activeProjectId);
-  fd.append("tag_id", customSheetTag.tagId);
+  fd.append("tag_id", tagId);
   fd.append("name", name);
-  fd.append("value", value);
+  fd.append("value", 0);
 
   const data = await api(API.addCustomSheet, { method: "POST", body: fd });
   if (!data.ok) {
@@ -699,7 +691,7 @@ async function submitCustomSheet() {
   renderFolderPapers();
   pulseFolder();
   closeCustomSheetModal();
-  showToast("Свой вариант создан");
+  showToast("Свой вариант добавлен");
 
   if (portfolio.overlay && !portfolio.overlay.hidden) {
     await loadPortfolioProject(state.activeProjectId);
@@ -838,12 +830,13 @@ function renderPortfolioParams() {
     select.innerHTML = '<option value="">— выберите регион —</option>';
     for (const r of state.regions) {
       const opt = document.createElement("option");
-      opt.value = r.id;
+      opt.value = String(r.id);
       opt.textContent = `${r.name} (×${r.factor})`;
       select.appendChild(opt);
     }
   }
-  select.value = portfolio.params?.region_id || "";
+  const rid = portfolio.params?.region_id;
+  select.value = rid != null ? String(rid) : "";
 
   const missing = portfolio.price?.missing || [];
   if (missing.length) {
@@ -890,12 +883,13 @@ function renderPCard(it) {
   const isCustom = it.is_custom === 1;
 
   let titleHTML = "";
-  if (isCustom) {
-    titleHTML = `<span class="pcard__cat">Свой</span><span class="pcard__sep">›</span>${escapeHtml(it.name || "—")}`;
-  } else if (!isBuilding && it.tag_name) {
-    titleHTML = `<span class="pcard__cat">${escapeHtml(it.tag_name)}</span><span class="pcard__sep">›</span>${escapeHtml(it.name || "—")}`;
-  } else {
+  if (isBuilding) {
     titleHTML = escapeHtml(it.name || "—");
+  } else {
+    const catLabel = isCustom
+      ? `${escapeHtml(it.tag_name || "Свой")} (свой)`
+      : escapeHtml(it.tag_name || "");
+    titleHTML = `<span class="pcard__cat">${catLabel}</span><span class="pcard__sep">›</span>${escapeHtml(it.name || "—")}`;
   }
 
   const previewInner = it.image_path
@@ -1034,6 +1028,8 @@ async function openPortfolio() {
   }
   if (!ensurePortfolioElements()) return;
 
+  // принудительно обновляем регионы (могли не догрузиться или добавились новые)
+  state.regions = [];
   await loadRegions();
   await loadPortfolioProject(state.activeProjectId);
   flipOpen();
@@ -1072,9 +1068,7 @@ function openItemDetails(type, id) {
   let html = `<h3 class="pdetails__title">${escapeHtml(item.name || "—")}</h3>`;
   const meta = isBuilding
     ? "Здание"
-    : isCustom
-      ? `Свой вариант · ${escapeHtml(item.tag_name || "")}`
-      : escapeHtml(item.tag_name || "Лист");
+    : `${escapeHtml(item.tag_name || "Лист")}${isCustom ? " (свой)" : ""}`;
   html += `<p class="pdetails__meta">${meta}</p>`;
 
   if (isBuilding) {
@@ -1366,12 +1360,8 @@ function bindEvents() {
         );
         return;
       }
-      const block = customBtn.closest(".tag-block");
       const tagId = parseInt(customBtn.dataset.addCustom);
-      const tagName = block?.dataset.tagName || "тег";
-      const isKey = block?.classList.contains("tag-block--key") ? 1 : 0;
-      const slug = block?.dataset.tagSlug || "";
-      openCustomSheetModal(tagId, tagName, isKey, slug);
+      openCustomSheetModal(tagId);
       return;
     }
 

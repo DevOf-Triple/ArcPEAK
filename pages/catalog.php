@@ -236,18 +236,17 @@ $userName = $_SESSION['user_name'] ?? '';
 <div class="modal" id="customSheetModal" hidden>
   <div class="modal__backdrop" data-close-custom></div>
   <div class="modal__window" role="dialog">
-    <h3 class="modal__title" id="customSheetTitle">Свой вариант</h3>
-    <p class="modal__lead" id="customSheetLead"></p>
+    <h3 class="modal__title">Свой вариант</h3>
+    <p class="modal__lead">Добавьте собственный вариант в одну из категорий. Стоимость подберёт куратор проекта — пока лист не влияет на смету.</p>
+
+    <label class="modal__field">
+      <span class="modal__label">Категория</span>
+      <select id="customSheetTag" class="modal__select"></select>
+    </label>
 
     <label class="modal__field">
       <span class="modal__label">Название</span>
       <input type="text" id="customSheetName" class="modal__input" placeholder="Например, «Мой стиль»">
-    </label>
-
-    <label class="modal__field">
-      <span class="modal__label" id="customSheetValueLabel">Значение</span>
-      <input type="number" id="customSheetValue" class="modal__input" step="0.01" value="0">
-      <span class="custom-modal__hint" id="customSheetHint"></span>
     </label>
 
     <div class="modal__actions">
