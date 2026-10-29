@@ -1,6 +1,8 @@
 /* ============================================================
-   1. RESET & BASE
+   ArcPEAK — Каталог: Сочный дизайн (Тактильные листы и планы)
    ============================================================ */
+
+/* 1. RESET & BASE */
 * {
   margin: 0;
   padding: 0;
@@ -17,20 +19,21 @@ body {
   font-size: 16px;
   line-height: 1.6;
   background-color: #edeae2;
+  /* Фон рабочего стола / верстака */
   background-image:
     radial-gradient(
       ellipse 90% 70% at 12% 0%,
-      rgba(221, 189, 132, 0.25) 0%,
+      rgba(221, 189, 132, 0.3) 0%,
       transparent 55%
     ),
     radial-gradient(
       ellipse 75% 60% at 92% 100%,
-      rgba(153, 82, 58, 0.12) 0%,
+      rgba(153, 82, 58, 0.15) 0%,
       transparent 55%
     ),
     radial-gradient(
       ellipse 60% 50% at 50% 50%,
-      rgba(255, 253, 247, 0.55) 0%,
+      rgba(255, 253, 247, 0.6) 0%,
       transparent 70%
     );
   background-attachment: fixed;
@@ -41,20 +44,19 @@ body {
   overflow-x: hidden;
 }
 
+/* Зерно */
 body::after {
   content: "";
   position: fixed;
   inset: 0;
   z-index: 200;
   pointer-events: none;
-  opacity: 0.1;
+  opacity: 0.12;
   mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* ============================================================
-   2. BACKGROUND BLOBS
-   ============================================================ */
+/* 2. BACKGROUND BLOBS */
 .bg {
   position: fixed;
   inset: 0;
@@ -68,26 +70,26 @@ body::after {
   content: "";
   position: absolute;
   border-radius: 50%;
-  filter: blur(70px);
+  filter: blur(80px);
   will-change: transform;
 }
 
 .bg::before {
-  width: 520px;
-  height: 520px;
-  top: 8%;
+  width: 600px;
+  height: 600px;
+  top: 5%;
   left: 5%;
-  background: rgba(221, 189, 132, 0.28);
-  animation: blobDrift1 32s ease-in-out infinite alternate;
+  background: rgba(221, 189, 132, 0.35);
+  animation: blobDrift1 28s ease-in-out infinite alternate;
 }
 
 .bg::after {
-  width: 460px;
-  height: 460px;
+  width: 500px;
+  height: 500px;
   bottom: 10%;
   right: 6%;
-  background: rgba(153, 82, 58, 0.14);
-  animation: blobDrift2 38s ease-in-out infinite alternate;
+  background: rgba(153, 82, 58, 0.2);
+  animation: blobDrift2 34s ease-in-out infinite alternate;
 }
 
 @keyframes blobDrift1 {
@@ -95,10 +97,10 @@ body::after {
     transform: translate(0, 0) scale(1);
   }
   50% {
-    transform: translate(70px, -60px) scale(1.12);
+    transform: translate(60px, -50px) scale(1.1);
   }
   100% {
-    transform: translate(-40px, 50px) scale(0.94);
+    transform: translate(-30px, 40px) scale(0.95);
   }
 }
 @keyframes blobDrift2 {
@@ -106,10 +108,10 @@ body::after {
     transform: translate(0, 0) scale(1);
   }
   50% {
-    transform: translate(-80px, -40px) scale(1.18);
+    transform: translate(-70px, -30px) scale(1.15);
   }
   100% {
-    transform: translate(60px, 70px) scale(0.9);
+    transform: translate(50px, 60px) scale(0.9);
   }
 }
 
@@ -119,16 +121,18 @@ body::after {
   z-index: 1;
 }
 
-/* ============================================================
-   3. PAGE LAYOUT
-   ============================================================ */
+/* 3. PAGE LAYOUT */
 .page__back {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   margin-bottom: 40px;
   color: #99523a;
   text-decoration: none;
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
   transition:
     color 0.3s,
     transform 0.3s;
@@ -139,62 +143,81 @@ body::after {
 }
 
 .page__main {
-  max-width: 1320px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
 .catalog-hero {
-  margin-bottom: 40px;
-  padding-bottom: 36px;
-  border-bottom: 1px solid rgba(42, 36, 28, 0.15);
+  margin-bottom: 48px;
+  padding-bottom: 40px;
+  border-bottom: 2px dashed rgba(42, 36, 28, 0.15);
+  position: relative;
 }
 
 .catalog-hero__label {
   display: inline-block;
-  margin-bottom: 14px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 4px;
+  margin-bottom: 16px;
+  padding: 4px 12px;
+  background: #99523a;
+  color: #decbab;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
   text-transform: uppercase;
-  color: #99523a;
 }
 
 .page__title {
   font-family: "Unbounded", sans-serif;
-  font-weight: 500;
-  font-size: clamp(34px, 5vw, 60px);
-  line-height: 1.08;
-  letter-spacing: -0.6px;
+  font-weight: 700;
+  font-size: clamp(38px, 6vw, 72px);
+  line-height: 1.05;
+  letter-spacing: -1px;
   color: #2a241c;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
 .page__title em {
   font-style: normal;
-  font-weight: 700;
   color: #99523a;
 }
 
 .catalog-hero__lead {
-  max-width: 640px;
-  font-size: 16px;
+  max-width: 680px;
+  font-size: 17px;
   color: #5a5246;
+  line-height: 1.7;
 }
 
-/* ============================================================
-   4. CATALOG FILTERS
-   ============================================================ */
+/* 4. CATALOG FILTERS (Панель управления) */
 .catalog-filters {
-  padding: 20px 24px;
-  margin-bottom: 24px;
-  background: #faf6ec;
+  padding: 24px 28px;
+  margin-bottom: 32px;
+  background: #fdfaf2;
   border: 1px solid rgba(42, 36, 28, 0.1);
-  box-shadow: 0 2px 6px rgba(42, 36, 28, 0.03);
+  box-shadow:
+    0 4px 12px rgba(42, 36, 28, 0.04),
+    0 1px 3px rgba(42, 36, 28, 0.02);
+  position: relative;
+}
+
+.catalog-filters::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    #99523a 0 10px,
+    transparent 10px 20px
+  );
+  opacity: 0.8;
 }
 
 .catalog-filters__row {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 16px;
   align-items: flex-end;
 }
 
@@ -204,42 +227,42 @@ body::after {
 
 .catalog-field__label {
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 2px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
   color: #7f786d;
 }
 
 .catalog-select,
 .catalog-input {
-  padding: 9px 12px;
+  padding: 10px 14px;
   background: #fff;
   border: 1px solid rgba(42, 36, 28, 0.2);
   font-family: "Onest", sans-serif;
   font-size: 14px;
-  color: #3a352d;
+  font-weight: 500;
+  color: #2a241c;
   outline: none;
-  transition:
-    border-color 0.25s,
-    box-shadow 0.25s;
+  transition: all 0.25s ease;
+  border-radius: 2px;
 }
 
 .catalog-select {
-  min-width: 130px;
+  min-width: 140px;
   cursor: pointer;
   appearance: none;
-  padding-right: 32px;
+  padding-right: 36px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath fill='%2399523a' d='M5 7 0 0h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 12px center;
+  background-position: right 14px center;
 }
 
 .catalog-select:focus,
 .catalog-input:focus {
   border-color: #99523a;
-  box-shadow: 0 0 0 3px rgba(153, 82, 58, 0.1);
+  box-shadow: 0 0 0 3px rgba(153, 82, 58, 0.15);
 }
 
 .catalog-input {
@@ -249,41 +272,41 @@ body::after {
 .catalog-field--price .catalog-price {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   font-size: 14px;
+  font-weight: 600;
   color: #7f786d;
 }
 
 .catalog-filters__features {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
   align-items: center;
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px dashed rgba(42, 36, 28, 0.15);
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(42, 36, 28, 0.08);
 }
 
 .feature-chip {
   display: inline-flex;
   align-items: center;
-  padding: 6px 14px;
+  padding: 7px 16px;
   background: #fff;
   border: 1px solid rgba(42, 36, 28, 0.15);
   font-size: 13px;
+  font-weight: 500;
   color: #3a352d;
   cursor: pointer;
   user-select: none;
-  transition:
-    background 0.25s,
-    border-color 0.25s,
-    color 0.25s;
+  transition: all 0.25s ease;
+  border-radius: 20px;
 }
 .feature-chip input {
   display: none;
 }
 .feature-chip:hover {
-  border-color: rgba(153, 82, 58, 0.4);
+  border-color: rgba(153, 82, 58, 0.5);
 }
 .feature-chip input:checked + span {
   color: #99523a;
@@ -292,106 +315,128 @@ body::after {
 .feature-chip:has(input:checked) {
   background: rgba(153, 82, 58, 0.08);
   border-color: #99523a;
+  box-shadow: inset 0 0 0 1px #99523a;
 }
 
 .catalog-filters__actions {
   display: flex;
   justify-content: flex-end;
-  margin-top: 14px;
+  margin-top: 20px;
 }
 
 .catalog-reset {
-  padding: 8px 18px;
+  padding: 9px 20px;
   background: transparent;
   color: #99523a;
-  border: 1px solid rgba(153, 82, 58, 0.35);
+  border: 1px solid rgba(153, 82, 58, 0.4);
   font-family: "Onest", sans-serif;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 700;
   letter-spacing: 1px;
+  text-transform: uppercase;
   cursor: pointer;
-  transition:
-    background 0.25s,
-    border-color 0.25s,
-    color 0.25s;
+  transition: all 0.25s ease;
 }
 .catalog-reset:hover {
   background: #99523a;
   color: #decbab;
-  border-color: #99523a;
 }
 
-/* ============================================================
-   5. CATALOG TABS
-   ============================================================ */
+/* 5. CATALOG TABS (Ярлыки картотеки) */
 .catalog-tabs {
   display: flex;
-  gap: 4px;
-  margin-bottom: 28px;
-  border-bottom: 1px solid rgba(42, 36, 28, 0.15);
+  gap: 8px;
+  margin-bottom: 32px;
 }
 
 .catalog-tab {
-  padding: 14px 24px;
-  background: transparent;
-  border: none;
-  border-bottom: 2px solid transparent;
+  padding: 14px 28px;
+  background: #e8e4d9;
+  border: 1px solid rgba(42, 36, 28, 0.1);
+  border-bottom: none;
   font-family: "Unbounded", sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 1px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
   color: #7f786d;
   cursor: pointer;
-  transition:
-    color 0.25s,
-    border-color 0.25s;
+  position: relative;
+  transition: all 0.3s ease;
+  border-radius: 4px 4px 0 0;
 }
+
 .catalog-tab:hover {
+  background: #f0ece2;
   color: #2a241c;
 }
+
 .catalog-tab.is-active {
+  background: #fdfaf2;
   color: #99523a;
-  border-bottom-color: #99523a;
+  border-color: rgba(42, 36, 28, 0.1);
+  z-index: 2;
+  padding-bottom: 16px;
+  margin-bottom: -2px;
+}
+.catalog-tab.is-active::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #99523a;
 }
 
 .catalog-panel {
   display: none;
+  animation: panelFadeIn 0.4s ease;
 }
 .catalog-panel.is-active {
   display: block;
 }
 
-/* ============================================================
-   6. BUILDINGS GRID + CARD
-   ============================================================ */
+@keyframes panelFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 6. BUILDINGS GRID + B-CARD (Архитектурные планшеты) */
 .catalog-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 28px;
 }
 
 .b-card {
   position: relative;
   display: flex;
   flex-direction: column;
-  background: #faf6ec;
-  border: 1px solid rgba(42, 36, 28, 0.1);
-  box-shadow: 0 2px 6px rgba(42, 36, 28, 0.03);
+  background: #fff;
+  border: 1px solid rgba(42, 36, 28, 0.12);
+  box-shadow: 0 4px 12px rgba(42, 36, 28, 0.05);
   cursor: pointer;
-  overflow: hidden;
   transition:
     transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.4s ease,
-    border-color 0.35s ease;
+    box-shadow 0.4s ease;
+  padding: 12px 12px 0; /* Отступ как у полароида */
 }
+
 .b-card:hover {
-  transform: translateY(-6px);
-  border-color: rgba(153, 82, 58, 0.25);
-  box-shadow: 0 24px 48px rgba(42, 36, 28, 0.1);
+  transform: translateY(-8px) rotate(1deg);
+  box-shadow: 0 20px 40px rgba(42, 36, 28, 0.12);
+  z-index: 2;
 }
+
 .b-card.is-added {
   box-shadow:
-    0 24px 48px rgba(42, 36, 28, 0.1),
+    0 20px 40px rgba(42, 36, 28, 0.12),
     0 0 0 3px #2ecc71;
   border-color: #2ecc71;
 }
@@ -399,62 +444,63 @@ body::after {
 .b-card__cover {
   position: relative;
   aspect-ratio: 4 / 3;
-  background: linear-gradient(135deg, #c79b78, #99523a);
+  background: #f4f0e6;
   overflow: hidden;
+  border: 1px solid rgba(42, 36, 28, 0.1);
 }
-.b-card:nth-child(3n + 2) .b-card__cover {
-  background: linear-gradient(135deg, #ae7f6c, #7f786d);
+
+/* Чертежная сетка на обложке */
+.b-card__cover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(153, 82, 58, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(153, 82, 58, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  z-index: 1;
+  pointer-events: none;
 }
-.b-card:nth-child(3n + 3) .b-card__cover {
-  background: linear-gradient(135deg, #ddbd84, #c79b78);
-}
+
 .b-card__cover img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.b-card__cover::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse at 30% 20%,
-    rgba(255, 255, 255, 0.18),
-    transparent 60%
-  );
-  pointer-events: none;
+.b-card:hover .b-card__cover img {
+  transform: scale(1.05);
 }
 
 .b-card__price {
   position: absolute;
   bottom: 12px;
-  left: 12px;
-  padding: 6px 12px;
-  background: rgba(42, 36, 28, 0.85);
+  right: 12px;
+  padding: 6px 14px;
+  background: #2a241c;
   color: #ddbd84;
   font-family: "Unbounded", sans-serif;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.5px;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  z-index: 2;
+  box-shadow: 2px 2px 0 rgba(153, 82, 58, 0.5); /* Жесткая тень */
 }
 
 .b-card__body {
   flex: 1;
-  padding: 20px 22px 22px;
+  padding: 20px 8px 20px;
   display: flex;
   flex-direction: column;
 }
 
 .b-card__title {
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   font-family: "Unbounded", sans-serif;
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.25;
-  letter-spacing: -0.2px;
   color: #2a241c;
   transition: color 0.3s;
 }
@@ -463,20 +509,20 @@ body::after {
 }
 
 .b-card__meta {
-  margin-bottom: 14px;
+  margin-bottom: 16px;
   font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 1.5px;
+  font-weight: 600;
+  letter-spacing: 2px;
   text-transform: uppercase;
-  color: #7f786d;
+  color: #99523a;
 }
 
 .b-card__specs {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 14px;
-  padding-top: 14px;
-  border-top: 1px solid rgba(42, 36, 28, 0.1);
+  gap: 8px 16px;
+  padding-top: 16px;
+  border-top: 1px dashed rgba(42, 36, 28, 0.15);
   font-size: 13px;
   color: #5a5246;
 }
@@ -487,32 +533,31 @@ body::after {
 }
 .b-card__specs b {
   font-family: "Unbounded", sans-serif;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
   color: #2a241c;
 }
 
+/* Кнопка удаления / Печать */
 .b-card__remove {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 20px;
+  right: 20px;
   z-index: 3;
   width: 32px;
   height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(42, 36, 28, 0.85);
-  color: #decbab;
-  border: none;
-  font-size: 18px;
+  background: #fdfaf2;
+  color: #c0392b;
+  border: 1px solid rgba(192, 57, 43, 0.3);
+  font-size: 20px;
   cursor: pointer;
   opacity: 0;
   transform: scale(0.8);
-  transition:
-    opacity 0.3s,
-    transform 0.3s,
-    background 0.25s;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 .b-card.is-added .b-card__remove {
   opacity: 1;
@@ -520,21 +565,20 @@ body::after {
 }
 .b-card__remove:hover {
   background: #c0392b;
+  color: #fff;
 }
 
 .b-card__stamp {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 24px;
+  right: 24px;
   z-index: 2;
-  width: 76px;
-  height: 76px;
+  width: 80px;
+  height: 80px;
   pointer-events: none;
   opacity: 0;
-  transform: scale(0) rotate(-15deg);
-  transition:
-    opacity 0.3s,
-    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: scale(0) rotate(-20deg);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .b-card.is-added .b-card__stamp {
   opacity: 1;
@@ -542,84 +586,124 @@ body::after {
 }
 
 /* ============================================================
-   7. TAGS / SHEETS
+   7. ЛИСТЫ СПРАВОЧНИКА (SHEET-CARD) — Физические карточки
    ============================================================ */
 .tags-wrap {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 40px;
 }
 
 .tag-block {
-  background: #faf6ec;
-  border: 1px solid rgba(42, 36, 28, 0.1);
-  padding: 24px 26px;
+  background: transparent;
 }
 
 .tag-block__head {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
   justify-content: space-between;
   align-items: baseline;
-  margin-bottom: 20px;
-  padding-bottom: 14px;
-  border-bottom: 1px dashed rgba(42, 36, 28, 0.15);
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid rgba(42, 36, 28, 0.1);
 }
 
 .tag-block__title {
   font-family: "Unbounded", sans-serif;
-  font-size: 16px;
-  font-weight: 500;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: #99523a;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #2a241c;
 }
 
 .tag-block__count {
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: 600;
   color: #7f786d;
-  letter-spacing: 1px;
+  background: #e8e4d9;
+  padding: 4px 10px;
+  border-radius: 12px;
 }
 
 .sheets-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
 }
 
+/* Настоящий бумажный лист */
 .sheet-card {
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 22px 22px 0;
-  background: #fff;
+  background: #fdfaf2;
   border: 1px solid rgba(42, 36, 28, 0.12);
+  padding: 24px 24px 0;
   cursor: pointer;
-  overflow: hidden;
+  /* Многослойная тень для объема */
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.05),
+    0 10px 20px rgba(42, 36, 28, 0.05);
   transition:
     transform 0.3s ease,
-    box-shadow 0.3s ease,
-    border-color 0.3s ease;
+    box-shadow 0.3s ease;
+  overflow: visible; /* Чтобы скотч вылезал */
 }
+
+/* Линии на бумаге */
+.sheet-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 31px,
+    rgba(42, 36, 28, 0.05) 31px,
+    rgba(42, 36, 28, 0.05) 32px
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Канцелярский скотч сверху */
+.sheet-card::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 80px;
+  height: 24px;
+  background: rgba(222, 203, 171, 0.6);
+  backdrop-filter: blur(2px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  z-index: 2;
+}
+
 .sheet-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(153, 82, 58, 0.3);
-  box-shadow: 0 16px 32px rgba(42, 36, 28, 0.1);
+  transform: translateY(-5px) rotate(-1deg);
+  box-shadow:
+    0 2px 5px rgba(0, 0, 0, 0.05),
+    0 20px 40px rgba(42, 36, 28, 0.1);
+  z-index: 10;
 }
+
 .sheet-card.is-added {
   border-color: #2ecc71;
-  box-shadow: 0 0 0 3px #2ecc71;
+  box-shadow:
+    0 0 0 2px #2ecc71,
+    0 20px 40px rgba(42, 36, 28, 0.1);
 }
 
 .sheet-card__title {
-  margin-bottom: 8px;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 12px;
   font-family: "Unbounded", sans-serif;
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 600;
   line-height: 1.3;
-  letter-spacing: 0.3px;
   color: #2a241c;
   transition: color 0.3s;
 }
@@ -628,9 +712,11 @@ body::after {
 }
 
 .sheet-card__desc {
-  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 16px;
   font-size: 13px;
-  line-height: 1.5;
+  line-height: 1.6;
   color: #5a5246;
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -641,103 +727,103 @@ body::after {
 }
 
 .sheet-card__modifier {
+  position: relative;
+  z-index: 1;
   display: inline-block;
   align-self: flex-start;
-  margin-bottom: 14px;
-  padding: 3px 9px;
-  background: rgba(153, 82, 58, 0.08);
-  color: #99523a;
-  font-size: 11px;
-  font-weight: 600;
+  margin-bottom: 16px;
+  padding: 4px 10px;
+  background: #2a241c;
+  color: #ddbd84;
+  font-size: 10px;
+  font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
+  border-radius: 2px;
 }
 
+/* Фото на листе — как приклеенное */
 .sheet-card__image {
   position: relative;
+  z-index: 1;
   aspect-ratio: 4 / 3;
-  margin: 0 -22px;
-  background: linear-gradient(135deg, #c79b78, #99523a);
+  margin: 0 -24px;
+  background: #f4f0e6;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(222, 203, 171, 0.55);
-  font-family: "Onest", sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
+  border-top: 1px dashed rgba(42, 36, 28, 0.2);
   overflow: hidden;
 }
+
 .sheet-card__image::before {
-  content: "ФОТО";
+  content: "ФОТО / ЭСКИЗ";
   position: absolute;
+  color: rgba(42, 36, 28, 0.2);
+  font-weight: 700;
+  letter-spacing: 2px;
+  font-size: 11px;
 }
+
 .sheet-card__image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  position: relative;
-  z-index: 1;
+  transition: transform 0.5s ease;
 }
+.sheet-card:hover .sheet-card__image img {
+  transform: scale(1.05);
+}
+
 .sheet-card__image:has(img)::before {
   display: none;
 }
 
-.sheet-card--custom .sheet-card__image {
-  background: linear-gradient(135deg, #ddbd84, #c79b78);
-}
-
+/* Удаление */
 .sheet-card__remove {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 3;
-  width: 26px;
-  height: 26px;
+  top: 12px;
+  right: 12px;
+  z-index: 5;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(42, 36, 28, 0.85);
-  color: #decbab;
-  border: none;
-  font-size: 15px;
+  background: #fdfaf2;
+  color: #c0392b;
+  border: 1px solid #c0392b;
+  font-size: 16px;
   cursor: pointer;
+  border-radius: 50%;
   opacity: 0;
-  transition:
-    opacity 0.25s,
-    background 0.25s;
+  transition: all 0.25s ease;
 }
 .sheet-card.is-added .sheet-card__remove {
   opacity: 1;
 }
 .sheet-card__remove:hover {
   background: #c0392b;
+  color: #fff;
+  transform: rotate(90deg);
 }
 
-/* ============================================================
-   8. KEY TAG BLOCK + CUSTOM SHEET
-   ============================================================ */
+/* 8. СПЕЦ-КАРТОЧКИ */
 .tag-block--key {
-  border-left: 3px solid #ddbd84;
-  background: linear-gradient(
-    90deg,
-    rgba(221, 189, 132, 0.06) 0%,
-    #faf6ec 100%
-  );
+  border-left: 4px solid #99523a;
+  padding-left: 24px;
 }
 
 .tag-block__key-badge {
   display: inline-block;
-  margin-left: 8px;
+  margin-left: 12px;
   padding: 2px 8px;
-  background: #ddbd84;
-  color: #2a241c;
-  font-family: "Onest", sans-serif;
-  font-size: 9px;
+  background: #99523a;
+  color: #decbab;
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 1.5px;
+  letter-spacing: 1px;
   text-transform: uppercase;
   border-radius: 2px;
   vertical-align: middle;
@@ -745,115 +831,109 @@ body::after {
 
 .tag-block__add-custom {
   margin-left: auto;
-  padding: 6px 14px;
-  background: transparent;
-  color: #99523a;
-  border: 1px dashed rgba(153, 82, 58, 0.4);
-  font-family: "Onest", sans-serif;
+  padding: 8px 16px;
+  background: #ddbd84;
+  color: #2a241c;
+  border: none;
   font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 1.2px;
+  font-weight: 700;
+  letter-spacing: 1px;
   text-transform: uppercase;
   cursor: pointer;
-  transition:
-    background 0.25s,
-    border-color 0.25s,
-    color 0.25s;
-  white-space: nowrap;
+  box-shadow: 3px 3px 0 #2a241c;
+  transition: all 0.2s;
 }
 .tag-block__add-custom:hover {
-  background: rgba(153, 82, 58, 0.06);
-  border-color: #99523a;
-  border-style: solid;
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 #2a241c;
 }
 
 .sheet-card--custom {
+  background: #fdfaf2;
   border: 2px dashed #99523a;
-  background: linear-gradient(135deg, #fdfaf2 0%, #faf3e4 100%);
-  position: relative;
 }
 .sheet-card--custom::before {
+  background: rgba(153, 82, 58, 0.15); /* Красноватый скотч */
+}
+.sheet-card--custom::after {
   content: "СВОЙ";
   position: absolute;
-  top: 6px;
-  right: 6px;
-  padding: 2px 6px;
+  top: 16px;
+  right: -8px;
+  padding: 4px 10px;
   background: #99523a;
   color: #decbab;
-  font-family: "Onest", sans-serif;
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 700;
-  letter-spacing: 1.2px;
-  border-radius: 2px;
+  letter-spacing: 1px;
+  transform: rotate(5deg);
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 3;
 }
 
-/* ============================================================
-   9. EMPTY STATES
-   ============================================================ */
+/* 9. EMPTY STATES */
 .catalog-empty {
-  padding: 60px 24px;
+  padding: 80px 24px;
   text-align: center;
-  background: #faf6ec;
-  border: 1px dashed rgba(42, 36, 28, 0.2);
+  background: #fdfaf2;
+  border: 2px dashed rgba(42, 36, 28, 0.15);
 }
 .catalog-empty__title {
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   font-family: "Unbounded", sans-serif;
-  font-size: 20px;
-  font-weight: 500;
+  font-size: 24px;
+  font-weight: 700;
   color: #2a241c;
 }
 .catalog-empty__text {
-  margin-bottom: 22px;
+  margin-bottom: 28px;
   color: #7f786d;
-  font-size: 15px;
+  font-size: 16px;
 }
 .catalog-empty__btn {
-  padding: 12px 26px;
-  background: #99523a;
+  padding: 14px 32px;
+  background: #2a241c;
   color: #decbab;
   border: none;
   font-family: "Onest", sans-serif;
   font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
+  font-weight: 700;
+  letter-spacing: 1px;
   text-transform: uppercase;
   cursor: pointer;
   transition:
-    background 0.3s,
-    transform 0.3s;
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 .catalog-empty__btn:hover {
-  background: #2a241c;
-  transform: translateY(-2px);
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 #99523a;
 }
 
-/* ============================================================
-   10. FOLDER STACK
-   ============================================================ */
+/* 10. FOLDER STACK (Папка на столе) */
 .folder-stack {
   position: fixed;
-  bottom: 32px;
-  right: 32px;
+  bottom: 40px;
+  right: 40px;
   z-index: 90;
-  width: 300px;
-  height: 220px;
+  width: 320px;
+  height: 240px;
   pointer-events: none;
+  perspective: 1000px;
 }
 
 .folder-stack::before {
   content: "";
   position: absolute;
-  right: 20px;
-  bottom: 148px;
-  width: 110px;
-  height: 26px;
-  background: linear-gradient(160deg, #5a4a36 0%, #3a2f22 100%);
-  border: 1px solid rgba(221, 189, 132, 0.55);
-  border-bottom: none;
-  border-radius: 10px 10px 0 0;
+  right: 30px;
+  bottom: 160px;
+  width: 120px;
+  height: 30px;
+  background: #bda076;
+  border-radius: 8px 8px 0 0;
   z-index: 2;
   pointer-events: none;
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.3);
 }
 
 .folder-stack__layer {
@@ -861,34 +941,35 @@ body::after {
   left: 0;
   right: 0;
   bottom: 0;
-  height: 148px;
-  border: 1px solid rgba(221, 189, 132, 0.35);
-  background: linear-gradient(160deg, #3a2f22 0%, #221c14 100%);
+  height: 160px;
+  background: #c9ae87;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
   pointer-events: none;
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
 }
 .folder-stack__layer--3 {
   z-index: 0;
-  transform: translateY(-26px) scale(0.88);
-  opacity: 0.35;
+  transform: translateY(-30px) scale(0.9);
+  opacity: 0.6;
 }
 .folder-stack__layer--2 {
   z-index: 1;
-  transform: translateY(-16px) scale(0.94);
-  opacity: 0.55;
+  transform: translateY(-20px) scale(0.95);
+  opacity: 0.8;
 }
 .folder-stack__layer--1 {
   z-index: 1;
-  transform: translateY(-8px) scale(0.98);
-  opacity: 0.75;
+  transform: translateY(-10px) scale(0.98);
 }
 
 .folder-stack__papers {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 148px;
-  height: 60px;
+  left: 20px;
+  right: 20px;
+  bottom: 160px;
+  height: 70px;
   z-index: 3;
   pointer-events: none;
   overflow: visible;
@@ -896,43 +977,29 @@ body::after {
 
 .folder-stack__paper {
   position: absolute;
-  left: calc(28px + var(--i, 0) * 14px);
-  bottom: calc(-15px + var(--i, 0) * 8px);
-  width: 200px;
-  height: 56px;
-  background: linear-gradient(180deg, #fdfaf2 0%, #ebe0cc 100%);
-  border: 1px solid rgba(42, 36, 28, 0.15);
-  border-radius: 3px 3px 0 0;
-  box-shadow: 0 -3px 6px rgba(0, 0, 0, 0.12);
-  transform: rotate(calc(-1.5deg + var(--i, 0) * 1.2deg));
+  left: calc(var(--i, 0) * 10px);
+  bottom: calc(-15px + var(--i, 0) * 6px);
+  width: 240px;
+  height: 70px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 2px;
+  box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.06);
+  transform: rotate(calc(-2deg + var(--i, 0) * 2deg));
   transform-origin: bottom left;
-  animation: paperIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: calc(var(--i, 0) * 60ms);
-}
-.folder-stack__paper::before,
-.folder-stack__paper::after {
-  content: "";
-  position: absolute;
-  left: 14px;
-  right: 14px;
-  height: 1px;
-  background: rgba(42, 36, 28, 0.1);
-}
-.folder-stack__paper::before {
-  top: 22px;
-}
-.folder-stack__paper::after {
-  top: 38px;
 }
 
-@keyframes paperIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px) rotate(0);
-  }
-  to {
-    opacity: 1;
-  }
+.folder-stack__paper::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  height: 2px;
+  background: #edeae2;
+  box-shadow:
+    0 12px 0 #edeae2,
+    0 24px 0 #edeae2;
 }
 
 .folder-stack__front {
@@ -941,141 +1008,110 @@ body::after {
   right: 0;
   bottom: 0;
   z-index: 5;
-  height: 148px;
+  height: 160px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-start;
-  padding: 20px 24px;
-  background: linear-gradient(160deg, #4a3c2c 0%, #2a241c 100%);
-  border: 1px solid rgba(221, 189, 132, 0.55);
-  border-top: 3px solid rgba(221, 189, 132, 0.5);
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.4);
-  color: #decbab;
-  font-family: "Onest", sans-serif;
-  text-align: left;
+  padding: 24px 28px;
+  background: #d4bc98;
+  border: 1px solid #bda076;
+  border-radius: 4px 4px 12px 12px;
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.15),
+    inset 0 2px 0 rgba(255, 255, 255, 0.4);
   cursor: pointer;
   pointer-events: auto;
-  transition:
-    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.4s ease;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: hidden;
 }
+
 .folder-stack__front::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, #ddbd84 50%, transparent);
-  opacity: 0.8;
-  transition: opacity 0.3s;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(0, 0, 0, 0.02) 0 2px,
+    transparent 2px 10px
+  );
 }
 
 .folder-stack:hover .folder-stack__front {
-  transform: translateY(-10px);
-  box-shadow: 0 22px 52px rgba(0, 0, 0, 0.5);
-  animation: folderSway 0.85s ease-in-out infinite;
-}
-.folder-stack:hover .folder-stack__layer--1 {
-  transform: translateY(-18px) scale(0.98);
-}
-.folder-stack:hover .folder-stack__layer--2 {
-  transform: translateY(-28px) scale(0.94);
-}
-.folder-stack:hover .folder-stack__layer--3 {
-  transform: translateY(-36px) scale(0.88);
-}
-.folder-stack:hover .folder-stack__papers {
-  transform: translateY(-12px);
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translateY(-12px) rotateX(5deg);
+  box-shadow:
+    0 30px 60px rgba(0, 0, 0, 0.2),
+    inset 0 2px 0 rgba(255, 255, 255, 0.6);
 }
 
-@keyframes folderSway {
-  0%,
-  100% {
-    transform: translateY(-10px) rotate(0);
-  }
-  25% {
-    transform: translateY(-12px) rotate(-1.2deg);
-  }
-  75% {
-    transform: translateY(-12px) rotate(1.2deg);
-  }
+.folder-stack:hover .folder-stack__layer--1 {
+  transform: translateY(-22px) scale(0.98);
+}
+.folder-stack:hover .folder-stack__layer--2 {
+  transform: translateY(-34px) scale(0.95);
+}
+.folder-stack:hover .folder-stack__layer--3 {
+  transform: translateY(-46px) scale(0.9);
+}
+.folder-stack:hover .folder-stack__papers {
+  transform: translateY(-15px);
 }
 
 .folder-stack__title {
+  position: relative;
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   font-family: "Unbounded", sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: #ddbd84;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #2a241c;
 }
 
 .folder-stack__meta {
-  display: block;
+  position: relative;
   font-size: 14px;
-  line-height: 1.35;
-  color: rgba(222, 203, 171, 0.85);
+  font-weight: 500;
+  color: rgba(42, 36, 28, 0.7);
 }
 
 .folder-stack__add {
   position: absolute;
-  top: 12px;
-  right: 14px;
+  top: 16px;
+  right: 16px;
   z-index: 7;
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #ddbd84;
-  color: #2a241c;
+  background: #99523a;
+  color: #decbab;
   border: none;
-  font-family: "Onest", sans-serif;
-  font-size: 20px;
-  font-weight: 500;
-  line-height: 1;
+  font-size: 24px;
   cursor: pointer;
   pointer-events: auto;
-  transition:
-    background 0.25s,
-    transform 0.25s;
+  transition: all 0.25s;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(153, 82, 58, 0.4);
 }
 .folder-stack__add:hover {
-  background: #decbab;
-  transform: rotate(90deg);
+  background: #2a241c;
+  transform: rotate(90deg) scale(1.1);
 }
 
-/* ============================================================
-   11. FLYING SHEET
-   ============================================================ */
+/* 11. FLYING SHEET */
 .fly-sheet {
   position: fixed;
   z-index: 999;
   pointer-events: none;
-  background: linear-gradient(180deg, #fdfaf2 0%, #ebe0cc 100%);
-  border: 2px solid #ddbd84;
-  border-radius: 4px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  background: #fff;
+  border: 1px solid #ddbd84;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
   will-change: transform, opacity;
 }
-.fly-sheet::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, #99523a 50%, transparent);
-}
 
-/* ============================================================
-   12. MODALS
-   ============================================================ */
+/* 12. MODALS */
 .modal {
   position: fixed;
   inset: 0;
@@ -1092,125 +1128,65 @@ body::after {
 .modal__backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(20, 16, 12, 0.5);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  animation: modalFadeIn 0.35s ease;
+  background: rgba(20, 16, 12, 0.6);
+  backdrop-filter: blur(8px);
 }
 
 .modal__window {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 440px;
-  padding: 36px 36px 28px;
-  background: #2a241c;
-  color: #decbab;
-  border: 1px solid rgba(221, 189, 132, 0.35);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
-  animation: modalPopIn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-@keyframes modalFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-@keyframes modalPopIn {
-  from {
-    opacity: 0;
-    transform: translateY(16px) scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  max-width: 480px;
+  padding: 40px;
+  background: #fdfaf2;
+  color: #2a241c;
+  border: 1px solid rgba(42, 36, 28, 0.15);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
 }
 
 .modal__title {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   font-family: "Unbounded", sans-serif;
-  font-size: clamp(22px, 2.4vw, 30px);
-  font-weight: 500;
-  line-height: 1.15;
-  letter-spacing: -0.3px;
-  color: #decbab;
+  font-size: 26px;
+  font-weight: 700;
+  color: #2a241c;
 }
 
 .modal__lead {
-  margin-bottom: 24px;
-  font-size: 14px;
-  color: rgba(222, 203, 171, 0.65);
+  margin-bottom: 28px;
+  font-size: 15px;
+  color: #5a5246;
 }
 
 .modal__field {
   display: block;
   margin-bottom: 24px;
 }
-
 .modal__label {
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 2px;
+  font-weight: 700;
+  letter-spacing: 1px;
   text-transform: uppercase;
-  color: #ddbd84;
-  opacity: 0.85;
+  color: #7f786d;
 }
 
-.modal__input {
-  width: 100%;
-  padding: 16px 18px;
-  background: rgba(221, 189, 132, 0.05);
-  color: #decbab;
-  border: 1px solid rgba(221, 189, 132, 0.25);
-  font-family: "Onest", sans-serif;
-  font-size: 20px;
-  font-weight: 500;
-  letter-spacing: -0.2px;
-  outline: none;
-  transition:
-    border-color 0.3s,
-    background 0.3s,
-    box-shadow 0.3s;
-}
-.modal__input:focus {
-  border-color: #ddbd84;
-  background: rgba(221, 189, 132, 0.09);
-  box-shadow: 0 0 0 3px rgba(221, 189, 132, 0.12);
-}
-
+.modal__input,
 .modal__select {
   width: 100%;
-  padding: 12px 40px 12px 14px;
-  background: rgba(221, 189, 132, 0.05);
-  color: #decbab;
-  border: 1px solid rgba(221, 189, 132, 0.25);
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid rgba(42, 36, 28, 0.2);
+  color: #2a241c;
   font-family: "Onest", sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   outline: none;
-  cursor: pointer;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath fill='%23ddbd84' d='M5 7 0 0h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  transition:
-    border-color 0.3s,
-    background 0.3s,
-    box-shadow 0.3s;
+  transition: border-color 0.3s;
 }
+.modal__input:focus,
 .modal__select:focus {
-  border-color: #ddbd84;
-  background-color: rgba(221, 189, 132, 0.09);
-  box-shadow: 0 0 0 3px rgba(221, 189, 132, 0.12);
-}
-.modal__select option {
-  background: #2a241c;
-  color: #decbab;
+  border-color: #99523a;
 }
 
 .modal__actions {
@@ -1220,44 +1196,38 @@ body::after {
 }
 
 .modal__btn {
-  padding: 12px 24px;
-  background: #ddbd84;
-  color: #2a241c;
-  border: 1px solid #ddbd84;
+  padding: 14px 28px;
+  background: #99523a;
+  color: #decbab;
+  border: none;
   font-family: "Onest", sans-serif;
   font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
+  font-weight: 700;
+  letter-spacing: 1px;
   text-transform: uppercase;
   cursor: pointer;
-  transition:
-    background 0.25s,
-    color 0.25s,
-    border-color 0.25s,
-    transform 0.25s;
+  transition: all 0.25s;
 }
 .modal__btn:hover {
-  background: #decbab;
-  transform: translateY(-2px);
+  background: #2a241c;
 }
 .modal__btn--ghost {
   background: transparent;
-  color: rgba(222, 203, 171, 0.7);
-  border-color: rgba(221, 189, 132, 0.3);
+  color: #7f786d;
+  border: 1px solid rgba(42, 36, 28, 0.2);
 }
 .modal__btn--ghost:hover {
-  background: transparent;
-  border-color: #ddbd84;
-  color: #decbab;
+  background: #edeae2;
+  color: #2a241c;
 }
 
+/* Выбор типа (Готовый/Свой) */
 .modal__kind {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 12px;
+  margin-bottom: 24px;
 }
-
 .kind-card {
   cursor: pointer;
 }
@@ -1267,85 +1237,67 @@ body::after {
 .kind-card__body {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding: 14px 16px;
-  border: 1px solid rgba(221, 189, 132, 0.25);
-  background: rgba(221, 189, 132, 0.05);
-  color: #decbab;
-  transition:
-    border-color 0.25s,
-    background 0.25s;
+  gap: 4px;
+  padding: 16px;
+  border: 2px solid rgba(42, 36, 28, 0.1);
+  background: #fff;
+  transition: all 0.25s;
 }
 .kind-card:hover .kind-card__body {
-  border-color: rgba(221, 189, 132, 0.5);
+  border-color: rgba(153, 82, 58, 0.4);
 }
 .kind-card input:checked + .kind-card__body {
-  border-color: #ddbd84;
-  background: rgba(221, 189, 132, 0.15);
-  box-shadow: 0 0 0 2px rgba(221, 189, 132, 0.2);
+  border-color: #99523a;
+  background: rgba(153, 82, 58, 0.05);
 }
 .kind-card__body strong {
   font-family: "Unbounded", sans-serif;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 15px;
+  color: #2a241c;
 }
 .kind-card__body small {
-  font-size: 12px;
-  color: rgba(222, 203, 171, 0.6);
+  font-size: 13px;
+  color: #7f786d;
 }
 
-.custom-modal__hint {
-  display: block;
-  margin-top: 6px;
-  font-size: 12px;
-  color: rgba(222, 203, 171, 0.5);
-  line-height: 1.4;
-}
-
-/* ============================================================
-   13. TOAST
-   ============================================================ */
+/* 13. TOAST */
 .toast {
   position: fixed;
-  top: 40px;
-  right: 40px;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
   z-index: 250;
-  min-width: 260px;
-  max-width: 360px;
-  padding: 16px 22px;
-  background: linear-gradient(160deg, #3a2f22 0%, #221c14 100%);
+  padding: 16px 32px;
+  background: #2a241c;
   color: #decbab;
-  border: 1px solid rgba(221, 189, 132, 0.4);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
   font-family: "Onest", sans-serif;
-  font-size: 14px;
-  transform: translateX(calc(100% + 40px));
+  font-size: 15px;
+  font-weight: 500;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   opacity: 0;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   pointer-events: none;
-  transition:
-    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.3s ease;
 }
 .toast.is-visible {
-  transform: translateX(0);
+  transform: translateX(-50%) translateY(0);
   opacity: 1;
 }
 .toast.is-error {
-  border-color: rgba(224, 133, 115, 0.6);
-  color: #e08573;
+  background: #c0392b;
+  color: #fff;
 }
 
 /* ============================================================
-   14. PORTFOLIO OVERLAY
+   14. PORTFOLIO OVERLAY (Рабочий стол)
    ============================================================ */
 .portfolio-overlay {
   position: fixed;
   inset: 0;
   z-index: 180;
   display: flex;
-  align-items: stretch;
+  align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: 32px;
 }
 .portfolio-overlay[hidden] {
   display: none;
@@ -1354,19 +1306,8 @@ body::after {
 .portfolio-overlay__backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(20, 16, 12, 0.55);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  animation: pFadeIn 0.4s ease;
-}
-
-@keyframes pFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  background: rgba(20, 16, 12, 0.7);
+  backdrop-filter: blur(10px);
 }
 
 .portfolio-panel {
@@ -1375,13 +1316,21 @@ body::after {
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: min(96vw, 1500px);
-  height: calc(100vh - 32px);
-  max-height: calc(100vh - 32px);
-  background: #faf6ec;
-  border: 1px solid rgba(42, 36, 28, 0.15);
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+  max-width: 1400px;
+  height: 100%;
+  max-height: 90vh;
+  background: #fdfaf2;
+  border: 1px solid rgba(42, 36, 28, 0.2);
+  box-shadow:
+    0 40px 100px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.5) inset;
   overflow: hidden;
+  /* Текстура бумаги для всего оверлея */
+  background-image: linear-gradient(
+    rgba(42, 36, 28, 0.03) 1px,
+    transparent 1px
+  );
+  background-size: 100% 32px;
 }
 
 .portfolio-panel::before {
@@ -1390,10 +1339,14 @@ body::after {
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, #ddbd84 50%, transparent);
-  z-index: 2;
-  pointer-events: none;
+  height: 6px;
+  background: repeating-linear-gradient(
+    90deg,
+    #99523a 0 20px,
+    #ddbd84 20px 40px,
+    #2a241c 40px 60px
+  );
+  z-index: 10;
 }
 
 .portfolio-panel__header,
@@ -1403,230 +1356,147 @@ body::after {
 .portfolio-pagination,
 .portfolio-footer {
   flex-shrink: 0;
+  background: #fdfaf2;
 }
 
-/* ============================================================
-   15. PORTFOLIO HEADER
-   ============================================================ */
+/* Шапка оверлея */
 .portfolio-panel__header {
   position: relative;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 24px;
-  padding: 28px 32px 22px;
-  border-bottom: 1px solid rgba(42, 36, 28, 0.1);
-}
-
-.portfolio-panel__title-block {
-  flex: 1;
-  min-width: 0;
+  padding: 32px 40px 24px;
+  border-bottom: 2px solid rgba(42, 36, 28, 0.1);
 }
 
 .portfolio-panel__label {
   display: inline-block;
-  margin-bottom: 8px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 3px;
+  margin-bottom: 12px;
+  padding: 4px 10px;
+  background: #2a241c;
+  color: #decbab;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
   text-transform: uppercase;
-  color: #99523a;
 }
 
 .portfolio-panel__title {
   display: inline;
   font-family: "Unbounded", sans-serif;
-  font-weight: 500;
-  font-size: clamp(26px, 3.2vw, 42px);
+  font-weight: 700;
+  font-size: clamp(28px, 3.5vw, 48px);
   line-height: 1.1;
-  letter-spacing: -0.5px;
   color: #2a241c;
-  word-break: break-word;
   cursor: text;
-  border-bottom: 1px solid transparent;
+  border-bottom: 2px dashed transparent;
   transition: border-color 0.25s;
 }
 .portfolio-panel__title:hover {
-  border-bottom-color: rgba(153, 82, 58, 0.3);
+  border-bottom-color: rgba(153, 82, 58, 0.4);
 }
 .portfolio-panel__title--editing {
   display: block;
-  width: 100%;
-  border-bottom: 1px solid #99523a;
+  border-bottom: 2px solid #99523a;
   outline: none;
-  padding-bottom: 2px;
 }
 
 .portfolio-panel__number {
   display: inline-block;
-  margin-left: 12px;
-  padding: 4px 10px;
+  margin-left: 16px;
+  padding: 4px 12px;
   background: rgba(153, 82, 58, 0.1);
   color: #99523a;
   font-family: "Unbounded", sans-serif;
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 1px;
+  font-size: 14px;
+  font-weight: 600;
   vertical-align: middle;
 }
 
 .portfolio-panel__actions {
   display: flex;
-  gap: 8px;
-  flex-shrink: 0;
+  gap: 12px;
 }
 
 .pp-btn {
-  padding: 9px 16px;
+  padding: 10px 20px;
   background: transparent;
-  color: #99523a;
-  border: 1px solid rgba(153, 82, 58, 0.35);
+  color: #2a241c;
+  border: 1px solid rgba(42, 36, 28, 0.2);
   font-family: "Onest", sans-serif;
   font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 1.2px;
+  font-weight: 700;
+  letter-spacing: 1px;
   text-transform: uppercase;
   cursor: pointer;
-  transition:
-    background 0.25s,
-    color 0.25s,
-    border-color 0.25s;
+  transition: all 0.2s;
 }
 .pp-btn:hover {
-  background: #99523a;
-  color: #decbab;
-  border-color: #99523a;
+  background: #edeae2;
+  border-color: #2a241c;
+}
+.pp-btn--danger {
+  color: #c0392b;
+  border-color: rgba(192, 57, 43, 0.3);
 }
 .pp-btn--danger:hover {
   background: #c0392b;
+  color: #fff;
   border-color: #c0392b;
 }
 .pp-btn--close {
   padding: 0;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
-  line-height: 1;
-  letter-spacing: 0;
-  text-transform: none;
+  font-size: 24px;
+  border-color: transparent;
+  background: #edeae2;
+}
+.pp-btn--close:hover {
+  background: #2a241c;
+  color: #fff;
 }
 
-/* ============================================================
-   16. PORTFOLIO PARAMS
-   ============================================================ */
+/* Параметры */
 .portfolio-params {
-  padding: 16px 32px;
-  background: rgba(153, 82, 58, 0.04);
+  padding: 16px 40px;
+  background: rgba(153, 82, 58, 0.03);
   border-bottom: 1px solid rgba(42, 36, 28, 0.08);
 }
-.portfolio-params[hidden] {
-  display: none;
-}
-
-.portfolio-params__row {
-  display: flex;
-  gap: 16px;
-  align-items: flex-end;
-  flex-wrap: wrap;
-}
-
-.portfolio-params__field {
-  display: block;
-  flex: 1;
-  min-width: 220px;
-}
-
-.portfolio-params__label {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: #7f786d;
-}
-
 .portfolio-params__select {
-  width: 100%;
-  padding: 9px 32px 9px 12px;
+  padding: 10px 16px;
   background: #fff;
   border: 1px solid rgba(42, 36, 28, 0.2);
   font-family: "Onest", sans-serif;
   font-size: 14px;
-  color: #3a352d;
-  cursor: pointer;
+  font-weight: 500;
   outline: none;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath fill='%2399523a' d='M5 7 0 0h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  transition: border-color 0.25s;
-}
-.portfolio-params__select:focus {
-  border-color: #99523a;
 }
 
-.portfolio-params__warning {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  margin-top: 12px;
-  padding: 10px 14px;
-  background: rgba(221, 189, 132, 0.15);
-  border-left: 3px solid #ddbd84;
-  font-size: 13px;
-  color: #7a5c14;
-  line-height: 1.4;
-}
-.portfolio-params__warning[hidden] {
-  display: none;
-}
-.portfolio-params__warning-icon {
-  font-size: 16px;
-  flex-shrink: 0;
-}
-
-/* ============================================================
-   17. PORTFOLIO TABS
-   ============================================================ */
+/* Табы проектов */
 .portfolio-tabs {
-  position: relative;
   display: flex;
-  flex-wrap: nowrap;
   overflow-x: auto;
-  overflow-y: hidden;
-  gap: 2px;
-  padding: 10px 32px 0;
-  background: rgba(42, 36, 28, 0.02);
-  border-bottom: 1px solid rgba(42, 36, 28, 0.08);
-  scrollbar-width: thin;
-  min-height: 48px;
-}
-.portfolio-tabs::-webkit-scrollbar {
-  height: 4px;
-}
-.portfolio-tabs::-webkit-scrollbar-thumb {
-  background: rgba(153, 82, 58, 0.2);
+  padding: 0 40px;
+  border-bottom: 1px solid rgba(42, 36, 28, 0.1);
 }
 
 .ptab {
-  flex-shrink: 0;
-  padding: 10px 16px;
+  padding: 16px 24px;
   background: transparent;
   border: none;
-  border-bottom: 2px solid transparent;
+  border-bottom: 3px solid transparent;
   font-family: "Onest", sans-serif;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
   color: #7f786d;
   cursor: pointer;
   white-space: nowrap;
-  transition:
-    color 0.2s,
-    border-color 0.2s;
+  transition: all 0.2s;
 }
 .ptab:hover {
   color: #2a241c;
@@ -1634,110 +1504,94 @@ body::after {
 .ptab.is-active {
   color: #99523a;
   border-bottom-color: #99523a;
-  font-weight: 600;
 }
 
-/* ============================================================
-   18. PORTFOLIO TOOLBAR
-   ============================================================ */
+/* Тулбар */
 .portfolio-toolbar {
-  position: relative;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 32px;
-  background: #faf6ec;
-  border-bottom: 1px solid rgba(42, 36, 28, 0.08);
-}
-.portfolio-toolbar__label {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: #7f786d;
+  gap: 16px;
+  padding: 16px 40px;
+  border-bottom: 1px solid rgba(42, 36, 28, 0.05);
 }
 .portfolio-toolbar__select {
-  padding: 6px 10px;
-  background: #fff;
+  padding: 6px 12px;
   border: 1px solid rgba(42, 36, 28, 0.15);
   font-family: "Onest", sans-serif;
   font-size: 13px;
-  color: #3a352d;
-  cursor: pointer;
+  font-weight: 500;
   outline: none;
 }
-.portfolio-toolbar__select:focus {
-  border-color: #99523a;
-}
 
-/* ============================================================
-   19. PORTFOLIO GRID + PCARD (FIX)
-   ============================================================ */
+/* Сетка портфолио */
 .portfolio-grid {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
   display: grid;
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(280px, 1fr)
-  ); /* было repeat(3, 1fr) */
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   grid-auto-rows: max-content;
-  gap: 44px 24px; /* заодно чуть уменьшил отступы под меньший размер карточек */
+  gap: 32px;
   align-content: start;
   align-items: start;
-  padding: 32px 44px;
-}
-.portfolio-grid::-webkit-scrollbar {
-  width: 6px;
-}
-.portfolio-grid::-webkit-scrollbar-thumb {
-  background: rgba(153, 82, 58, 0.2);
-  border-radius: 3px;
+  padding: 40px;
+  background: #f4f0e6; /* Чуть темнее фона панели, как рабочий стол */
 }
 
+.portfolio-grid::-webkit-scrollbar {
+  width: 8px;
+}
+.portfolio-grid::-webkit-scrollbar-track {
+  background: transparent;
+}
+.portfolio-grid::-webkit-scrollbar-thumb {
+  background: rgba(42, 36, 28, 0.2);
+  border-radius: 4px;
+}
+
+/* Карточка в портфолио (PCARD) - как настоящий документ */
 .pcard {
   position: relative;
   display: flex;
   flex-direction: column;
-  min-width: 0;
-  /* больше НЕТ aspect-ratio на самой карточке — высота идёт от содержимого */
+  aspect-ratio: 1 / 1.2; /* Чуть вытянутые листы */
   background: #fff;
-  border: 1px solid rgba(42, 36, 28, 0.12);
+  border: 1px solid rgba(42, 36, 28, 0.1);
   cursor: pointer;
-  overflow: hidden;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.05),
+    0 10px 20px rgba(0, 0, 0, 0.05);
   transition:
-    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.35s ease,
-    border-color 0.3s ease;
-  animation: pcardIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@keyframes pcardIn {
-  from {
-    opacity: 0;
-    transform: scale(0.94);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.3s;
+  animation: pcardIn 0.4s ease both;
 }
 
 .pcard:hover {
-  transform: translateY(-4px);
-  border-color: rgba(153, 82, 58, 0.35);
-  box-shadow: 0 16px 32px rgba(42, 36, 28, 0.12);
+  transform: translateY(-8px) rotate(1.5deg) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+}
+
+/* Дырокол слева (декор) */
+.pcard::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  top: 20px;
+  bottom: 20px;
+  width: 12px;
+  background: radial-gradient(circle, #f4f0e6 4px, transparent 5px) 0 0 / 12px
+    25% repeat-y;
+  z-index: 2;
+  opacity: 0.6;
+  pointer-events: none;
 }
 
 .pcard__body {
-  flex: 0 0 auto; /* не растим, не сжимаем — фиксированная высота по контенту */
-  order: -1; /* название сверху */
-  padding: 14px 16px 12px;
-  background: #faf6ec;
-  border-bottom: 1px solid rgba(42, 36, 28, 0.1);
-  min-width: 0;
-  overflow: hidden;
+  flex: 0 0 auto;
+  padding: 16px 16px 12px 32px; /* Место под дырокол */
+  border-bottom: 2px solid rgba(42, 36, 28, 0.08);
 }
 
 .pcard__title {
@@ -1747,12 +1601,10 @@ body::after {
   -webkit-box-orient: vertical;
   overflow: hidden;
   font-family: "Unbounded", sans-serif;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 1.3;
-  letter-spacing: -0.1px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
   color: #2a241c;
-  text-overflow: ellipsis;
 }
 
 .pcard__cat {
@@ -1760,30 +1612,27 @@ body::after {
   margin-right: 4px;
   font-family: "Onest", sans-serif;
   font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 1.2px;
+  font-weight: 700;
+  letter-spacing: 1px;
   text-transform: uppercase;
   color: #99523a;
 }
-.pcard__sep {
-  display: inline;
-  margin-right: 4px;
-  color: rgba(153, 82, 58, 0.5);
-  font-weight: 400;
-}
 
 .pcard__preview {
-  flex: 0 0 auto;
+  flex: 1 1 auto;
+  min-height: 0;
   position: relative;
-  width: 100%;
-  aspect-ratio: 4 / 3; /* высота превью задаёт высоту карточки, никаких сюрпризов */
-  background: linear-gradient(135deg, #c79b78, #99523a);
+  background: #fdfaf2;
   overflow: hidden;
 }
 
-.pcard[data-item-type="sheet"] .pcard__preview,
-.pcard[data-type="sheet"] .pcard__preview {
-  background: linear-gradient(135deg, #ddbd84, #c79b78);
+.pcard[data-item-type="sheet"] .pcard__preview {
+  background: #fff;
+  background-image: linear-gradient(
+    rgba(42, 36, 28, 0.05) 1px,
+    transparent 1px
+  );
+  background-size: 100% 20px; /* Тетрадные линии для листов */
 }
 
 .pcard__preview img {
@@ -1793,70 +1642,53 @@ body::after {
   display: block;
 }
 
-.pcard__preview::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: repeating-linear-gradient(
-    45deg,
-    rgba(42, 36, 28, 0.08) 0 1px,
-    transparent 1px 12px
-  );
-  pointer-events: none;
-}
-
+/* Бейдж */
 .pcard__badge {
   position: absolute;
-  top: 8px;
-  left: 8px;
-  z-index: 2;
-  padding: 3px 8px;
-  background: rgba(42, 36, 28, 0.8);
+  top: 12px;
+  right: 12px;
+  padding: 4px 10px;
+  background: rgba(42, 36, 28, 0.85);
   color: #decbab;
-  font-family: "Onest", sans-serif;
   font-size: 9px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
   backdrop-filter: blur(4px);
+  box-shadow: 2px 2px 0 rgba(153, 82, 58, 0.5);
 }
 
 .pcard__price {
   position: absolute;
-  bottom: 8px;
-  right: 8px;
-  z-index: 2;
-  padding: 4px 10px;
-  background: rgba(42, 36, 28, 0.85);
+  bottom: 12px;
+  right: 12px;
+  padding: 6px 12px;
+  background: #2a241c;
   color: #ddbd84;
   font-family: "Unbounded", sans-serif;
-  font-size: 11px;
-  font-weight: 500;
-  backdrop-filter: blur(4px);
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 2px 2px 0 rgba(153, 82, 58, 0.5);
 }
 
 .pcard__remove {
   position: absolute;
-  top: 6px;
-  right: 6px;
-  z-index: 3;
-  width: 24px;
-  height: 24px;
+  top: 8px;
+  right: 8px;
+  z-index: 5;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(42, 36, 28, 0.85);
-  color: #decbab;
-  border: none;
-  font-size: 14px;
-  line-height: 1;
+  background: #fdfaf2;
+  color: #c0392b;
+  border: 1px solid #c0392b;
+  border-radius: 50%;
   cursor: pointer;
   opacity: 0;
   transform: scale(0.8);
-  transition:
-    opacity 0.25s,
-    transform 0.25s,
-    background 0.2s;
+  transition: all 0.2s;
 }
 .pcard:hover .pcard__remove {
   opacity: 1;
@@ -1864,68 +1696,56 @@ body::after {
 }
 .pcard__remove:hover {
   background: #c0392b;
+  color: #fff;
 }
 
-/* ============================================================
-   20. PORTFOLIO PAGINATION
-   ============================================================ */
+/* 15. ПАГИНАЦИЯ */
 .portfolio-pagination {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 16px;
-  padding: 16px 32px;
-  background: #faf6ec;
-  border-top: 1px solid rgba(42, 36, 28, 0.08);
+  gap: 20px;
+  padding: 20px 40px;
+  border-top: 1px solid rgba(42, 36, 28, 0.1);
 }
 .portfolio-pagination[hidden] {
   display: none;
 }
 
 .portfolio-page-btn {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent;
-  color: #99523a;
-  border: 1px solid rgba(153, 82, 58, 0.35);
-  font-size: 16px;
-  font-weight: 500;
+  background: #fff;
+  color: #2a241c;
+  border: 1px solid rgba(42, 36, 28, 0.15);
+  font-size: 18px;
   cursor: pointer;
-  transition:
-    background 0.25s,
-    color 0.25s,
-    border-color 0.25s;
+  transition: all 0.2s;
 }
 .portfolio-page-btn:hover:not(:disabled) {
-  background: #99523a;
-  color: #decbab;
-  border-color: #99523a;
+  background: #2a241c;
+  color: #fff;
 }
 .portfolio-page-btn:disabled {
-  opacity: 0.35;
+  opacity: 0.3;
   cursor: not-allowed;
 }
 
 .portfolio-page-info {
   font-family: "Unbounded", sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 1.5px;
+  font-size: 14px;
+  font-weight: 600;
   color: #2a241c;
-  min-width: 60px;
-  text-align: center;
 }
 
-/* ============================================================
-   21. PDETAILS (модалка деталей)
-   ============================================================ */
+/* 16. PDETAILS (Модалка) */
 .pdetails {
   position: absolute;
   inset: 0;
-  z-index: 10;
+  z-index: 20;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1940,39 +1760,36 @@ body::after {
   inset: 0;
   background: rgba(20, 16, 12, 0.6);
   backdrop-filter: blur(4px);
-  animation: pFadeIn 0.3s ease;
 }
 
 .pdetails__window {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 560px;
-  max-height: 88vh;
-  padding: 0 0 24px;
-  background: #faf6ec;
-  border: 1px solid rgba(42, 36, 28, 0.15);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+  max-width: 600px;
+  max-height: 90vh;
+  padding: 0 0 32px;
+  background: #fdfaf2;
+  border: 1px solid rgba(42, 36, 28, 0.2);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
   overflow-y: auto;
-  animation: pcardIn 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .pdetails__close {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 16px;
+  right: 16px;
   z-index: 2;
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(42, 36, 28, 0.85);
+  background: #2a241c;
   color: #decbab;
   border: none;
-  font-size: 18px;
+  font-size: 20px;
   cursor: pointer;
-  transition: background 0.25s;
 }
 .pdetails__close:hover {
   background: #c0392b;
@@ -1980,15 +1797,11 @@ body::after {
 
 .pdetails__preview {
   aspect-ratio: 16 / 9;
-  background: linear-gradient(135deg, #c79b78, #99523a);
+  background: #e8e4d9;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #decbab;
-  font-family: "Unbounded", sans-serif;
-  font-size: 14px;
-  letter-spacing: 2px;
-  overflow: hidden;
+  border-bottom: 1px solid rgba(42, 36, 28, 0.1);
 }
 .pdetails__preview img {
   width: 100%;
@@ -1997,238 +1810,168 @@ body::after {
 }
 
 .pdetails__content {
-  padding: 24px 28px 20px;
+  padding: 32px;
 }
 
 .pdetails__title {
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   font-family: "Unbounded", sans-serif;
-  font-size: 22px;
-  font-weight: 500;
-  line-height: 1.2;
-  letter-spacing: -0.3px;
+  font-size: 24px;
+  font-weight: 700;
   color: #2a241c;
 }
 
 .pdetails__meta {
-  margin-bottom: 18px;
+  margin-bottom: 24px;
   font-size: 13px;
-  color: #7f786d;
+  font-weight: 600;
   letter-spacing: 1px;
   text-transform: uppercase;
+  color: #99523a;
 }
 
 .pdetails__desc {
-  font-size: 14px;
-  line-height: 1.65;
+  font-size: 15px;
+  line-height: 1.7;
   color: #5a5246;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
 }
 
 .pdetails__specs {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px 20px;
-  padding: 16px 0;
-  border-top: 1px solid rgba(42, 36, 28, 0.1);
-  border-bottom: 1px solid rgba(42, 36, 28, 0.1);
-  margin-bottom: 18px;
-  font-size: 13px;
+  gap: 16px;
+  padding: 24px 0;
+  border-top: 1px dashed rgba(42, 36, 28, 0.15);
+  border-bottom: 1px dashed rgba(42, 36, 28, 0.15);
+  margin-bottom: 24px;
 }
 .pdetails__specs dt {
   color: #7f786d;
-  margin-bottom: 2px;
   font-size: 11px;
-  letter-spacing: 1.5px;
+  font-weight: 600;
+  letter-spacing: 1px;
   text-transform: uppercase;
+  margin-bottom: 4px;
 }
 .pdetails__specs dd {
   color: #2a241c;
-  font-weight: 500;
-  font-family: "Unbounded", sans-serif;
-  font-size: 13px;
-}
-
-.pdetails__actions {
-  padding: 0 28px;
-}
-
-.pdetails__btn {
-  padding: 12px 24px;
-  background: #99523a;
-  color: #decbab;
-  border: 1px solid #99523a;
-  font-family: "Onest", sans-serif;
-  font-size: 13px;
   font-weight: 600;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition:
-    background 0.25s,
-    border-color 0.25s;
-}
-.pdetails__btn:hover {
-  background: #2a241c;
-  border-color: #2a241c;
-}
-.pdetails__btn--danger {
-  background: #c0392b;
-  border-color: #c0392b;
-}
-.pdetails__btn--danger:hover {
-  background: #a32b1f;
-  border-color: #a32b1f;
-}
-
-/* ============================================================
-   22. PORTFOLIO EMPTY
-   ============================================================ */
-.portfolio-empty {
-  grid-column: 1 / -1;
-  padding: 60px 20px;
-  text-align: center;
-  color: #7f786d;
-}
-.portfolio-empty__title {
-  margin-bottom: 6px;
   font-family: "Unbounded", sans-serif;
-  font-size: 16px;
-  font-weight: 500;
-  color: #2a241c;
-}
-.portfolio-empty__text {
   font-size: 14px;
 }
 
-/* ============================================================
-   23. PORTFOLIO FOOTER + BREAKDOWN
-   ============================================================ */
+.pdetails__actions {
+  padding: 0 32px;
+}
+
+.pdetails__btn {
+  padding: 14px 24px;
+  background: #c0392b;
+  color: #fff;
+  border: none;
+  font-family: "Onest", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+}
+.pdetails__btn:hover {
+  background: #2a241c;
+}
+
+/* 17. ФУТЕР ОВЕРЛЕЯ */
 .portfolio-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 20px;
-  padding: 18px 32px;
-  border-top: 1px solid rgba(42, 36, 28, 0.1);
-  background: rgba(42, 36, 28, 0.03);
+  gap: 24px;
+  padding: 24px 40px;
+  border-top: 2px solid rgba(42, 36, 28, 0.1);
+  background: #fff;
 }
 
-.portfolio-total {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
 .portfolio-total__label {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
   color: #7f786d;
 }
 .portfolio-total__value {
   font-family: "Unbounded", sans-serif;
-  font-size: 22px;
-  font-weight: 600;
-  letter-spacing: -0.5px;
+  font-size: 28px;
+  font-weight: 700;
   color: #99523a;
 }
 
 .portfolio-breakdown {
-  margin-top: 8px;
+  margin-top: 12px;
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  max-height: 140px;
+  gap: 6px;
+  max-height: 120px;
   overflow-y: auto;
-  padding-right: 4px;
-}
-.portfolio-breakdown::-webkit-scrollbar {
-  width: 3px;
-}
-.portfolio-breakdown::-webkit-scrollbar-thumb {
-  background: rgba(153, 82, 58, 0.2);
 }
 
 .breakdown-row {
   display: flex;
   justify-content: space-between;
-  gap: 12px;
-  font-size: 12px;
+  gap: 16px;
+  font-size: 13px;
   color: #5a5246;
-  padding: 2px 0;
-}
-.breakdown-row__label {
-  flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.breakdown-row__value {
-  font-family: "Unbounded", sans-serif;
-  font-size: 11px;
-  font-weight: 500;
-  white-space: nowrap;
-}
-.breakdown-row--param .breakdown-row__value {
-  color: #7f786d;
 }
 .breakdown-row--base {
-  font-weight: 600;
-  padding-top: 5px;
-  margin-top: 3px;
-  border-top: 1px dashed rgba(42, 36, 28, 0.15);
-}
-.breakdown-row--base .breakdown-row__value {
+  font-weight: 700;
   color: #2a241c;
-}
-.breakdown-row--modifier .breakdown-row__value {
-  color: #99523a;
+  border-top: 1px solid rgba(42, 36, 28, 0.1);
+  padding-top: 8px;
+  margin-top: 4px;
 }
 
 .portfolio-new-btn {
-  padding: 12px 24px;
-  background: #99523a;
-  color: #decbab;
-  border: 1px solid #99523a;
+  padding: 16px 32px;
+  background: #ddbd84;
+  color: #2a241c;
+  border: none;
   font-family: "Onest", sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
   text-transform: uppercase;
   cursor: pointer;
-  transition:
-    background 0.25s,
-    border-color 0.25s;
+  box-shadow: 4px 4px 0 #2a241c;
+  transition: all 0.2s;
 }
 .portfolio-new-btn:hover {
-  background: #2a241c;
-  border-color: #2a241c;
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 #2a241c;
 }
 
-/* ============================================================
-   24. MEDIA QUERIES
-   ============================================================ */
+/* 18. АДАПТИВ */
 @media (max-width: 900px) {
   .folder-stack {
-    width: 200px;
-    height: 140px;
+    width: 240px;
+    height: 180px;
     bottom: 20px;
     right: 20px;
   }
   .folder-stack__layer,
   .folder-stack__front {
-    height: 110px;
+    height: 120px;
   }
-  .folder-stack__title {
-    font-size: 11px;
+  .folder-stack__papers {
+    bottom: 120px;
   }
-  .folder-stack__meta {
-    font-size: 12px;
+  .folder-stack::before {
+    bottom: 120px;
   }
   .portfolio-grid {
     padding: 24px;
-    gap: 40px 24px;
+    gap: 24px;
   }
 }
 
@@ -2237,98 +1980,62 @@ body::after {
     padding: 0;
   }
   .portfolio-panel {
-    max-width: none;
-    height: 100vh;
-    height: 100dvh;
-    max-height: 100dvh;
-    border: none;
+    max-height: 100vh;
+    border-radius: 0;
   }
-
   .portfolio-panel__header {
     flex-direction: column;
-    align-items: stretch;
-    gap: 14px;
-    padding: 18px 18px 14px;
+    gap: 16px;
+    padding: 24px 20px;
   }
-  .portfolio-panel__title {
-    font-size: 22px;
-  }
-  .portfolio-panel__actions {
-    justify-content: flex-end;
-    flex-wrap: wrap;
-  }
-  .pp-btn {
-    padding: 8px 12px;
-    font-size: 11px;
-  }
-
-  .portfolio-params {
-    padding: 12px 18px;
-  }
-  .portfolio-params__field {
-    min-width: 0;
-  }
-
-  .portfolio-tabs {
-    padding: 8px 18px 0;
-    min-height: 44px;
-  }
-  .portfolio-toolbar {
-    padding: 10px 18px;
-  }
-
   .portfolio-grid {
     grid-template-columns: repeat(2, 1fr);
-    padding: 18px;
-    gap: 24px 16px;
+    padding: 20px;
+    gap: 16px;
   }
-  .pcard__body {
-    padding: 10px 12px;
+  .pcard {
+    aspect-ratio: 1 / 1.3;
   }
-  .pcard__title {
-    font-size: 11px;
-  }
-
-  .portfolio-pagination {
-    padding: 12px 18px;
+  .portfolio-toolbar,
+  .portfolio-tabs,
+  .portfolio-footer {
+    padding: 16px 20px;
   }
   .portfolio-footer {
     flex-direction: column;
     align-items: stretch;
-    gap: 12px;
-    padding: 14px 18px;
   }
   .portfolio-new-btn {
     width: 100%;
+    text-align: center;
   }
 
+  /* Мобильная папка */
   .folder-stack {
-    width: 72px;
-    height: 72px;
+    width: 80px;
+    height: 80px;
     bottom: 16px;
     right: 16px;
     border-radius: 50%;
     overflow: visible;
   }
-  .folder-stack::before {
-    display: none;
-  }
+  .folder-stack::before,
   .folder-stack__layer,
   .folder-stack__papers {
     display: none;
   }
   .folder-stack__front {
-    width: 72px;
-    height: 72px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     padding: 0;
     align-items: center;
     justify-content: center;
-    border-top-width: 1px;
+    background: #99523a;
   }
   .folder-stack__title {
-    font-size: 20px;
-    letter-spacing: 0;
+    font-size: 24px;
+    color: #decbab;
     margin: 0;
   }
   .folder-stack__meta {
@@ -2337,60 +2044,28 @@ body::after {
   .folder-stack__add {
     top: -4px;
     right: -4px;
-    width: 26px;
-    height: 26px;
-    font-size: 16px;
-  }
-
-  .toast {
-    top: 16px;
-    right: 12px;
-    left: 12px;
-    min-width: 0;
-  }
-
-  .pdetails__window {
-    max-height: 92vh;
-  }
-  .pdetails__content {
-    padding: 18px 20px 16px;
-  }
-  .pdetails__title {
-    font-size: 18px;
-  }
-  .pdetails__specs {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-
-  .modal__kind {
-    grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 600px) {
   body {
-    padding: 24px 16px 180px;
+    padding: 24px 16px 120px;
   }
   .catalog-filters {
     padding: 16px;
   }
   .catalog-select {
-    min-width: 0;
+    min-width: 100%;
   }
-  .catalog-field--price {
-    grid-column: 1 / -1;
+  .catalog-field {
+    width: 100%;
   }
-  .catalog-filters__features {
-    gap: 6px;
+  .catalog-field--price .catalog-price {
+    width: 100%;
+    justify-content: space-between;
   }
-  .feature-chip {
-    font-size: 12px;
-    padding: 5px 10px;
-  }
-  .catalog-tab {
-    padding: 12px 16px;
-    font-size: 12px;
+  .catalog-input {
+    width: 45%;
   }
   .catalog-grid {
     grid-template-columns: 1fr;
@@ -2398,11 +2073,11 @@ body::after {
   .sheets-grid {
     grid-template-columns: 1fr;
   }
-  .modal__window {
-    padding: 28px 24px 22px;
+  .b-card {
+    padding: 8px 8px 0;
   }
-  .modal__title {
-    font-size: 18px;
+  .b-card__body {
+    padding: 16px 4px;
   }
 }
 
