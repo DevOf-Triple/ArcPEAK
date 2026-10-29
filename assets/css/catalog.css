@@ -1587,10 +1587,10 @@ body::after {
 .portfolio-grid {
   flex: 1;
   overflow-y: auto;
-  padding: 28px 44px 4px;
+  padding: 28px 44px 28px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-auto-rows: 1fr;
+  grid-auto-rows: auto;
   gap: 32px 28px;
   align-content: start;
 }

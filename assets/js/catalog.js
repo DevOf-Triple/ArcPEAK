@@ -347,7 +347,7 @@ function renderSheets() {
         <header class="tag-block__head">
           <h3 class="tag-block__title">${escapeHtml(tag.name)}${keyBadge}</h3>
           <span class="tag-block__count">${tag.sheets.length} вариантов</span>
-          <button type="button" class="tag-block__add-custom" data-add-custom="${tag.id}">+ Свой вариант</button>
+          ${isKey ? "" : `<button type="button" class="tag-block__add-custom" data-add-custom="${tag.id}">+ Свой вариант</button>`}
         </header>
         <div class="sheets-grid">
           ${tag.sheets.map(sheetCardHTML).join("")}
@@ -627,7 +627,7 @@ async function createNewProject(title, kind) {
 
 let customSheetDefaultTagId = null;
 
-function openCustomSheetModal(tagId, tagName) {
+function openCustomSheetModal(tagId) {
   customSheetDefaultTagId = tagId;
 
   const modal = $("#customSheetModal");
@@ -635,16 +635,17 @@ function openCustomSheetModal(tagId, tagName) {
   const select = $("#customSheetTag");
   if (!modal || !select) return;
 
-  // заполняем селект только неключевыми тегами
   select.innerHTML = "";
+  let found = false;
   for (const tag of state.sheets) {
     if (tag.is_key === 1) continue;
     const opt = document.createElement("option");
-    opt.value = tag.id;
+    opt.value = String(tag.id);
     opt.textContent = tag.name;
+    if (String(tag.id) === String(tagId)) found = true;
     select.appendChild(opt);
   }
-  select.value = String(tagId);
+  if (found) select.value = String(tagId);
 
   nameInput.value = "";
   modal.removeAttribute("hidden");
