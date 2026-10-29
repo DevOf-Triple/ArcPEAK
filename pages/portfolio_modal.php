@@ -15,6 +15,21 @@
       </div>
     </header>
 
+    <div class="portfolio-params" id="portfolioParams" hidden>
+      <div class="portfolio-params__row">
+        <label class="portfolio-params__field">
+          <span class="portfolio-params__label">Регион</span>
+          <select id="portfolioRegion" class="portfolio-params__select">
+            <option value="">— выберите регион —</option>
+          </select>
+        </label>
+      </div>
+      <div class="portfolio-params__warning" id="portfolioParamsWarning" hidden>
+        <span class="portfolio-params__warning-icon">⚠</span>
+        <span class="portfolio-params__warning-text" id="portfolioParamsWarningText"></span>
+      </div>
+    </div>
+
     <nav class="portfolio-tabs" id="portfolioTabs" aria-label="Проекты"></nav>
 
     <div class="portfolio-toolbar">
@@ -37,7 +52,8 @@
     <footer class="portfolio-footer">
       <div class="portfolio-total">
         <span class="portfolio-total__label">Итого</span>
-        <strong class="portfolio-total__value" id="portfolioTotal">0 ₽</strong>
+        <strong class="portfolio-total__value" id="portfolioTotal">—</strong>
+        <div class="portfolio-breakdown" id="portfolioBreakdown"></div>
       </div>
       <button type="button" class="portfolio-new-btn" id="portfolioNew">+ Новый проект</button>
     </footer>

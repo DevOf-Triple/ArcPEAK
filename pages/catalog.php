@@ -196,22 +196,66 @@ $userName = $_SESSION['user_name'] ?? '';
     <button type="button" class="folder-stack__add" id="folderAddBtn" aria-label="Новый проект">+</button>
   </div>
 
-  <!-- Модалка создания проекта -->
-  <div class="modal" id="createProjectModal" hidden>
-    <div class="modal__backdrop" data-close-modal></div>
-    <div class="modal__window" role="dialog" aria-labelledby="createProjectTitle">
-      <h3 class="modal__title" id="createProjectTitle">Создайте первый проект</h3>
-      <p class="modal__lead">Проект — это папка, в которую вы собираете здания и листы.</p>
-      <label class="modal__field">
-        <span class="modal__label">Название</span>
-        <input type="text" id="newProjectTitle" class="modal__input" value="Проект" placeholder="Например, «Дом для семьи»">
+<!-- Создание проекта -->
+<div class="modal" id="createProjectModal" hidden>
+  <div class="modal__backdrop" data-close-modal></div>
+  <div class="modal__window" role="dialog" aria-labelledby="createProjectTitle">
+    <h3 class="modal__title" id="createProjectTitle">Создайте проект</h3>
+    <p class="modal__lead">Готовый — собираете из каталога зданий. Пользовательский — конфигурируете свой дом.</p>
+
+    <div class="modal__kind">
+      <label class="kind-card">
+        <input type="radio" name="project_kind" value="ready" checked>
+        <span class="kind-card__body">
+          <strong>Готовый</strong>
+          <small>Каталог зданий</small>
+        </span>
       </label>
-      <div class="modal__actions">
-        <button type="button" class="modal__btn modal__btn--ghost" data-close-modal>Отмена</button>
-        <button type="button" class="modal__btn" id="createProjectSubmit">Создать</button>
-      </div>
+      <label class="kind-card">
+        <input type="radio" name="project_kind" value="custom">
+        <span class="kind-card__body">
+          <strong>Свой</strong>
+          <small>Конфигуратор</small>
+        </span>
+      </label>
+    </div>
+
+    <label class="modal__field">
+      <span class="modal__label">Название</span>
+      <input type="text" id="newProjectTitle" class="modal__input" value="Проект" placeholder="Например, «Дом для семьи»">
+    </label>
+
+    <div class="modal__actions">
+      <button type="button" class="modal__btn modal__btn--ghost" data-close-modal>Отмена</button>
+      <button type="button" class="modal__btn" id="createProjectSubmit">Создать</button>
     </div>
   </div>
+</div>
+
+<!-- Свой вариант листа -->
+<div class="modal" id="customSheetModal" hidden>
+  <div class="modal__backdrop" data-close-custom></div>
+  <div class="modal__window" role="dialog">
+    <h3 class="modal__title" id="customSheetTitle">Свой вариант</h3>
+    <p class="modal__lead" id="customSheetLead"></p>
+
+    <label class="modal__field">
+      <span class="modal__label">Название</span>
+      <input type="text" id="customSheetName" class="modal__input" placeholder="Например, «Мой стиль»">
+    </label>
+
+    <label class="modal__field">
+      <span class="modal__label" id="customSheetValueLabel">Значение</span>
+      <input type="number" id="customSheetValue" class="modal__input" step="0.01" value="0">
+      <span class="custom-modal__hint" id="customSheetHint"></span>
+    </label>
+
+    <div class="modal__actions">
+      <button type="button" class="modal__btn modal__btn--ghost" data-close-custom>Отмена</button>
+      <button type="button" class="modal__btn" id="customSheetSubmit">Создать и добавить</button>
+    </div>
+  </div>
+</div>
 
   <?php include __DIR__ . '/portfolio_modal.php'; ?>
 
