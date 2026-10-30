@@ -391,8 +391,15 @@ body::after {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
   border-radius: 50%;
+  color: #99523a; /* Цвет иконки */
+  transition: all 0.3s ease;
+}
+
+/* При наведении на карточку иконка становится темнее */
+.cab-project-item:hover .cab-project-item__icon {
+  background: #ddbd84;
+  color: #2a241c;
 }
 .cab-project-item__info strong {
   display: block;

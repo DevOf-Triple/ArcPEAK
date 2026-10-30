@@ -119,7 +119,26 @@ $fmtPrice = fn($n) => number_format($n, 0, ',', ' ') . ' ₽';
             <?php foreach ($recentProjects as $p): ?>
               <div class="cab-project-item">
                 <div class="cab-project-item__icon">
-                  <?= $p['project_kind'] === 'custom' ? '⚙️' : '🏠' ?>
+                  <?php if ($p['project_kind'] === 'custom'): ?>
+                    <!-- Иконка настроек/конфигуратора -->
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="4" y1="21" x2="4" y2="14"></line>
+                      <line x1="4" y1="10" x2="4" y2="3"></line>
+                      <line x1="12" y1="21" x2="12" y2="12"></line>
+                      <line x1="12" y1="8" x2="12" y2="3"></line>
+                      <line x1="20" y1="21" x2="20" y2="16"></line>
+                      <line x1="20" y1="12" x2="20" y2="3"></line>
+                      <line x1="1" y1="14" x2="7" y2="14"></line>
+                      <line x1="9" y1="8" x2="15" y2="8"></line>
+                      <line x1="17" y1="16" x2="23" y2="16"></line>
+                    </svg>
+                  <?php else: ?>
+                    <!-- Иконка готового дома -->
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+                      <path d="M3 10L12 3L21 10V21H3V10Z"/>
+                      <path d="M9 21V15H15V21"/>
+                    </svg>
+                  <?php endif; ?>
                 </div>
                 <div class="cab-project-item__info">
                   <strong>Проект №<?= $p['project_number'] ?> · <?= htmlspecialchars($p['title']) ?></strong>
