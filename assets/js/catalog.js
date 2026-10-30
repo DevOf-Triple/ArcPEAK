@@ -920,7 +920,6 @@ function renderPCard(it) {
 function renderPortfolioGrid() {
   const grid = document.getElementById("portfolioGrid");
   const pagination = document.getElementById("portfolioPagination");
-  const pageInfo = document.getElementById("portfolioPageInfo");
   if (!grid) return;
 
   const sorted = getSortedItems();
@@ -946,7 +945,6 @@ function renderPortfolioGrid() {
     .join("");
 
   if (pagination) pagination.hidden = totalPages <= 1;
-  if (pageInfo) pageInfo.textContent = `${portfolio.page + 1} / ${totalPages}`;
 
   const prev = document.querySelector("[data-page-prev]");
   const next = document.querySelector("[data-page-next]");
@@ -1019,6 +1017,26 @@ async function loadPortfolioProject(projectId) {
   portfolio.price = data.data.price;
   portfolio.page = 0;
   renderPortfolioAll();
+
+  // ЗАГРУЗКА ЗАМЕТОК ИЗ LOCALSTORAGE
+  const notesArea = $("#portfolioNotes");
+  if (notesArea) {
+    const savedNotes = localStorage.getItem(`project_notes_${projectId}`) || "";
+    notesArea.value = savedNotes;
+
+    // Вешаем обработчик, чтобы избежать дублирования
+    if (!notesArea.dataset.listenerAttached) {
+      notesArea.addEventListener("input", (e) => {
+        if (portfolio.project) {
+          localStorage.setItem(
+            `project_notes_${portfolio.project.id}`,
+            e.target.value,
+          );
+        }
+      });
+      notesArea.dataset.listenerAttached = "true";
+    }
+  }
 }
 
 async function openPortfolio() {

@@ -1288,7 +1288,7 @@ body::after {
 }
 
 /* ============================================================
-   14. PORTFOLIO OVERLAY (Рабочий стол)
+   14. PORTFOLIO OVERLAY (Две колонки)
    ============================================================ */
 .portfolio-overlay {
   position: fixed;
@@ -1310,69 +1310,51 @@ body::after {
   backdrop-filter: blur(10px);
 }
 
+/* Сама панель — flex-контейнер */
 .portfolio-panel {
   position: relative;
   z-index: 1;
   display: flex;
-  flex-direction: column;
+  flex-direction: row; /* ВАЖНО: колонки */
   width: 100%;
-  max-width: 1400px;
-  height: 100%;
-  max-height: 90vh;
-  background: #fdfaf2;
-  border: 1px solid rgba(42, 36, 28, 0.2);
+  max-width: 1500px;
+  height: 90vh;
+  background: #f4f0e6;
+  border: 1px solid rgba(42, 36, 28, 0.15);
   box-shadow:
     0 40px 100px rgba(0, 0, 0, 0.5),
     0 0 0 1px rgba(255, 255, 255, 0.5) inset;
   overflow: hidden;
-  /* Текстура бумаги для всего оверлея */
-  background-image: linear-gradient(
-    rgba(42, 36, 28, 0.03) 1px,
-    transparent 1px
-  );
-  background-size: 100% 32px;
 }
 
-.portfolio-panel::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 6px;
-  background: repeating-linear-gradient(
-    90deg,
-    #99523a 0 20px,
-    #ddbd84 20px 40px,
-    #2a241c 40px 60px
-  );
-  z-index: 10;
-}
-
-.portfolio-panel__header,
-.portfolio-params,
-.portfolio-tabs,
-.portfolio-toolbar,
-.portfolio-pagination,
-.portfolio-footer {
+/* ЛЕВАЯ КОЛОНКА (Сайдбар) */
+.portfolio-sidebar {
+  width: 380px;
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
   background: #fdfaf2;
+  border-right: 2px dashed rgba(42, 36, 28, 0.15);
+  overflow-y: auto;
+}
+.portfolio-sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+.portfolio-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(42, 36, 28, 0.2);
 }
 
-/* Шапка оверлея */
 .portfolio-panel__header {
-  position: relative;
+  padding: 24px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 24px;
-  padding: 32px 40px 24px;
-  border-bottom: 2px solid rgba(42, 36, 28, 0.1);
+  border-bottom: 1px solid rgba(42, 36, 28, 0.05);
 }
 
 .portfolio-panel__label {
   display: inline-block;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   padding: 4px 10px;
   background: #2a241c;
   color: #decbab;
@@ -1386,8 +1368,8 @@ body::after {
   display: inline;
   font-family: "Unbounded", sans-serif;
   font-weight: 700;
-  font-size: clamp(28px, 3.5vw, 48px);
-  line-height: 1.1;
+  font-size: 22px;
+  line-height: 1.2;
   color: #2a241c;
   cursor: text;
   border-bottom: 2px dashed transparent;
@@ -1404,37 +1386,162 @@ body::after {
 
 .portfolio-panel__number {
   display: inline-block;
-  margin-left: 16px;
-  padding: 4px 12px;
+  margin-top: 8px;
+  padding: 4px 8px;
   background: rgba(153, 82, 58, 0.1);
   color: #99523a;
   font-family: "Unbounded", sans-serif;
-  font-size: 14px;
+  font-size: 11px;
   font-weight: 600;
-  vertical-align: middle;
 }
 
-.portfolio-panel__actions {
+.pp-btn--close {
+  background: transparent;
+  border: none;
+  font-size: 28px;
+  color: #7f786d;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+.pp-btn--close:hover {
+  color: #c0392b;
+}
+
+/* Блок заметок */
+.portfolio-notes {
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(42, 36, 28, 0.05);
+}
+.portfolio-notes__input {
+  width: 100%;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid rgba(42, 36, 28, 0.15);
+  font-family: "Onest", sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #3a352d;
+  resize: vertical;
+  min-height: 80px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.portfolio-notes__input:focus {
+  border-color: #99523a;
+}
+
+/* Параметры */
+.portfolio-params {
+  padding: 16px 24px;
+  border-bottom: 1px solid rgba(42, 36, 28, 0.05);
+}
+.portfolio-params[hidden] {
+  display: none;
+}
+.portfolio-params__row {
+  display: flex;
+  flex-direction: column;
   gap: 12px;
 }
-
-.pp-btn {
-  padding: 10px 20px;
-  background: transparent;
-  color: #2a241c;
+.portfolio-params__field {
+  display: block;
+  width: 100%;
+}
+.portfolio-params__label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #7f786d;
+}
+.portfolio-params__select {
+  width: 100%;
+  padding: 10px 14px;
+  background: #fff;
   border: 1px solid rgba(42, 36, 28, 0.2);
   font-family: "Onest", sans-serif;
+  font-size: 13px;
+  color: #3a352d;
+  cursor: pointer;
+  outline: none;
+}
+.portfolio-params__warning {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 12px;
+  padding: 10px;
+  background: rgba(221, 189, 132, 0.15);
+  border-left: 3px solid #ddbd84;
   font-size: 12px;
-  font-weight: 700;
+  color: #7a5c14;
+  line-height: 1.4;
+}
+.portfolio-params__warning[hidden] {
+  display: none;
+}
+
+/* Табы проектов (чипсы) */
+.portfolio-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 16px 24px;
+  gap: 8px;
+  border-bottom: 1px solid rgba(42, 36, 28, 0.05);
+}
+.ptab {
+  padding: 6px 12px;
+  background: #fff;
+  border: 1px solid rgba(42, 36, 28, 0.1);
+  border-radius: 20px;
+  font-family: "Onest", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #7f786d;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.ptab:hover {
+  border-color: #99523a;
+  color: #2a241c;
+}
+.ptab.is-active {
+  background: #99523a;
+  color: #fff;
+  border-color: #99523a;
+}
+
+/* Кнопки действий */
+.portfolio-actions {
+  display: flex;
+  gap: 8px;
+  padding: 16px 24px;
+}
+.pp-btn {
+  padding: 10px 16px;
+  background: transparent;
+  color: #99523a;
+  border: 1px solid rgba(153, 82, 58, 0.35);
+  font-family: "Onest", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
   letter-spacing: 1px;
   text-transform: uppercase;
   cursor: pointer;
   transition: all 0.2s;
+  flex: 1;
 }
 .pp-btn:hover {
-  background: #edeae2;
-  border-color: #2a241c;
+  background: #99523a;
+  color: #decbab;
 }
 .pp-btn--danger {
   color: #c0392b;
@@ -1443,113 +1550,192 @@ body::after {
 .pp-btn--danger:hover {
   background: #c0392b;
   color: #fff;
-  border-color: #c0392b;
 }
-.pp-btn--close {
-  padding: 0;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  border-color: transparent;
+
+/* Футер с ценой */
+.portfolio-footer {
+  margin-top: auto;
+  padding: 24px;
   background: #edeae2;
-}
-.pp-btn--close:hover {
-  background: #2a241c;
-  color: #fff;
-}
-
-/* Параметры */
-.portfolio-params {
-  padding: 16px 40px;
-  background: rgba(153, 82, 58, 0.03);
-  border-bottom: 1px solid rgba(42, 36, 28, 0.08);
-}
-.portfolio-params__select {
-  padding: 10px 16px;
-  background: #fff;
-  border: 1px solid rgba(42, 36, 28, 0.2);
-  font-family: "Onest", sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  outline: none;
-}
-
-/* Табы проектов */
-.portfolio-tabs {
+  border-top: 2px solid rgba(42, 36, 28, 0.1);
   display: flex;
-  overflow-x: auto;
-  padding: 0 40px;
-  border-bottom: 1px solid rgba(42, 36, 28, 0.1);
+  flex-direction: column;
+  gap: 16px;
 }
-
-.ptab {
-  padding: 16px 24px;
-  background: transparent;
-  border: none;
-  border-bottom: 3px solid transparent;
-  font-family: "Onest", sans-serif;
-  font-size: 14px;
-  font-weight: 600;
+.portfolio-total {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.portfolio-total__label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
   color: #7f786d;
+}
+.portfolio-total__value {
+  font-family: "Unbounded", sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #99523a;
+}
+.portfolio-breakdown {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 160px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+  color: #5a5246;
+}
+.breakdown-row--base {
+  font-weight: 700;
+  color: #2a241c;
+  border-top: 1px solid rgba(42, 36, 28, 0.1);
+  padding-top: 8px;
+  margin-top: 4px;
+}
+.portfolio-new-btn {
+  width: 100%;
+  padding: 16px;
+  background: #ddbd84;
+  color: #2a241c;
+  border: none;
+  font-family: "Onest", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
   cursor: pointer;
-  white-space: nowrap;
+  box-shadow: 4px 4px 0 #2a241c;
   transition: all 0.2s;
 }
-.ptab:hover {
-  color: #2a241c;
-}
-.ptab.is-active {
-  color: #99523a;
-  border-bottom-color: #99523a;
+.portfolio-new-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 #2a241c;
 }
 
-/* Тулбар */
-.portfolio-toolbar {
+/* ПРАВАЯ КОЛОНКА (Листы) */
+.portfolio-main {
+  flex: 1;
   display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: #f4f0e6;
+}
+
+.portfolio-toolbar {
+  padding: 16px 32px;
+  background: #fdfaf2;
+  border-bottom: 1px solid rgba(42, 36, 28, 0.1);
+  display: flex;
+  justify-content: flex-end;
   align-items: center;
-  gap: 16px;
-  padding: 16px 40px;
-  border-bottom: 1px solid rgba(42, 36, 28, 0.05);
+  gap: 12px;
+}
+.portfolio-toolbar__label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #7f786d;
 }
 .portfolio-toolbar__select {
-  padding: 6px 12px;
+  padding: 8px 12px;
+  background: #fff;
   border: 1px solid rgba(42, 36, 28, 0.15);
   font-family: "Onest", sans-serif;
   font-size: 13px;
   font-weight: 500;
+  color: #3a352d;
   outline: none;
+  cursor: pointer;
 }
 
-/* Сетка портфолио */
 .portfolio-grid {
-  flex: 1 1 auto;
-  min-height: 0;
+  flex: 1;
   overflow-y: auto;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   grid-auto-rows: max-content;
   gap: 32px;
   align-content: start;
-  align-items: start;
-  padding: 40px;
-  background: #f4f0e6; /* Чуть темнее фона панели, как рабочий стол */
+  padding: 32px;
 }
 
-.portfolio-grid::-webkit-scrollbar {
-  width: 8px;
+/* Компактная пагинация */
+.portfolio-pagination {
+  padding: 16px;
+  background: #fdfaf2;
+  border-top: 1px solid rgba(42, 36, 28, 0.1);
+  display: flex;
+  justify-content: center;
+  gap: 12px;
 }
-.portfolio-grid::-webkit-scrollbar-track {
-  background: transparent;
+.portfolio-pagination[hidden] {
+  display: none;
 }
-.portfolio-grid::-webkit-scrollbar-thumb {
-  background: rgba(42, 36, 28, 0.2);
+
+.portfolio-page-btn {
+  width: 36px;
+  height: 36px;
+  background: #fff;
+  border: 1px solid rgba(42, 36, 28, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
   border-radius: 4px;
+  transition: all 0.2s;
+}
+.portfolio-page-btn:hover:not(:disabled) {
+  background: #2a241c;
+  color: #fff;
+}
+.portfolio-page-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 
-/* Карточка в портфолио (PCARD) - как настоящий документ */
+/* АДАПТИВ */
+@media (max-width: 900px) {
+  .portfolio-panel {
+    flex-direction: column;
+    height: 100vh;
+  }
+  .portfolio-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 2px dashed rgba(42, 36, 28, 0.15);
+    max-height: 45vh;
+  }
+  .portfolio-grid {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 16px;
+    gap: 16px;
+  }
+}
+@media (max-width: 600px) {
+  .portfolio-overlay {
+    padding: 0;
+  }
+  .portfolio-panel {
+    border: none;
+  }
+}
+
+/* ============================================================
+   ВОЗВРАЩАЕМ СТИЛИ КАРТОЧЕК ЛИСТОВ (PCARD)
+   ============================================================ */
+
 .pcard {
   position: relative;
   display: flex;
@@ -1565,6 +1751,17 @@ body::after {
     transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
     box-shadow 0.3s;
   animation: pcardIn 0.4s ease both;
+}
+
+@keyframes pcardIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .pcard:hover {
@@ -1588,9 +1785,10 @@ body::after {
   pointer-events: none;
 }
 
+/* Верхняя часть с названием */
 .pcard__body {
   flex: 0 0 auto;
-  padding: 16px 16px 12px 32px; /* Место под дырокол */
+  padding: 16px 16px 12px 32px; /* Место под дырокол слева */
   border-bottom: 2px solid rgba(42, 36, 28, 0.08);
 }
 
@@ -1618,6 +1816,7 @@ body::after {
   color: #99523a;
 }
 
+/* Нижняя часть (превью) */
 .pcard__preview {
   flex: 1 1 auto;
   min-height: 0;
@@ -1626,13 +1825,14 @@ body::after {
   overflow: hidden;
 }
 
+/* Тетрадная линовка для листов */
 .pcard[data-item-type="sheet"] .pcard__preview {
   background: #fff;
   background-image: linear-gradient(
     rgba(42, 36, 28, 0.05) 1px,
     transparent 1px
   );
-  background-size: 100% 20px; /* Тетрадные линии для листов */
+  background-size: 100% 20px;
 }
 
 .pcard__preview img {
@@ -1642,7 +1842,7 @@ body::after {
   display: block;
 }
 
-/* Бейдж */
+/* Бейдж "Лист" */
 .pcard__badge {
   position: absolute;
   top: 12px;
@@ -1656,8 +1856,10 @@ body::after {
   text-transform: uppercase;
   backdrop-filter: blur(4px);
   box-shadow: 2px 2px 0 rgba(153, 82, 58, 0.5);
+  z-index: 2;
 }
 
+/* Цена здания (если это здание) */
 .pcard__price {
   position: absolute;
   bottom: 12px;
@@ -1669,8 +1871,10 @@ body::after {
   font-size: 12px;
   font-weight: 600;
   box-shadow: 2px 2px 0 rgba(153, 82, 58, 0.5);
+  z-index: 2;
 }
 
+/* Кнопка удаления */
 .pcard__remove {
   position: absolute;
   top: 8px;
@@ -1690,13 +1894,54 @@ body::after {
   transform: scale(0.8);
   transition: all 0.2s;
 }
+
 .pcard:hover .pcard__remove {
   opacity: 1;
   transform: scale(1);
 }
+
 .pcard__remove:hover {
   background: #c0392b;
   color: #fff;
+}
+
+/* Стиль для новой кнопки закрытия */
+.portfolio-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  z-index: 100;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fdfaf2;
+  border: 1px solid rgba(42, 36, 28, 0.15);
+  border-radius: 50%;
+  font-size: 22px;
+  color: #7f786d;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s;
+}
+
+.portfolio-close-btn:hover {
+  background: #c0392b;
+  color: #fff;
+  border-color: #c0392b;
+  transform: rotate(90deg);
+}
+
+/* Обнови стили тулбара (найди его в файле и замени padding) */
+.portfolio-toolbar {
+  padding: 16px 80px 16px 32px; /* Справа 80px, чтобы оставить место под кнопку */
+  background: #fdfaf2;
+  border-bottom: 1px solid rgba(42, 36, 28, 0.1);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
 }
 
 /* 15. ПАГИНАЦИЯ */
