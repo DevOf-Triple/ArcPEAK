@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: MySQL-8.4
--- Время создания: Окт 30 2026 г., 21:46
+-- Время создания: Окт 30 2026 г., 22:40
 -- Версия сервера: 8.4.6
 -- Версия PHP: 8.2.29
 
@@ -161,8 +161,11 @@ INSERT INTO `portfolio_items` (`id`, `project_id`, `item_type`, `item_id`, `adde
 (169, 6, 'sheet', 41, '2026-10-29 21:27:51'),
 (170, 6, 'sheet', 45, '2026-10-29 21:27:52'),
 (171, 6, 'sheet', 2, '2026-10-29 21:27:53'),
-(172, 6, 'sheet', 7, '2026-10-29 21:27:54'),
-(173, 6, 'sheet', 14, '2026-10-29 21:27:55');
+(175, 6, 'sheet', 7, '2026-10-30 19:12:00'),
+(177, 6, 'sheet', 14, '2026-10-30 19:12:02'),
+(178, 6, 'sheet', 19, '2026-10-30 19:12:03'),
+(179, 6, 'sheet', 25, '2026-10-30 19:12:04'),
+(180, 7, 'building', 7, '2026-10-30 19:21:12');
 
 -- --------------------------------------------------------
 
@@ -185,7 +188,8 @@ CREATE TABLE `portfolio_projects` (
 --
 
 INSERT INTO `portfolio_projects` (`id`, `user_id`, `project_number`, `title`, `project_kind`, `created_at`, `updated_at`) VALUES
-(6, 1, 1, 'Проект', 'custom', '2026-10-29 19:21:10', '2026-10-29 21:27:55');
+(6, 1, 1, 'Проект', 'custom', '2026-10-29 19:21:10', '2026-10-30 19:12:04'),
+(7, 1, 2, 'Проектwq', 'ready', '2026-10-30 19:21:08', '2026-10-30 19:21:12');
 
 -- --------------------------------------------------------
 
@@ -326,6 +330,33 @@ INSERT INTO `regions` (`id`, `name`, `factor`, `sort_order`) VALUES
 (83, 'Чукотский автономный округ', 1.0000, 83),
 (84, 'Ямало-Ненецкий автономный округ', 1.1000, 84),
 (85, 'Ярославская область', 1.0000, 85);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `saved_calculations`
+--
+
+CREATE TABLE `saved_calculations` (
+  `id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `title` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `region_name` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `floors` int NOT NULL,
+  `total_area` decimal(10,2) NOT NULL,
+  `total_price` decimal(15,2) NOT NULL,
+  `loan_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `monthly_payment` decimal(15,2) NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Дамп данных таблицы `saved_calculations`
+--
+
+INSERT INTO `saved_calculations` (`id`, `user_id`, `title`, `type_name`, `region_name`, `floors`, `total_area`, `total_price`, `loan_name`, `monthly_payment`, `created_at`) VALUES
+(1, 1, 'Расчёт от 30.10.2026', 'Квартира', 'Московская область', 1, 40.00, 4480000.00, 'Рыночная', 47193.74, '2026-10-30 19:03:56');
 
 -- --------------------------------------------------------
 
@@ -530,6 +561,13 @@ ALTER TABLE `regions`
   ADD UNIQUE KEY `name` (`name`);
 
 --
+-- Индексы таблицы `saved_calculations`
+--
+ALTER TABLE `saved_calculations`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_calc_user` (`user_id`);
+
+--
 -- Индексы таблицы `sheets`
 --
 ALTER TABLE `sheets`
@@ -572,13 +610,13 @@ ALTER TABLE `catalog_tags`
 -- AUTO_INCREMENT для таблицы `portfolio_items`
 --
 ALTER TABLE `portfolio_items`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=174;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=181;
 
 --
 -- AUTO_INCREMENT для таблицы `portfolio_projects`
 --
 ALTER TABLE `portfolio_projects`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT для таблицы `project_sheet_overrides`
@@ -591,6 +629,12 @@ ALTER TABLE `project_sheet_overrides`
 --
 ALTER TABLE `regions`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
+
+--
+-- AUTO_INCREMENT для таблицы `saved_calculations`
+--
+ALTER TABLE `saved_calculations`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT для таблицы `sheets`
@@ -640,6 +684,12 @@ ALTER TABLE `project_sheet_overrides`
   ADD CONSTRAINT `fk_pso_curator` FOREIGN KEY (`curator_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `fk_pso_project` FOREIGN KEY (`project_id`) REFERENCES `portfolio_projects` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_pso_sheet` FOREIGN KEY (`sheet_id`) REFERENCES `sheets` (`id`) ON DELETE CASCADE;
+
+--
+-- Ограничения внешнего ключа таблицы `saved_calculations`
+--
+ALTER TABLE `saved_calculations`
+  ADD CONSTRAINT `fk_calc_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Ограничения внешнего ключа таблицы `sheets`
