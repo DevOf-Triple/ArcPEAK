@@ -1,10 +1,11 @@
-/* ===== БАЗА ===== */
+/* ============================================================
+   ArcPEAK — Личный кабинет (Стиль главной страницы почти что, у меня не получилось)
+   ============================================================ */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-
 html,
 body {
   min-height: 100%;
@@ -12,13 +13,18 @@ body {
 
 body {
   font-family: "Onest", sans-serif;
-  font-size: 19px;
+  font-size: 16px;
   line-height: 1.6;
+  /* Цвет фона с главной */
   background: #cfc9c5;
   color: #3a352d;
+  min-height: 100vh;
+  padding: 40px 24px 80px;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
+/* Зерно с главной */
 body::after {
   content: "";
   position: fixed;
@@ -30,30 +36,209 @@ body::after {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* ===== СТРАНИЦА ===== */
-.cabinet-page {
-  display: flex;
+/* Блобы с главной */
+.blobs {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.blob {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.45;
+  mix-blend-mode: multiply;
+  will-change: transform;
+}
+.blob--1 {
+  width: 620px;
+  height: 620px;
+  top: 5%;
+  left: 35%;
+  background: #ddbd84;
+  animation: drift1 32s ease-in-out infinite;
+}
+.blob--2 {
+  width: 520px;
+  height: 520px;
+  top: 55%;
+  left: 45%;
+  background: #99523a;
+  opacity: 0.28;
+  animation: drift2 40s ease-in-out infinite;
+}
+.blob--3 {
+  width: 700px;
+  height: 700px;
+  top: 25%;
+  left: 55%;
+  background: #decbab;
+  opacity: 0.55;
+  animation: drift3 46s ease-in-out infinite;
+}
+@keyframes drift1 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(90px, -120px) scale(1.12);
+  }
+  50% {
+    transform: translate(-70px, 90px) scale(0.94);
+  }
+  75% {
+    transform: translate(110px, 60px) scale(1.08);
+  }
+}
+@keyframes drift2 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(-130px, -80px) scale(1.15);
+  }
+  66% {
+    transform: translate(70px, -150px) scale(0.9);
+  }
+}
+@keyframes drift3 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1) rotate(0);
+  }
+  50% {
+    transform: translate(-100px, 130px) scale(1.18) rotate(180deg);
+  }
+}
+
+.page__back {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 40px 20px;
-}
-
-.cabinet {
-  width: 100%;
-  max-width: 520px;
-}
-
-.cabinet__card {
+  gap: 8px;
   position: relative;
-  padding: 56px 48px;
-  background: #2a241c;
-  color: #decbab;
-  border: 1px solid rgba(221, 189, 132, 0.3);
+  z-index: 2;
+  margin-bottom: 40px;
+  color: #99523a;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition:
+    color 0.3s,
+    transform 0.3s;
+}
+.page__back:hover {
+  color: #2a241c;
+  transform: translateX(-4px);
+}
+
+.cabinet-wrapper {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Сетка дашборда */
+.cabinet-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "profile projects"
+    "calcs calcs"
+    "settings settings";
+  gap: 32px;
+}
+
+/* Базовый стиль карточек с золотыми уголками */
+.cab-card {
+  background: #decbab;
+  border: 1px solid #ddbd84;
+  padding: 36px;
+  position: relative;
+  box-shadow:
+    0 4px 12px rgba(42, 36, 28, 0.06),
+    0 20px 40px rgba(42, 36, 28, 0.1);
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
   overflow: hidden;
 }
 
-.cabinet__card::before {
+/* Золотые уголки (как на главной) */
+.cab-card::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  pointer-events: none;
+  background-image:
+    linear-gradient(#ddbd84, #ddbd84), linear-gradient(#ddbd84, #ddbd84),
+    linear-gradient(#ddbd84, #ddbd84), linear-gradient(#ddbd84, #ddbd84),
+    linear-gradient(#ddbd84, #ddbd84), linear-gradient(#ddbd84, #ddbd84),
+    linear-gradient(#ddbd84, #ddbd84), linear-gradient(#ddbd84, #ddbd84);
+  background-repeat: no-repeat;
+  background-size:
+    24px 1px,
+    1px 24px,
+    24px 1px,
+    1px 24px,
+    24px 1px,
+    1px 24px,
+    24px 1px,
+    1px 24px;
+  background-position:
+    left top,
+    left top,
+    right top,
+    right top,
+    left bottom,
+    left bottom,
+    right bottom,
+    right bottom;
+  opacity: 0;
+  transition:
+    opacity 0.4s ease,
+    inset 0.4s ease;
+  z-index: 5;
+}
+.cab-card:hover::before {
+  opacity: 1;
+  inset: 8px;
+}
+
+.cab-card.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cab-card--profile {
+  grid-area: profile;
+}
+.cab-card--projects {
+  grid-area: projects;
+}
+.cab-card--calcs {
+  grid-area: calcs;
+}
+.cab-card--settings {
+  grid-area: settings;
+}
+
+/* --- 1. ПРОФИЛЬ (Темная карточка как на главной) --- */
+.cab-card--profile {
+  background: #2a241c;
+  border-color: rgba(221, 189, 132, 0.3);
+  color: #decbab;
+}
+.cab-card--profile::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -65,65 +250,329 @@ body::after {
   );
 }
 
-.cabinet__label {
-  position: relative;
-  display: inline-block;
-  margin-bottom: 20px;
-  font-family: "Onest", sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 4px;
-  text-transform: uppercase;
+.cab-stamp {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  border: 2px solid rgba(221, 189, 132, 0.4);
   color: #ddbd84;
-  opacity: 0.85;
-}
-
-.cabinet__title {
-  position: relative;
   font-family: "Unbounded", sans-serif;
-  font-weight: 500;
-  font-size: 30px;
-  line-height: 1.15;
-  letter-spacing: -0.3px;
-  margin-bottom: 6px;
-  color: #decbab;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: 4px 8px;
+  transform: rotate(5deg);
+  z-index: 2;
 }
 
-.cabinet__subtitle {
+.cab-profile__header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 32px;
   position: relative;
-  font-family: "Onest", sans-serif;
-  font-size: 15px;
-  color: rgba(222, 203, 171, 0.55);
-  margin-bottom: 36px;
+  z-index: 2;
 }
-
-.cabinet__form {
-  position: relative;
-  margin-bottom: 22px;
-}
-
-.cabinet__logout {
-  display: block;
-  width: 100%;
-  padding: 18px 24px;
+.cab-profile__avatar {
+  width: 72px;
+  height: 72px;
   background: #ddbd84;
   color: #2a241c;
-  border: none;
-  font-family: "Onest", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Unbounded", sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px rgba(221, 189, 132, 0.2);
+}
+.cab-profile__name {
+  font-family: "Unbounded", sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #decbab;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+.cab-profile__login {
+  font-size: 15px;
+  color: rgba(222, 203, 171, 0.6);
+}
+
+.cab-profile__details {
+  border-top: 1px dashed rgba(221, 189, 132, 0.2);
+  border-bottom: 1px dashed rgba(221, 189, 132, 0.2);
+  padding: 20px 0;
+  margin-bottom: 28px;
+  position: relative;
+  z-index: 2;
+}
+.cab-detail-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+.cab-detail-row:last-child {
+  margin-bottom: 0;
+}
+.cab-detail-row span {
+  color: rgba(222, 203, 171, 0.6);
+}
+.cab-detail-row strong {
+  color: #decbab;
+  font-weight: 600;
+}
+
+.cab-profile__actions {
+  position: relative;
+  z-index: 2;
+}
+.cab-profile__actions button {
+  width: 100%;
+}
+
+/* --- 2. ПРОЕКТЫ --- */
+.cab-section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 2;
+}
+.cab-section-title {
+  font-family: "Unbounded", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #2a241c;
+  letter-spacing: -0.3px;
+}
+.cab-link {
+  font-size: 13px;
+  font-weight: 600;
+  color: #99523a;
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(153, 82, 58, 0.4);
+  transition: all 0.2s;
+}
+.cab-link:hover {
+  border-bottom-style: solid;
+  color: #2a241c;
+}
+
+.cab-projects-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  z-index: 2;
+}
+.cab-project-item {
+  display: grid;
+  grid-template-columns: 48px 1fr auto auto;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 20px;
+  background: #faf6ec;
+  border: 1px solid rgba(42, 36, 28, 0.1);
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cab-project-item:hover {
+  transform: translateY(-2px);
+  border-color: rgba(153, 82, 58, 0.4);
+  box-shadow: 0 8px 24px rgba(42, 36, 28, 0.08);
+}
+.cab-project-item__icon {
+  width: 48px;
+  height: 48px;
+  background: #edeae2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  border-radius: 50%;
+}
+.cab-project-item__info strong {
+  display: block;
+  font-family: "Unbounded", sans-serif;
+  font-size: 14px;
+  color: #2a241c;
+  margin-bottom: 4px;
+}
+.cab-project-item__info span {
+  font-size: 13px;
+  color: #7f786d;
+}
+.cab-project-item__price {
+  font-family: "Unbounded", sans-serif;
   font-size: 15px;
   font-weight: 600;
-  letter-spacing: 2px;
+  color: #99523a;
+  text-align: right;
+}
+.cab-project-item__link {
+  font-size: 12px;
+  font-weight: 700;
+  color: #decbab;
+  background: #2a241c;
+  padding: 10px 20px;
+  text-decoration: none;
   text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background 0.2s;
+}
+.cab-project-item__link:hover {
+  background: #99523a;
+}
+
+/* --- 3. РАСЧЁТЫ (Как белый лист) --- */
+.cab-card--calcs {
+  background: #faf6ec;
+}
+.cab-calcs-table-wrap {
+  overflow-x: auto;
+  position: relative;
+  z-index: 2;
+}
+.cab-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.cab-table th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #7f786d;
+  padding: 12px 16px;
+  border-bottom: 2px solid #ddbd84;
+}
+.cab-table td {
+  padding: 20px 16px;
+  border-bottom: 1px dashed rgba(42, 36, 28, 0.1);
+  vertical-align: top;
+}
+.cab-table tr:hover td {
+  background: rgba(221, 189, 132, 0.08);
+}
+.cab-table td strong {
+  display: block;
+  font-size: 15px;
+  color: #2a241c;
+  margin-bottom: 4px;
+}
+.cab-table td small {
+  font-size: 12px;
+  color: #7f786d;
+}
+
+.cab-table__specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.cab-table__specs span {
+  background: #edeae2;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #3a352d;
+  border-radius: 4px;
+}
+.cab-price {
+  font-family: "Unbounded", sans-serif;
+  font-size: 16px;
+  color: #2a241c;
+}
+.cab-monthly {
+  font-family: "Unbounded", sans-serif;
+  font-size: 15px;
+  color: #99523a;
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* --- 4. НАСТРОЙКИ --- */
+.cab-settings__desc {
+  font-size: 14px;
+  color: #5a5246;
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 2;
+}
+.cab-toggle-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  z-index: 2;
+}
+.cab-toggle {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+}
+.cab-toggle input {
+  display: none;
+}
+.cab-toggle__slider {
+  position: relative;
+  width: 48px;
+  height: 26px;
+  background: rgba(42, 36, 28, 0.15);
+  border-radius: 13px;
+  transition: background 0.3s;
+  flex-shrink: 0;
+}
+.cab-toggle__slider::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  background: #faf6ec;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cab-toggle input:checked + .cab-toggle__slider {
+  background: #99523a;
+}
+.cab-toggle input:checked + .cab-toggle__slider::after {
+  transform: translateX(22px);
+  background: #decbab;
+}
+.cab-toggle__label {
+  font-size: 15px;
+  font-weight: 500;
+  color: #2a241c;
+}
+
+/* --- КНОПКИ (С эффектом блика с главной) --- */
+.cab-btn {
+  display: inline-block;
+  padding: 14px 28px;
+  background: #2a241c;
+  color: #decbab;
+  border: none;
+  font-family: "Onest", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-decoration: none;
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  transition:
-    background 0.3s ease,
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+  transition: all 0.3s;
 }
-
-.cabinet__logout::after {
+.cab-btn::after {
   content: "";
   position: absolute;
   top: 0;
@@ -133,36 +582,97 @@ body::after {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.6),
+    rgba(255, 255, 255, 0.4),
     transparent
   );
   transform: skewX(-20deg);
   transition: left 0.7s ease;
 }
-
-.cabinet__logout:hover {
-  background: #decbab;
-  transform: translateY(-2px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+.cab-btn:hover {
+  background: #99523a;
 }
-
-.cabinet__logout:hover::after {
+.cab-btn:hover::after {
   left: 130%;
 }
 
-.cabinet__back {
-  position: relative;
-  display: inline-block;
-  font-family: "Onest", sans-serif;
-  font-size: 14px;
-  color: rgba(222, 203, 171, 0.6);
-  text-decoration: none;
-  transition:
-    color 0.3s ease,
-    transform 0.3s ease;
+.cab-btn--outline {
+  background: transparent;
+  color: rgba(222, 203, 171, 0.7);
+  border: 1px solid rgba(221, 189, 132, 0.4);
+}
+.cab-btn--outline:hover {
+  background: rgba(221, 189, 132, 0.1);
+  color: #decbab;
+  border-color: #ddbd84;
 }
 
-.cabinet__back:hover {
-  color: #ddbd84;
-  transform: translateX(-4px);
+.cab-empty {
+  text-align: center;
+  padding: 40px 20px;
+  background: rgba(42, 36, 28, 0.03);
+  border: 1px dashed rgba(42, 36, 28, 0.2);
+  position: relative;
+  z-index: 2;
+}
+.cab-empty p {
+  font-size: 15px;
+  color: #5a5246;
+  margin-bottom: 20px;
+}
+
+/* --- АДАПТИВ --- */
+@media (max-width: 1000px) {
+  .cabinet-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas: "profile" "projects" "calcs" "settings";
+  }
+  .cab-project-item {
+    grid-template-columns: 48px 1fr auto;
+    grid-template-areas:
+      "icon info price"
+      "icon info link";
+    row-gap: 8px;
+  }
+  .cab-project-item__icon {
+    grid-area: icon;
+  }
+  .cab-project-item__info {
+    grid-area: info;
+  }
+  .cab-project-item__price {
+    grid-area: price;
+    text-align: left;
+  }
+  .cab-project-item__link {
+    grid-area: link;
+    text-align: center;
+  }
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 24px 16px 40px;
+  }
+  .cab-card {
+    padding: 24px 20px;
+  }
+  .cab-stamp {
+    display: none;
+  }
+  .cab-profile__header {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+  .cab-table th,
+  .cab-table td {
+    padding: 12px 8px;
+  }
+  .cab-table__specs span {
+    padding: 2px 6px;
+  }
+  .cab-project-item {
+    padding: 12px;
+    gap: 12px;
+  }
 }

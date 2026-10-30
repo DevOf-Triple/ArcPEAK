@@ -104,6 +104,7 @@ $userName = $_SESSION['user_name'] ?? '';
         <div class="calc__row"><span>Выплаты банку</span><strong id="totalPayout">0 ₽</strong></div>
         <div class="calc__row"><span>Переплата банку</span><strong id="overpayment">0 ₽</strong></div>
         <div class="calc__row calc__row--total"><span>Всего потрачено</span><strong id="grandTotal">0 ₽</strong></div>
+        <button type="button" id="saveCalcBtn" class="calc__save-btn">Сохранить расчёт</button>
       </aside>
     </div>
   </main>
@@ -471,6 +472,57 @@ $userName = $_SESSION['user_name'] ?? '';
     ensureFloors(1);
     addRoom(1, { name: 'Гостиная', length: 6, width: 4 });
     addRoom(1, { name: 'Спальня', length: 4, width: 4 });
+
+        // ===== СОХРАНЕНИЕ РАСЧЁТА =====
+    document.getElementById('saveCalcBtn').addEventListener('click', async () => {
+      const r = calc(); // Получаем текущие результаты
+      if (r.totalArea <= 0) {
+        alert('Добавьте хотя бы одно помещение, чтобы сохранить расчёт.');
+        return;
+      }
+
+      const typeName = document.querySelector('input[name="type"]:checked').nextElementSibling.querySelector('strong').textContent;
+      
+      const formData = new FormData();
+      formData.append('title', 'Расчёт от ' + new Date().toLocaleDateString('ru-RU'));
+      formData.append('type_name', typeName);
+      formData.append('region_name', regionSelect.value);
+      formData.append('floors', document.getElementById('floors').value);
+      formData.append('total_area', r.totalArea);
+      formData.append('total_price', r.totalPrice);
+      formData.append('loan_name', r.presetName);
+      formData.append('monthly_payment', r.monthlyPayment);
+
+      const btn = document.getElementById('saveCalcBtn');
+      const originalText = btn.textContent;
+      btn.textContent = 'Сохранение...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('../api/save_calculation.php', { method: 'POST', body: formData });
+        const data = await res.json();
+        
+        if (data.ok) {
+          btn.textContent = 'Сохранено!';
+          btn.style.background = '#2ecc71';
+          btn.style.color = '#fff';
+          setTimeout(() => {
+            btn.textContent = originalText;
+            btn.style.background = '';
+            btn.style.color = '';
+            btn.disabled = false;
+          }, 2500);
+        } else {
+          alert(data.error || 'Ошибка сохранения');
+          btn.textContent = originalText;
+          btn.disabled = false;
+        }
+      } catch (e) {
+        alert('Нет связи с сервером');
+        btn.textContent = originalText;
+        btn.disabled = false;
+      }
+    });
   </script>
 </body>
 </html>

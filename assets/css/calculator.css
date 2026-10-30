@@ -757,6 +757,28 @@ body::after {
   transform: translateY(0);
 }
 
+/* ===== КНОПКА ====== */
+
+.calc__save-btn {
+  width: 100%;
+  margin-top: 24px;
+  padding: 16px;
+  background: #ddbd84;
+  color: #2a241c;
+  border: none;
+  font-family: "Onest", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.calc__save-btn:hover {
+  background: #decbab;
+  transform: translateY(-2px);
+}
+
 /* ===== АДАПТИВ ===== */
 @media (max-width: 1000px) {
   .calc {
