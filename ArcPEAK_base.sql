@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: MySQL-8.4
--- Время создания: Окт 30 2026 г., 22:40
+-- Время создания: Ноя 13 2026 г., 23:16
 -- Версия сервера: 8.4.6
 -- Версия PHP: 8.2.29
 
@@ -165,7 +165,22 @@ INSERT INTO `portfolio_items` (`id`, `project_id`, `item_type`, `item_id`, `adde
 (177, 6, 'sheet', 14, '2026-10-30 19:12:02'),
 (178, 6, 'sheet', 19, '2026-10-30 19:12:03'),
 (179, 6, 'sheet', 25, '2026-10-30 19:12:04'),
-(180, 7, 'building', 7, '2026-10-30 19:21:12');
+(180, 7, 'building', 7, '2026-10-30 19:21:12'),
+(181, 8, 'sheet', 2, '2026-10-30 21:57:10'),
+(182, 8, 'sheet', 8, '2026-10-30 21:57:11'),
+(183, 8, 'sheet', 19, '2026-10-30 21:57:13'),
+(184, 8, 'sheet', 29, '2026-10-30 21:57:14'),
+(185, 8, 'sheet', 30, '2026-10-30 21:57:14'),
+(186, 8, 'sheet', 34, '2026-10-30 21:57:14'),
+(187, 8, 'sheet', 33, '2026-10-30 21:57:15'),
+(188, 8, 'sheet', 36, '2026-10-30 21:57:15'),
+(189, 8, 'sheet', 39, '2026-10-30 21:57:16'),
+(190, 8, 'sheet', 40, '2026-10-30 21:57:16'),
+(191, 8, 'sheet', 42, '2026-10-30 21:57:16'),
+(193, 8, 'sheet', 47, '2026-10-30 21:57:17'),
+(194, 8, 'sheet', 53, '2026-10-30 21:57:18'),
+(195, 8, 'sheet', 14, '2026-10-30 21:57:27'),
+(196, 8, 'sheet', 27, '2026-10-30 21:57:39');
 
 -- --------------------------------------------------------
 
@@ -189,7 +204,8 @@ CREATE TABLE `portfolio_projects` (
 
 INSERT INTO `portfolio_projects` (`id`, `user_id`, `project_number`, `title`, `project_kind`, `created_at`, `updated_at`) VALUES
 (6, 1, 1, 'Проект', 'custom', '2026-10-29 19:21:10', '2026-10-30 19:12:04'),
-(7, 1, 2, 'Проектwq', 'ready', '2026-10-30 19:21:08', '2026-10-30 19:21:12');
+(7, 1, 2, 'Проектwq', 'ready', '2026-10-30 19:21:08', '2026-10-30 19:21:12'),
+(8, 1, 3, 'SUPERDUPER', 'custom', '2026-10-30 21:57:08', '2026-10-30 21:59:04');
 
 -- --------------------------------------------------------
 
@@ -209,7 +225,8 @@ CREATE TABLE `project_params` (
 --
 
 INSERT INTO `project_params` (`project_id`, `region_id`, `created_at`, `updated_at`) VALUES
-(6, 17, '2026-10-29 19:21:10', '2026-10-29 21:28:24');
+(6, 17, '2026-10-29 19:21:10', '2026-10-29 21:28:24'),
+(8, 9, '2026-10-30 21:57:08', '2026-10-30 21:58:14');
 
 -- --------------------------------------------------------
 
@@ -356,7 +373,8 @@ CREATE TABLE `saved_calculations` (
 --
 
 INSERT INTO `saved_calculations` (`id`, `user_id`, `title`, `type_name`, `region_name`, `floors`, `total_area`, `total_price`, `loan_name`, `monthly_payment`, `created_at`) VALUES
-(1, 1, 'Расчёт от 30.10.2026', 'Квартира', 'Московская область', 1, 40.00, 4480000.00, 'Рыночная', 47193.74, '2026-10-30 19:03:56');
+(1, 1, 'Расчёт от 30.10.2026', 'Квартира', 'Московская область', 1, 40.00, 4480000.00, 'Рыночная', 47193.74, '2026-10-30 19:03:56'),
+(2, 1, 'Расчёт от 31.10.2026', 'Частный дом', 'Московская область', 2, 420.00, 62092800.00, 'Военная', 523181.09, '2026-10-30 21:59:34');
 
 -- --------------------------------------------------------
 
@@ -610,13 +628,13 @@ ALTER TABLE `catalog_tags`
 -- AUTO_INCREMENT для таблицы `portfolio_items`
 --
 ALTER TABLE `portfolio_items`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=181;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=197;
 
 --
 -- AUTO_INCREMENT для таблицы `portfolio_projects`
 --
 ALTER TABLE `portfolio_projects`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT для таблицы `project_sheet_overrides`
@@ -634,7 +652,7 @@ ALTER TABLE `regions`
 -- AUTO_INCREMENT для таблицы `saved_calculations`
 --
 ALTER TABLE `saved_calculations`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT для таблицы `sheets`
