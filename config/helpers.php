@@ -201,3 +201,36 @@ function calculate_custom_project(PDO $pdo, int $projectId): array
         'breakdown' => $breakdown,
     ];
 }
+
+/**
+ * Требует роль 'admin'. Возвращает user_id.
+ */
+function require_admin(): int
+{
+    $userId = require_auth();
+    global $pdo;
+    $stmt = $pdo->prepare('SELECT role FROM users WHERE id = ?');
+    $stmt->execute([$userId]);
+    $role = $stmt->fetchColumn();
+    if ($role !== 'admin') {
+        json_response(['ok' => false, 'error' => 'Требуются права администратора'], 403);
+    }
+    return $userId;
+}
+
+/**
+ * Требует роль 'admin' + флаг is_root_admin = 1. Возвращает user_id.
+ * Используется для операций над ролями администраторов и удаления пользователей.
+ */
+function require_root_admin(): int
+{
+    $userId = require_auth();
+    global $pdo;
+    $stmt = $pdo->prepare('SELECT role, is_root_admin FROM users WHERE id = ?');
+    $stmt->execute([$userId]);
+    $row = $stmt->fetch();
+    if (!$row || $row['role'] !== 'admin' || (int)$row['is_root_admin'] !== 1) {
+        json_response(['ok' => false, 'error' => 'Только главный администратор может выполнять это действие'], 403);
+    }
+    return $userId;
+}

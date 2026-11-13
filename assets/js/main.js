@@ -167,13 +167,17 @@ function applyUser(user) {
   document.querySelectorAll("[data-user-name]").forEach((el) => {
     el.textContent = user ? user.full_name : "—";
   });
-
   document.querySelectorAll("[data-user-login]").forEach((el) => {
     el.textContent = user ? "@" + user.login : "—";
   });
 
-  setAuthMode(user ? "user" : "login");
+  // ← добавили: показ/скрытие ссылки на админку
+  const adminLink = document.querySelector("[data-admin-link]");
+  if (adminLink) {
+    adminLink.style.display = user && user.role === "admin" ? "" : "none";
+  }
 
+  setAuthMode(user ? "user" : "login");
   if (user) closeAuth();
 }
 

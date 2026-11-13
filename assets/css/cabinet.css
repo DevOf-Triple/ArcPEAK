@@ -152,7 +152,7 @@ body::after {
   grid-template-areas:
     "profile projects"
     "calcs calcs"
-    "settings settings";
+    "settings security";
   gap: 32px;
 }
 
@@ -631,7 +631,7 @@ body::after {
 @media (max-width: 1000px) {
   .cabinet-grid {
     grid-template-columns: 1fr;
-    grid-template-areas: "profile" "projects" "calcs" "settings";
+    grid-template-areas: "profile" "projects" "calcs" "settings" "security";
   }
   .cab-project-item {
     grid-template-columns: 48px 1fr auto;
@@ -682,4 +682,69 @@ body::after {
     padding: 12px;
     gap: 12px;
   }
+}
+
+/* --- 5. СМЕНА ПАРОЛЯ --- */
+.cab-card--security {
+  background: #faf6ec;
+}
+
+.cab-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  z-index: 2;
+  max-width: 420px;
+}
+
+.cab-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cab-field__label {
+  font-family: "Onest", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #7f786d;
+}
+
+.cab-field__input {
+  width: 100%;
+  padding: 12px 14px;
+  background: #fff;
+  border: 1px solid rgba(42, 36, 28, 0.2);
+  font-family: "Onest", sans-serif;
+  font-size: 15px;
+  color: #2a241c;
+  outline: none;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.cab-field__input:focus {
+  border-color: #99523a;
+  box-shadow: 0 0 0 3px rgba(153, 82, 58, 0.12);
+}
+
+.cab-form__error {
+  min-height: 20px;
+  font-family: "Onest", sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #c0392b;
+}
+
+.cab-form__error:empty {
+  display: none;
+}
+
+.cab-form .cab-btn {
+  align-self: flex-start;
+  padding: 12px 28px;
 }

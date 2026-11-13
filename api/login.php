@@ -10,7 +10,8 @@ if ($login === '' || $password === '') {
     exit(json_encode(['ok' => false, 'error' => 'Заполни все поля']));
 }
 
-$stmt = $pdo->prepare('SELECT id, login, password_hash, full_name, email FROM users WHERE login = ? OR email = ? LIMIT 1');
+// было: SELECT id, login, password_hash, full_name, email FROM users
+$stmt = $pdo->prepare('SELECT id, login, password_hash, full_name, email, role FROM users WHERE login = ? OR email = ? LIMIT 1');
 $stmt->execute([$login, $login]);
 $user = $stmt->fetch();
 
@@ -21,6 +22,7 @@ if (!$user || !password_verify($password, $user['password_hash'])) {
 $_SESSION['user_id'] = (int)$user['id'];
 $_SESSION['user_login'] = $user['login'];
 $_SESSION['user_name'] = $user['full_name'];
+$_SESSION['user_role'] = $user['role']; // ← добавили
 
 echo json_encode([
     'ok' => true,
@@ -29,5 +31,6 @@ echo json_encode([
         'login' => $user['login'],
         'full_name' => $user['full_name'],
         'email' => $user['email'],
+        'role' => $user['role'], // ← добавили
     ],
 ]);

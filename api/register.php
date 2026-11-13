@@ -39,6 +39,7 @@ $id = (int)$pdo->lastInsertId();
 $_SESSION['user_id'] = $id;
 $_SESSION['user_login'] = $login;
 $_SESSION['user_name'] = $full_name;
+$_SESSION['user_role'] = 'user'; // ← добавили (роль по умолчанию)
 
 echo json_encode([
     'ok' => true,
@@ -47,5 +48,6 @@ echo json_encode([
         'login' => $login,
         'full_name' => $full_name,
         'email' => $email,
+        'role' => 'user', // ← добавили
     ],
 ]);

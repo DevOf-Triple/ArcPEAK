@@ -12,5 +12,6 @@ echo json_encode([
         'id' => (int)$_SESSION['user_id'],
         'login' => $_SESSION['user_login'],
         'full_name' => $_SESSION['user_name'],
+        'role' => $_SESSION['user_role'] ?? 'user', // ← добавили
     ],
 ]);

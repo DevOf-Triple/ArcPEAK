@@ -52,6 +52,11 @@
     <span></span>
   </button>
 
+  <a href="admin.php" class="admin-floating" data-admin-link style="display:none;" aria-label="Админ-панель">
+    <span class="admin-floating__dot">◆</span>
+    <span class="admin-floating__text">Админка</span>
+  </a>
+  
   <div class="building__container">
 
     <div class="building">

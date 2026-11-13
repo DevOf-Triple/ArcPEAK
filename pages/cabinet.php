@@ -6,20 +6,23 @@ if (empty($_SESSION['user_id'])) {
     exit;
 }
 
-// Подключаем БД и хелперы
 require_once __DIR__ . '/../config/db.php';
-require_once __DIR__ . '/../config/helpers.php'; // Важно для расчёта цены!
+require_once __DIR__ . '/../config/helpers.php';
 
 $userId = (int)$_SESSION['user_id'];
 $userName = $_SESSION['user_name'] ?? '';
 $userLogin = $_SESSION['user_login'] ?? '';
 
-// Получаем инфу о пользователе
-$stmt = $pdo->prepare('SELECT email, created_at FROM users WHERE id = ?');
+// Инфо о пользователе
+$stmt = $pdo->prepare('SELECT email, created_at, role, is_root_admin FROM users WHERE id = ?');
 $stmt->execute([$userId]);
 $user = $stmt->fetch();
 
-// Получаем 3 последних проекта
+$isCurator   = $user && $user['role'] === 'curator';
+$isAdmin     = $user && $user['role'] === 'admin';
+$isRootAdmin = $user && (int)$user['is_root_admin'] === 1;
+
+// 3 последних проекта
 $stmt = $pdo->prepare('
     SELECT id, project_number, title, project_kind, updated_at,
            (SELECT COUNT(*) FROM portfolio_items WHERE project_id = portfolio_projects.id) as items_count
@@ -31,14 +34,13 @@ $stmt = $pdo->prepare('
 $stmt->execute([$userId]);
 $recentProjects = $stmt->fetchAll();
 
-// Считаем стоимость для каждого проекта
 foreach ($recentProjects as &$p) {
     $priceData = calculate_project_price($pdo, $p['id']);
     $p['price_total'] = $priceData['can_calculate'] ? $priceData['total'] : null;
 }
 unset($p);
 
-// Получаем сохранённые расчёты
+// Сохранённые расчёты
 $stmt = $pdo->prepare('SELECT * FROM saved_calculations WHERE user_id = ? ORDER BY created_at DESC');
 $stmt->execute([$userId]);
 $calculations = $stmt->fetchAll();
@@ -57,7 +59,7 @@ $fmtPrice = fn($n) => number_format($n, 0, ',', ' ') . ' ₽';
   <link rel="stylesheet" href="../assets/css/cabinet.css">
 </head>
 <body class="cabinet-page">
-  <!-- Фоновые блобы с главной страницы -->
+  <!-- Фоновые блобы -->
   <div class="blobs" aria-hidden="true">
     <span class="blob blob--1"></span>
     <span class="blob blob--2"></span>
@@ -79,7 +81,14 @@ $fmtPrice = fn($n) => number_format($n, 0, ',', ' ') . ' ₽';
             <?= mb_strtoupper(mb_substr($userName ?: $userLogin, 0, 1)) ?>
           </div>
           <div class="cab-profile__info">
-            <h1 class="cab-profile__name"><?= htmlspecialchars($userName ?: $userLogin) ?></h1>
+            <h1 class="cab-profile__name">
+              <?= htmlspecialchars($userName ?: $userLogin) ?>
+              <?php if ($isAdmin): ?>
+                <span style="display:inline-block;padding:2px 8px;background:#2a241c;color:#ddbd84;font-size:10px;font-weight:700;letter-spacing:1.5px;border-radius:3px;vertical-align:middle;margin-left:8px;"><?= $isRootAdmin ? 'ROOT ADMIN' : 'АДМИН' ?></span>
+              <?php elseif ($isCurator): ?>
+                <span style="display:inline-block;padding:2px 8px;background:rgba(52,152,219,.15);color:#2471a3;border:1px solid rgba(52,152,219,.4);font-size:10px;font-weight:700;letter-spacing:1.5px;border-radius:3px;vertical-align:middle;margin-left:8px;">КУРАТОР</span>
+              <?php endif; ?>
+            </h1>
             <p class="cab-profile__login">@<?= htmlspecialchars($userLogin) ?></p>
           </div>
         </div>
@@ -96,6 +105,9 @@ $fmtPrice = fn($n) => number_format($n, 0, ',', ' ') . ' ₽';
         </div>
 
         <div class="cab-profile__actions">
+          <?php if ($isAdmin): ?>
+            <a href="admin.php" class="cab-btn" style="display:block;text-align:center;margin-bottom:12px;background:#ddbd84;color:#2a241c;">Перейти в админ-панель</a>
+          <?php endif; ?>
           <form action="../api/logout.php" method="post">
             <button type="submit" class="cab-btn cab-btn--outline">Выйти из аккаунта</button>
           </form>
@@ -120,7 +132,6 @@ $fmtPrice = fn($n) => number_format($n, 0, ',', ' ') . ' ₽';
               <div class="cab-project-item">
                 <div class="cab-project-item__icon">
                   <?php if ($p['project_kind'] === 'custom'): ?>
-                    <!-- Иконка настроек/конфигуратора -->
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <line x1="4" y1="21" x2="4" y2="14"></line>
                       <line x1="4" y1="10" x2="4" y2="3"></line>
@@ -133,7 +144,6 @@ $fmtPrice = fn($n) => number_format($n, 0, ',', ' ') . ' ₽';
                       <line x1="17" y1="16" x2="23" y2="16"></line>
                     </svg>
                   <?php else: ?>
-                    <!-- Иконка готового дома -->
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
                       <path d="M3 10L12 3L21 10V21H3V10Z"/>
                       <path d="M9 21V15H15V21"/>
@@ -231,10 +241,36 @@ $fmtPrice = fn($n) => number_format($n, 0, ',', ' ') . ' ₽';
         </div>
       </section>
 
+      <!-- 5. СМЕНА ПАРОЛЯ -->
+      <section class="cab-card cab-card--security" data-reveal style="--d:.4s">
+        <h2 class="cab-section-title">Смена пароля</h2>
+        <p class="cab-settings__desc">Пароль должен быть не короче 6 символов. Сохраните новый пароль — восстановить старый нельзя.</p>
+
+        <form class="cab-form" id="changePasswordForm" autocomplete="off">
+          <label class="cab-field">
+            <span class="cab-field__label">Текущий пароль</span>
+            <input type="password" name="current_password" class="cab-field__input" required autocomplete="current-password">
+          </label>
+          <label class="cab-field">
+            <span class="cab-field__label">Новый пароль</span>
+            <input type="password" name="new_password" class="cab-field__input" required minlength="6" autocomplete="new-password">
+          </label>
+          <label class="cab-field">
+            <span class="cab-field__label">Повторите новый пароль</span>
+            <input type="password" name="new_password2" class="cab-field__input" required minlength="6" autocomplete="new-password">
+          </label>
+
+          <div class="cab-form__error" id="cabFormError"></div>
+
+          <button type="submit" class="cab-btn">Изменить пароль</button>
+        </form>
+      </section>
+
     </div>
   </main>
 
   <script>
+    // Reveal on scroll
     const io = new IntersectionObserver((entries) => {
       entries.forEach((e) => {
         if (e.isIntersecting) {
@@ -244,6 +280,45 @@ $fmtPrice = fn($n) => number_format($n, 0, ',', ' ') . ' ₽';
       });
     }, { threshold: 0.1 });
     document.querySelectorAll("[data-reveal]").forEach((el) => io.observe(el));
+
+    // Смена пароля
+    const cpForm  = document.getElementById('changePasswordForm');
+    const cpError = document.getElementById('cabFormError');
+    if (cpForm) {
+      cpForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        cpError.textContent = '';
+        cpError.style.color = '';
+
+        const btn = cpForm.querySelector('button[type="submit"]');
+        const original = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Сохранение…';
+
+        try {
+          const res = await fetch('../api/change_password.php', {
+            method: 'POST',
+            body: new FormData(cpForm),
+          });
+          const data = await res.json();
+          if (!data.ok) {
+            cpError.textContent = data.error || 'Ошибка';
+            cpError.style.color = '#c0392b';
+            return;
+          }
+          cpForm.reset();
+          cpError.textContent = 'Пароль успешно изменён';
+          cpError.style.color = '#2ecc71';
+          setTimeout(() => { cpError.textContent = ''; cpError.style.color = ''; }, 4000);
+        } catch (err) {
+          cpError.textContent = 'Нет связи с сервером';
+          cpError.style.color = '#c0392b';
+        } finally {
+          btn.disabled = false;
+          btn.textContent = original;
+        }
+      });
+    }
   </script>
 </body>
 </html>
